@@ -28,7 +28,7 @@
 typedef struct
 {
 
-		int local_map_id;
+	int local_map_id;
         int dim;
         int K;
         int* ptrClusterId;
@@ -58,7 +58,7 @@ typedef struct
 
 void cmeans_cpu_reduce_cpp(void *key, val_t* vals, int keySize, int valCount){
 
-		CMEANS_KEY_T* pKey = (CMEANS_KEY_T*)key;
+	CMEANS_KEY_T* pKey = (CMEANS_KEY_T*)key;
         int dim = pKey->dim;
         int K = pKey->K;
 
@@ -93,8 +93,8 @@ void cmeans_cpu_reduce_cpp(void *key, val_t* vals, int keySize, int valCount){
 			//printf("\n");
         }//for
 		
-		free(myClusters);
-		free(myDenominators);
+	free(myClusters);
+	free(myDenominators);
 
 }
 
@@ -156,7 +156,6 @@ void cmeans_cpu_map_cpp(void *key, void *val, int keySize, int valSize){
 		}//for 
 	}//for
 	//printf("map_task_id 1:%d\n",map_task_idx);
-	
 	free(distances);
 	free(numerator);
 	
@@ -165,13 +164,6 @@ void cmeans_cpu_map_cpp(void *key, void *val, int keySize, int valSize){
 	pKey->end = 0;
 	pKey->start = 0;
 	pKey->global_map_id = 0;
-
 }
-
-
-
-
-
-
 
 #endif //__MAP_CPP__

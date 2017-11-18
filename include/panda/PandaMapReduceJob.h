@@ -18,15 +18,38 @@ namespace panda
   class MapTask;
   class ReduceTask;
   class EmitConfiguration;
-
+	
   class PandaMapReduceJob : public MapReduceJob
   {
-
+	
     protected:
-      std::vector<Chunk * > chunks;
-	  std::vector<MapTask *> mapTasks;
-	  std::vector<ReduceTask *> reduceTasks;
-
+	
+        std::vector<Chunk * >   chunks;
+	std::vector<MapTask *>  mapTasks;
+	std::vector<MapTask *>	cpuMapTasks;
+	std::vector<MapTask *>	gpuMapTasks;
+	std::vector<MapTask*>   gpuCardMapTasks;
+	std::vector<ReduceTask *> reduceTasks;
+	//void ExecutePandaGPUCombiner(panda_gpu_context *pgc);	
+	panda_gpu_card_context *pGPUCardContext;
+	void addGPUCardMapTasks(panda::Chunk *chunk);
+	void AddReduceTask4GPU(panda_gpu_context* pgc, panda_node_context *pnc, int start_row_id, int end_row_id);	
+	void AddReduceTask4CPU(panda_cpu_context* pgc, panda_node_context *pnc, int start_row_id, int end_row_id);
+	void StartPandaCPUReduceTasks();
+	void InitPandaGPUCardMapReduce();
+	int StartPandaMapTasksOnGPUCard();
+	void StartPandaCPUCombiner();
+	void StartPandaGPUCardCombiner();
+	void StartPandaSortCPUResults();
+	void StartPandaSortGPUCardResults(int, int);
+ 	void StartPandaCopyRecvedBucketToCPU(int, int);
+	void StartPandaCopyRecvedBucketToGPUCard(int, int);
+	bool getEnableGPUCard()	{return enableGPUCard;}
+	bool getEnableGPU() {return enableGPU;}
+	bool getEnableCPU() {return enableCPU;}
+	bool enableGPU;
+	bool enableGPUCard;
+	bool enableCPU;
       	void * keys;
       	void * vals;
       	int keySize, keySpace;
@@ -75,7 +98,9 @@ namespace panda
       oscpp::Timer sortTimer;
       oscpp::Timer reduceTimer;
       oscpp::Timer totalTimer;
-
+      
+      virtual int StartPandaReduceTasksOnGPU();
+      virtual int StartPandaReduceTasksOnGPUCard();
       virtual void determineMaximumSpaceRequirements();
       virtual void allocateMapVariables();
       virtual void freeMapVariables();
@@ -137,7 +162,7 @@ namespace panda
 	  virtual int  StartPandaGPUReduceTasks();
 	  virtual void PandaPartitionCheckSends(const bool sync);
 	  virtual void StartPandaPartitionSubSendData();
-	  virtual void StartPandaCopyRecvedBucketToGPU();
+	  virtual void StartPandaCopyRecvedBucketToGPU(int,int);
 	  virtual void StartPandaExitMessager();
 	  virtual void InitPandaCPUMapReduce();
 	  
@@ -153,8 +178,8 @@ namespace panda
 
     public:
       //PandaMapReduceJob(int &argc, char **&argv,const bool bl);
-      PandaMapReduceJob(int & argc,
-                            char **& argv,
+      PandaMapReduceJob(int argc,
+                            char ** argv,
                             const bool accumulateMapResults     = false,
                             const bool accumulateReduceResults  = false,
                             const bool syncOnPartitionSends     = true);

@@ -2,6 +2,8 @@
 #define __PANDA_FIXEDSIZEMessage_H__
 
 #include <mpi.h>
+#include <cuda.h>
+
 #include <panda/Message.h>
 #include <oscpp/Condition.h>
 #include <oscpp/Mutex.h>

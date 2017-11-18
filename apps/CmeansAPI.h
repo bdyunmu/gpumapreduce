@@ -8,8 +8,8 @@
 	This is the source code for Panda, a MapReduce runtime on GPUs and CPUs.
 */
 
-#ifndef __USER_H__
-#define __USER_H__
+#ifndef __CMEANS_API_H__
+#define __CMEANS_API_H__
 #include "Panda.h"
 
 #define MATRIX_BLOCK_SIZE 64
@@ -69,7 +69,7 @@ void panda_cpu_map(void *KEY, void*VAL, int keySize, int valSize, panda_cpu_cont
 void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context* pcc);
 int  panda_cpu_compare(const void *d_a, int len_a, const void *d_b, int len_b);
 void panda_cpu_combiner(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context *pcc, int map_task_idx);
-
+int  cpu_compare(const void *d_a, int len_a, const void *d_b, int len_b);
 void cmeans_cpu_map_cpp(void *key, void *val, int keySize, int valSize);
 void cmeans_cpu_reduce_cpp(void *key, val_t* vals, int keySize, int valCount);
 

@@ -10,6 +10,8 @@
 #include <vector>
 #include "Panda.h"
 
+
+void PandaExecuteMapTasksOnGPUCard(panda_gpu_card_context pg);
 namespace panda
 {
 
@@ -107,21 +109,20 @@ namespace panda
           ~PandaMapReduceWorker();
 
 	void setMessage(panda::PandaFSMessage *msg);
+      	void addInput(panda::Chunk * chunk);
+	void addCPUMapTasks(Chunk *chunk) ;
+	void addGPUMapTasks(Chunk *chunk) ;
+	void addGPUCardMapTasks(Chunk *chunk);
 
-      void addInput(panda::Chunk * chunk);
-	  void addCPUMapTasks(Chunk *chunk) ;
-	  void addGPUMapTasks(Chunk *chunk) ;
-	  void addGPUCardMapTasks(Chunk *chunk);
+	bool getEnableCPU()		{return enableCPU;}
+	bool getEnableGPU()		{return enableGPU;}
+	bool getEnableGPUCard()	{return enableGPUCard;}
 
-	  bool getEnableCPU()		{return enableCPU;}
-	  bool getEnableGPU()		{return enableGPU;}
-	  bool getEnableGPUCard()	{return enableGPUCard;}
-
-	  void setEnableCPU(bool b)		{enableCPU = b;}
-	  void setEnableGPU(bool b)		{enableGPU = b;}
-	  void setEnableGPUCard(bool b)	{enableGPUCard = b;}
-      void execute();
-	  int PandaExecuteMapTasksOnGPUCard(panda_gpu_card_context pg);
+	void setEnableCPU(bool b)		{enableCPU = b;}
+	void setEnableGPU(bool b)		{enableGPU = b;}
+	void setEnableGPUCard(bool b)	{enableGPUCard = b;}
+      	void execute();
+	//void PandaExecuteMapTasksOnGPUCard(panda_gpu_card_context pg);
 
   };
 }

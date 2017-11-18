@@ -6,7 +6,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <cuda.h>
-#include <cuda_runtime.h>
+//#include <cuda_runtime.h>
 #include <string.h>
 #include <assert.h>
 #include <time.h>

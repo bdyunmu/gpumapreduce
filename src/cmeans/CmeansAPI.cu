@@ -16,6 +16,140 @@
 #include "Panda.h"
 #include "CmeansAPI.h"
 
+
+int cpu_compare(const void *key_a, int len_a, const void *key_b, int len_b)
+{
+	//CMEANS_KEY_T *ka = (CMEANS_KEY_T*)key_a;
+	//CMEANS_KEY_T *kb = (CMEANS_KEY_T*)key_b;
+
+	return 0;
+
+	/*
+	if (ka->i > kb->i)
+		return 1;
+	if (ka->i > kb->i)
+		return -1;
+	if (ka->i == kb->i)
+		return 0;
+		*/
+
+}
+
+
+#if 0
+void cpu_combiner(void *KEY, val_t* VAL, int keySize, int valCount, cpu_context *d_g_state, int map_task_idx){
+		
+		
+}//reduce2
+#endif
+
+void gpu_card_map(void *key, void *val, int keySize, int valSize, panda_gpu_card_context *pgcc, int map_task_idx){
+
+#if 0
+	CMEANS_KEY_T* pKey = (CMEANS_KEY_T*)key;
+	CMEANS_VAL_T* pVal = (CMEANS_VAL_T*)val;
+	
+	int dim		= pKey->dim;
+	int K		= pKey->K;
+	int start	= pKey->start;
+	int end		= pKey->end;
+	int index	= pKey->map_task_id;
+	int tid		= 0;
+
+	int my_num_events	= end - start;
+	int events_per_gpu	= my_num_events;
+	
+	/*
+	float ** tempClusters		= (float **)malloc(sizeof(float*)*pgcc->input_key_vals.num_input_record);
+	float ** tempDenominators	= (float **)malloc(sizeof(float*)*pgcc->input_key_vals.num_input_record);
+	for (int i=0; i<pgcc->input_key_vals.num_input_record; i++){
+		//tempClusters = pVal->d_tempClusters;
+		tempClusters[i] = (float *)malloc(sizeof(float)*K*dim);
+		//tempDenominators = pVal->d_tempDenominators;
+		tempDenominators[i] = (float *)malloc(sizeof(float)*K);
+	}	//for
+	*/
+
+	float *tempClusters		= (float *)malloc(sizeof(float)*K*dim);
+	float *tempDenominators = (float *)malloc(sizeof(float)*K);
+		
+	//pVal->d_tempClusters;			//+index*dim*K;
+	//float ** tempDenominators = pVal->d_tempDenominators;	//+index*K;
+		
+	ShowLog("GPU %d, Starting Event: %d, Ending Event: %d, My Num Events: %d dim:%d K:%d\n",tid,start,end,my_num_events,dim, K);
+
+		
+		float *myEvents			= (float *)malloc(sizeof(float)*my_num_events*dim);							//pVal->d_Points;
+		float *myClusters		= (float *)malloc(sizeof(float)*dim*K);										//pVal->d_Clusters;
+		float *transposedEvents = (float *)malloc(sizeof(float)*my_num_events*dim);
+		
+		for(int i=0; i< my_num_events; i++) {
+			for(int j=0; j< dim; j++) {
+            transposedEvents[j*my_num_events+i] = myEvents[i*dim+j];
+			}//for
+		}//for
+
+        float *d_distanceMatrix;
+        checkCudaErrors(cudaMalloc((void**)&d_distanceMatrix, sizeof(float)*my_num_events*K));
+
+        #if !LINEAR
+            float* d_memberships;
+            checkCudaErrors(cudaMalloc((void**)&d_memberships, sizeof(float)*my_num_events*K));
+        #endif
+
+        float* d_E;
+        checkCudaErrors(cudaMalloc((void**)&d_E, sizeof(float)*my_num_events*dim));
+        float* d_C;
+        checkCudaErrors(cudaMalloc((void**)&d_C, sizeof(float)*K*dim));
+        float* d_nC;
+        checkCudaErrors(cudaMalloc((void**)&d_nC, sizeof(float)*K*dim));
+        float* d_denoms;
+        checkCudaErrors(cudaMalloc((void**)&d_denoms, sizeof(float)*K));
+
+		int size = sizeof(float)*dim*my_num_events;
+		float* temp_fcs_data = (float*) malloc(size);
+        for(int d=0; d < dim; d++) {
+		memcpy(&temp_fcs_data[d*my_num_events],&transposedEvents[d*my_num_events + tid*events_per_gpu],sizeof(float)*my_num_events);
+        }//for
+        checkCudaErrors(cudaMemcpy( d_E, temp_fcs_data, size,cudaMemcpyHostToDevice) );
+        cudaThreadSynchronize();
+        free(temp_fcs_data);
+
+        size = sizeof(float)*dim*K;
+        checkCudaErrors(cudaMemcpy(d_C, myClusters, size, cudaMemcpyHostToDevice));
+        int iterations = 0;
+        int num_blocks_distance = my_num_events / NUM_THREADS_DISTANCE;
+		//printf("Starting C-means -2 :num_blocks_distance:%d my_num_events:%d NUM_THREADS_DISTANCE:%d\n",num_blocks_distance, my_num_events, NUM_THREADS_DISTANCE);
+        if(my_num_events % NUM_THREADS_DISTANCE) {
+            num_blocks_distance++;
+        }//if
+        int num_blocks_membership = my_num_events / NUM_THREADS_MEMBERSHIP;
+        if(my_num_events % NUM_THREADS_DISTANCE) {
+            num_blocks_membership++;
+        }//if
+
+        int num_blocks_update = K / NUM_CLUSTERS_PER_BLOCK;
+        if(K % NUM_CLUSTERS_PER_BLOCK) {
+            num_blocks_update++;
+    }
+
+    //size = sizeof(float)*NUM_DIMENSIONS*my_num_events;
+	ComputeDistanceMatrix<<< dim3(num_blocks_distance,K), NUM_THREADS_DISTANCE >>>(d_C, d_E, d_distanceMatrix, my_num_events, dim);
+	//ComputeMembershipMatrixLinear<<< num_blocks_membership, NUM_THREADS_MEMBERSHIP >>>(d_distanceMatrix, my_num_events, K);
+	UpdateClusterCentersGPU3<<< dim3(dim, num_blocks_update), NUM_THREADS_UPDATE >>>(d_C, d_E, d_nC, d_distanceMatrix, my_num_events, K, dim);
+	ComputeClusterSizes<<< K, 512 >>>( d_distanceMatrix, d_denoms, my_num_events);
+	
+	checkCudaErrors(cudaMemcpy(tempClusters, d_nC, sizeof(float)*K*dim, cudaMemcpyDeviceToHost));
+	checkCudaErrors(cudaMemcpy(tempDenominators, d_denoms, sizeof(float)*K, cudaMemcpyDeviceToHost));
+	
+	memcpy(pVal->myClusters,tempClusters,1);
+	memcpy(pVal->myDenominators, tempDenominators,1);
+
+	GPUCardEmitMapOutput(pKey, pVal, sizeof(CMEANS_KEY_T), sizeof(CMEANS_VAL_T), pgcc, map_task_idx);
+	//////////////Reduce Function
+#endif
+}
+
 void panda_cpu_map(void *key, void *val, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx){
 #if 0
 	CMEANS_KEY_T* pKey = (CMEANS_KEY_T*)key;
@@ -120,7 +254,7 @@ __global__ void ComputeClusterSizes(float* memberships, float* sizes, int my_num
 }
 
 __global__ void UpdateClusterCentersGPU3(const float* oldClusters, 
-										 const float* events, float* newClusters, float* memberships, int my_num_events, int numClusters, int dim) {
+ const float* events, float* newClusters, float* memberships, int my_num_events, int numClusters, int dim) {
     float membershipValue;
     float eventValue;
 
@@ -214,7 +348,7 @@ __device__ float CalculateDistanceGPU(const float* clusters, const float* events
 
 __global__ void ComputeDistanceMatrix(const float* clusters, const float* events, float* matrix, int my_num_events, int dim) {
 	
-    //copy the relavant center for this block into shared memory   
+    	//copy the relavant center for this block into shared memory   
 	//if (dim>100){
 	//printf("error!\n");
 	//return;
@@ -237,6 +371,7 @@ __global__ void ComputeDistanceMatrix(const float* clusters, const float* events
 
 }//ComputeDistanceMatrix
 
+#if 0
 __global__ void ComputeMembershipMatrixLinear(float* distances, int my_num_events, int numCluster) {
     float membershipValue;
     float denom = 0.0f;
@@ -272,6 +407,7 @@ __global__ void ComputeMembershipMatrixLinear(float* distances, int my_num_event
         }
     }
 }//ComputeMembershipMatrixLinear
+#endif
 
 void panda_gpu_card_reduce(void *key, val_t* vals, int keySize, int valCount, panda_gpu_card_context* pgcc){
 
@@ -361,33 +497,33 @@ void panda_gpu_card_map(void *key, void *val, int keySize, int valSize, panda_gp
 		}//for
 
         float *d_distanceMatrix;
-        checkCudaErrors(cudaMalloc((void**)&d_distanceMatrix, sizeof(float)*my_num_events*K));
+        cudaMalloc((void**)&d_distanceMatrix, sizeof(float)*my_num_events*K);
 
         #if !LINEAR
             float* d_memberships;
-            checkCudaErrors(cudaMalloc((void**)&d_memberships, sizeof(float)*my_num_events*K));
+            cudaMalloc((void**)&d_memberships, sizeof(float)*my_num_events*K);
         #endif
 
         float* d_E;
-        checkCudaErrors(cudaMalloc((void**)&d_E, sizeof(float)*my_num_events*dim));
+        cudaMalloc((void**)&d_E, sizeof(float)*my_num_events*dim);
         float* d_C;
-        checkCudaErrors(cudaMalloc((void**)&d_C, sizeof(float)*K*dim));
+        cudaMalloc((void**)&d_C, sizeof(float)*K*dim);
         float* d_nC;
-        checkCudaErrors(cudaMalloc((void**)&d_nC, sizeof(float)*K*dim));
+        cudaMalloc((void**)&d_nC, sizeof(float)*K*dim);
         float* d_denoms;
-        checkCudaErrors(cudaMalloc((void**)&d_denoms, sizeof(float)*K));
+        cudaMalloc((void**)&d_denoms, sizeof(float)*K);
 
 		int size = sizeof(float)*dim*my_num_events;
 		float* temp_fcs_data = (float*) malloc(size);
         for(int d=0; d < dim; d++) {
 		memcpy(&temp_fcs_data[d*my_num_events],&transposedEvents[d*my_num_events + tid*events_per_gpu],sizeof(float)*my_num_events);
         }//for
-        checkCudaErrors(cudaMemcpy( d_E, temp_fcs_data, size,cudaMemcpyHostToDevice) );
+        cudaMemcpy( d_E, temp_fcs_data, size,cudaMemcpyHostToDevice) ;
         cudaThreadSynchronize();
         free(temp_fcs_data);
 
         size = sizeof(float)*dim*K;
-        checkCudaErrors(cudaMemcpy(d_C, myClusters, size, cudaMemcpyHostToDevice));
+        cudaMemcpy(d_C, myClusters, size, cudaMemcpyHostToDevice);
         //int iterations = 0;
         int num_blocks_distance = my_num_events / NUM_THREADS_DISTANCE;
 		//printf("Starting C-means -2 :num_blocks_distance:%d my_num_events:%d NUM_THREADS_DISTANCE:%d\n",num_blocks_distance, my_num_events, NUM_THREADS_DISTANCE);
@@ -406,12 +542,12 @@ void panda_gpu_card_map(void *key, void *val, int keySize, int valSize, panda_gp
 
     //size = sizeof(float)*NUM_DIMENSIONS*my_num_events;
 	ComputeDistanceMatrix<<< dim3(num_blocks_distance,K), NUM_THREADS_DISTANCE >>>(d_C, d_E, d_distanceMatrix, my_num_events, dim);
-	ComputeMembershipMatrixLinear<<< num_blocks_membership, NUM_THREADS_MEMBERSHIP >>>(d_distanceMatrix, my_num_events, K);
+	//ComputeMembershipMatrixLinear<<< num_blocks_membership, NUM_THREADS_MEMBERSHIP >>>(d_distanceMatrix, my_num_events, K);
 	UpdateClusterCentersGPU3<<< dim3(dim, num_blocks_update), NUM_THREADS_UPDATE >>>(d_C, d_E, d_nC, d_distanceMatrix, my_num_events, K, dim);
 	ComputeClusterSizes<<< K, 512 >>>( d_distanceMatrix, d_denoms, my_num_events);
 	
-	checkCudaErrors(cudaMemcpy(tempClusters, d_nC, sizeof(float)*K*dim, cudaMemcpyDeviceToHost));
-	checkCudaErrors(cudaMemcpy(tempDenominators, d_denoms, sizeof(float)*K, cudaMemcpyDeviceToHost));
+	cudaMemcpy(tempClusters, d_nC, sizeof(float)*K*dim, cudaMemcpyDeviceToHost);
+	cudaMemcpy(tempDenominators, d_denoms, sizeof(float)*K, cudaMemcpyDeviceToHost);
 	
 	memcpy(pVal->myClusters,tempClusters,1);
 	memcpy(pVal->myDenominators, tempDenominators,1);

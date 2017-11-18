@@ -181,7 +181,11 @@ namespace panda
 		finalValSize += valSize;
 
 	}//void
-
+	PandaMessage::PandaMessage(const bool pCopySendData){
+		singleKeySize = 0;
+		singleValSize = 0;
+		copySendData = pCopySendData;
+	}
 	PandaMessage::PandaMessage(const int pSingleKeySize, const int pSingleValSize, const bool pCopySendData)
 	{
 		singleKeySize = pSingleKeySize;

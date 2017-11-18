@@ -3,7 +3,7 @@
 namespace panda{
 class MapReduceWorker{
 public:
-	MapReduceWorker(int &, char **&);
+	MapReduceWorker(int argc, char **);
 	~MapReduceWorker();
 };
 

@@ -29,7 +29,7 @@ namespace panda
 
   void MapReduceJob::setDevice()
   {
-    checkCudaErrors(cudaSetDevice(0));
+    cudaSetDevice(0);
     MPI_Barrier(MPI_COMM_WORLD);
 	return;
 
@@ -132,7 +132,7 @@ namespace panda
 	ShowLog("cudaSetDevice [%d]",deviceNum);
 	if (deviceNum!=0)
 		ShowError("deviceNum!=0");
-	checkCudaErrors(cudaSetDevice(deviceNum));
+	cudaSetDevice(deviceNum);
     MPI_Barrier(MPI_COMM_WORLD);
   }//MPI_Barrier(MPI_COMM_WORLD);
 

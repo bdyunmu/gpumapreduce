@@ -5,7 +5,7 @@
 	File: Panda.h 
 	First Version:		2012-07-01 V0.1
 	Last  Version:		2012-09-01 V0.3
-	Last Updates:		2013-06-27 V0.43
+	Last Updates:		2017-11-07 V0.45
 
 	Developer: Hui Li (lihui@indiana.edu)
 	This is the source code for Panda, a MapReduce runtime on GPUs and CPUs.
@@ -17,7 +17,7 @@
 #endif 
 #include <pthread.h>
 */
-
+#include <cuda.h>
 #ifndef __PANDA_H__
 #define __PANDA_H__
 
@@ -106,13 +106,82 @@ void DoDiskLog(const char *str);
 #define ShowWarn(...) 
 #endif
 
-#define cudaError int
-void checkCudaErrors2(cudaError err, const char *file, const int line );
-void checkCudaErrors(int err);
-extern int cudaMemcpyHostToDevice;
+//#define cudaError int
+//void checkCudaErrors2(cudaError err, const char *file, const int line );
+//void checkCudaErrors(int err);
+struct panda_cpu_context;
+struct panda_node_context;
+struct panda_gpu_card_context;
+struct panda_gpu_context;
+
+struct keyval_t
+{
+   void *key;
+   void *val;
+   int keySize;
+   int valSize;
+   int task_idx;//map_task_idx, reduce_task_idx
+};// keyval_t;
+
+struct job_configuration
+{		
+	bool auto_tuning;
+	bool local_combiner;
+	bool iterative_support;
+
+	int num_input_record;
+	keyval_t * input_keyval_arr;
+	
+	int num_mappers;
+	int num_reducers;
+	
+	int num_gpu_core_groups;
+	int num_gpu_card_groups;
+	int num_cpus_groups;
+
+	int num_cpus_cores;
+	int auto_tuning_sample_rate;
+
+	//double cpu_ratio;
+	//int matrix_size;
+		
+};//job_configuration;
 
 extern "C"
+void *RunPandaCPUCombinerThread(void *ptr);
+extern "C"
+void ExecutePandaGPUCombiner(panda_gpu_context *pgc);
+extern "C"
+void ExecutePandaGPUSort(panda_gpu_context *pgc);
+extern "C"
+void ExecutePandaShuffleMergeGPU(panda_node_context *d_g_state_1, panda_gpu_context *d_g_state_0);
+extern "C"
+void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc);
+extern "C"
+void ExecutePandaGPUCardSort(panda_gpu_card_context *pgcc, panda_node_context *pnc);
+extern "C"
+void ExecutePandaReduceTasksOnGPU(panda_gpu_context *pgc);
+extern "C"
+void ExecutePandaReduceTasksOnGPUCard(panda_gpu_card_context *pgcc);
+extern "C"
+void* ExecutePandaCPUMapThread(void* thread_info);
+extern "C"
+void RunMapTasksOnGPUCardHost(panda_gpu_card_context pgcc);
+extern "C"
+void StartPandaGPUMapPartitioner(panda_gpu_context pgc, dim3 grids, dim3 blocks);
+extern "C"
+void RunGPUMapTasksHost(panda_gpu_context pgc, int curIter, int totalIter, dim3 grids, dim3 blocks);
+extern "C"
+void ExecutePandaGPUCardCombiner(panda_gpu_card_context *pgcc);
+extern "C"
+void ExecutePandaSortBucket(panda_node_context *pnc);
+extern "C"
+void ExecutePandaCPUCombiner(panda_cpu_context *pcc);
+extern "C" struct dim3;
+//extern "C"
 //void __checkCudaErrors(cudaError err, const char *file, const int line );
+
+/*
 class dim3{
 public:
 	int x;
@@ -120,26 +189,25 @@ public:
 	int z;
 	dim3(int, int);
 };
+*/
 
 struct panda_gpu_context;
 
-int cudaMemcpy(void *, void *, int, int);
+//int cudaMemcpy(void *, void *, int, int);
 int cudaMemGetInfo(void *, size_t *);
 //void cudaMemcpyHostToDevice();
-int cudaMalloc(void *,int);
-void cudaThreadSynchronize();
-int cudaGetDevice(int *);
+//int cudaMalloc(void *,int);
 int cudaMemset(void *,int,int);
-void cudaDeviceSynchronize();
+//void cudaDeviceSynchronize();
 void PandaLaunchMapPartitionerOnGPU(panda_gpu_context,dim3,dim3);
 void PandaLaunchMapTasksOnGPU(panda_gpu_context, int, int , dim3,dim3);
-int cudaSetDevice(int);
-int cudaGetDeviceCount(int *);
+//int cudaSetDevice(int);
+//int cudaGetDeviceCount(int *);
 double PandaTimer();
-struct cudaDeviceProp {
+/*struct cudaDeviceProp {
 	int name;
-};
-int cudaGetDeviceProperties(cudaDeviceProp *,int);
+};*/
+//int cudaGetDeviceProperties(cudaDeviceProp *,int);
 
 struct keyval_pos_t
 {
@@ -172,6 +240,7 @@ struct sorted_keyval_pos_t
 };// sorted_keyval_pos_t;
 
 //used for unsorted values
+#if 0
 struct keyval_t
 {
    void *key;
@@ -180,6 +249,7 @@ struct keyval_t
    int valSize;
    int task_idx;//map_task_idx, reduce_task_idx
 };// keyval_t;
+#endif
 
 //two direction - bounded share buffer
 // from left to right  key val buffer
@@ -218,7 +288,6 @@ struct keyvals_t
    int val_arr_len;
    val_t * vals;
 };// keyvals_t;
-		
 
 //job_configuration;
 //typedef 
@@ -232,7 +301,7 @@ struct panda_cpu_task_info_t {
 	char device_type;			//
 	panda_cpu_context *pcc;			//gpu_context  cpu_context
 	panda_node_context *pnc;		//
-	
+	void *cpu_job_conf; //depricated	
 	int start_row_idx;
 	int end_row_idx;
 
