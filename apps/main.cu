@@ -2,9 +2,9 @@
 
 Copyright 2012 The Trustees of Indiana University.  All rights reserved.
 CGL MapReduce Framework on GPUs and CPUs
-Code Name: Panda 0.43
+Code Name: Panda 0.6
 File: main.cu 
-Time: 2013-06-11 
+Time: 2017-11-11 
 Developer: Hui Li (lihui@indiana.edu)
 This is the source code for Panda, a MapReduce runtime on GPUs and CPUs.
 
@@ -16,7 +16,7 @@ This is the source code for Panda, a MapReduce runtime on GPUs and CPUs.
 #include <panda/PandaMessage.h>
 #include <panda/PandaMapReduceJob.h>
 #include <panda/IntIntSorter.h>
-
+#include <panda/PandaMapReduceWorker.h>
 #include <cudacpp/Event.h>
 #include <cudacpp/Runtime.h>
 #include <cudacpp/Stream.h>
@@ -27,8 +27,8 @@ This is the source code for Panda, a MapReduce runtime on GPUs and CPUs.
 #include <ctype.h>
 
 //-----------------------------------------------------------------------
-//usage: C-means datafile
-//param: datafile 
+//app name:
+//C-means:  fuzzy data clustering algorithm 
 //-----------------------------------------------------------------------
 
 
@@ -83,13 +83,15 @@ int main(int argc, char** argv)
 		cudaGetDeviceCount(&numgpus);
 		int global_dev_id = 0;
 		
-		//panda::MapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv, false,false,true);
-		panda::PandaMapReduceJob pjob(argc,argv,false,false,true);
+		panda::MapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv, false,false,true);
+		//panda::PandaMapReduceJob pjob(argc,argv,false,false,true);
 
 		int rank, size;
 		MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 		MPI_Comm_size(MPI_COMM_WORLD, &size);
-		//job->setMessage(new panda::PandaMPIMessage(true));
+		
+		job->setMessage(new panda::PandaFSMessage(true));
+		//pjob.setMessage(new panda::PandaMPIMessage(true));
 
 		float* d_points	 =	NULL;
 		float* d_cluster =	NULL;
