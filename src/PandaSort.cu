@@ -25,7 +25,8 @@ This is the source code for Panda, a MapReduce runtime on GPUs and CPUs.
 #define _PANDASORT_CU_
 
 #include "Panda.h"
-#include "CmeansAPI.h"
+#include "wc_api.h"
+//#include "CmeansAPI.h"
 
 //void initialize(cmp_type_t *d_data, int rLen, cmp_type_t value)
 //{

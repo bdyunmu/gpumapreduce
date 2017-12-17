@@ -3,6 +3,8 @@
 
 #include <panda/Message.h>
 #include <panda/PandaFSMessage.h>
+#include <panda/PandaMPIMessage.h>
+
 #include <panda/MapReduceWorker.h>
 #include <cudacpp/Stream.h>
 #include <oscpp/Thread.h>
@@ -107,7 +109,7 @@ namespace panda
                             const bool accumulateReduceResults  = false,
                             const bool syncOnPartitionSends     = true);
           ~PandaMapReduceWorker();
-
+	void setMessage(panda::PandaMPIMessage *msg);
 	void setMessage(panda::PandaFSMessage *msg);
       	void addInput(panda::Chunk * chunk);
 	void addCPUMapTasks(Chunk *chunk) ;

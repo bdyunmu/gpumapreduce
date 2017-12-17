@@ -26,6 +26,9 @@ This is the source code for Panda, a MapReduce runtime on GPUs and CPUs.
 #include <cstdio>
 #include <ctype.h>
 
+#include <CmeansAPI.h>
+
+
 //-----------------------------------------------------------------------
 //app name:
 //C-means:  fuzzy data clustering algorithm 
@@ -116,7 +119,6 @@ int main(int argc, char** argv)
 		cudaGetDeviceProperties(&gpu_dev, dev_id);
 		ShowLog("Configure Device ID:%d: Device Name:%s", dev_id, gpu_dev.name);
 
-#if 0		
 		CMEANS_VAL_T val;
 		//val.ptrPoints = (int *)d_points;
 		//val.ptrClusters = (int *)d_cluster;
@@ -136,6 +138,7 @@ int main(int argc, char** argv)
 		int start_i,end_i;
 		start_i = start;
 		double t1 = PandaTimer();
+#if 0
 		for (int j = 0; j < numMapperGPU; j++)
 		{	
 			end_i = start_i + numPtPerMap;
@@ -150,7 +153,7 @@ int main(int argc, char** argv)
 			val.d_Points = d_points;
 			val.d_tempClusters = d_tempClusters;
 			val.d_tempDenominators = d_tempDenominators;
-			job->addInput(new panda::VariousSizePandaChunk(&key,sizeof(CMEANS_KEY_T), &val,sizeof(CMEANS_VAL_T));
+		job->addInput(new panda::VariousSizePandaChunk(&key,sizeof(CMEANS_KEY_T), &val,sizeof(CMEANS_VAL_T));
 			//AddPandaTask(gpu_job_conf, &key, &val, sizeof(CMEANS_KEY_T), sizeof(CMEANS_VAL_T));
 			job->execute();
 			start_i = end_i;

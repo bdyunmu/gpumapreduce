@@ -18,9 +18,12 @@
 #ifndef __PANDALIB_CU__
 #define __PANDALIB_CU__
 
-#include "CmeansAPI.h"
+//#include "CmeansAPI.h"
 #include "Panda.h"
-#include "cmeans/CmeansAPI.cu"
+//#include "cmeans/CmeansAPI.cu"
+
+#include "wc_api.h"
+#include "wc/wc_api.cu"
 #include "Global.h"
 
 extern int gCommRank;
@@ -41,13 +44,14 @@ void RunMapTasksOnGPUCardHost(panda_gpu_card_context pgcc){
 
 	for (int i=0;i<pgcc.input_key_vals.num_input_record;i++){
 
-		gpu_card_map(pgcc.input_key_vals.input_keyval_arr[i].key,
+	/*	gpu_card_map(pgcc.input_key_vals.input_keyval_arr[i].key,
 			pgcc.input_key_vals.input_keyval_arr[i].val,
 			pgcc.input_key_vals.input_keyval_arr[i].keySize,
 			pgcc.input_key_vals.input_keyval_arr[i].valSize,
 			&pgcc,
 			i
-			);
+		);
+	*/
 		cudaThreadSynchronize();
 
 	}//for

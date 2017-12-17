@@ -78,35 +78,41 @@ void panda_gpu_card_reduce(void *key, val_t* vals, int keySize, int valCount, pa
 void panda_gpu_card_combiner(void *KEY, val_t* VAL, int keySize, int valCount, panda_gpu_card_context *pgcc, int map_task_idx);
 int  panda_gpu_card_compare(const void *d_a, int len_a, const void *d_b, int len_b);
 
-typedef struct
+struct CMEANS_KEY_T
 {
-		int map_task_id;
+	int map_task_id;
         int dim;	//10
         int K;		//10
         
         int start;
         int end;
-        //int global_map_id;
+        int global_map_id;
+	int local_map_id;
+	int* ptrClusterId;
+};
 
-} CMEANS_KEY_T;
-
-typedef struct
+struct CMEANS_VAL_T
 {
 
-		/*
         float *d_tempClusters;
         float *d_tempDenominators;
         float *d_Clusters;
         float *d_Points;
-		float* d_distanceMatrix;
-		*/
+	float* d_distanceMatrix;
 		
-		//float *myEvents;	//my_num_events*dim;						
-		//float *myClusters;	//dim*K;									
-		float myClusters[100];
-		float myDenominators[1000];
+	//float *myEvents;	//my_num_events*dim;						
+	//float *myClusters;	//dim*K;									
+	float myClusters[100];
+	float myDenominators[1000];
 		
-} CMEANS_VAL_T;
+};
 
+#if 0
+struct val_t
+{
+   void * val;
+   int valSize;
+};
+#endif
 
 #endif

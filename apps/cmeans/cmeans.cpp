@@ -23,8 +23,10 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include <CmeansAPI.h>
 
 
+#if 0
 typedef struct
 {
 
@@ -55,6 +57,7 @@ typedef struct
    void * val;
    int valSize;
 } val_t;
+#endif
 
 void cmeans_cpu_reduce_cpp(void *key, val_t* vals, int keySize, int valCount){
 

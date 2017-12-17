@@ -1,5 +1,5 @@
 # * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-#    Panda Code V0.45 						 11/04/2017 */
+#    Panda Code V0.60 						 11/04/2017 */
 #    							  lihui@indiana.edu */
 # * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -16,7 +16,7 @@ LIBS        = -lmpi -lmpi_cxx -lpthread
 #  with openmpi add -lmpi_cxx
 #  gcc usess -fopenmp
 #  icc uses -opnemp
-#  support c-means code
+#  support word count code
 
 OMPFLAGS    = -fopenmp
 CC          = mpicxx
@@ -51,8 +51,8 @@ CU_OBJ_FILES 	:= $(addprefix cuobj/,$(notdir $(CUDA_CU_FILES:.cu=.o)))
 TARGET_OBJ_FILES:=
 WC_OBJ_CU_FILES	:=
 
-panda: panda_cmeans
-panda_cmeans: $(APP_OBJ_FILES) $(TARGET_OBJ_FILES) $(OS_OBJ_FILES) $(PANDA_OBJ_FILES) \
+panda: panda_word_count
+panda_word_count: $(APP_OBJ_FILES) $(TARGET_OBJ_FILES) $(OS_OBJ_FILES) $(PANDA_OBJ_FILES) \
 		$(CUDA_OBJ_FILES) $(CU_OBJ_FILES) $(APP_CU_OBJ_FILES)
 		$(NVCC) $(LIBS) $(NVCCFLAGS) $(LDFLAGS) -o $@ $^
 
@@ -81,4 +81,4 @@ cuobj/%.o: apps/%.cu $(APP_H_FILES)
 	nvcc $(LIBS) $(NVCCFLAGS) $((C_FLAGS) $(INCFLAGS) -c -o $@ $<
 
 clean:
-	rm -rf obj/*.o cuobj/*.o panda_cmeans test
+	rm -rf obj/*.o cuobj/*.o panda_word_count test

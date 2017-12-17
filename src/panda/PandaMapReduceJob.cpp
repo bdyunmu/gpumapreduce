@@ -959,9 +959,10 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	  PandaPartitionCheckSends(false);
 	  StartPandaDoPartitionOnCPU();
 	  StartPandaPartitionSubSendData();
+	ShowLog("StartPandaPartitionSubSendData is done");
 
       if (syncPartSends) PandaPartitionCheckSends(true);
-
+	ShowLog("PandaPartitionCheckSends is done");
 	  /*
 	  this->pNodeContext->buckets.savedKeysBuff.clear();
 	  this->pNodeContext->buckets.savedValsBuff.clear();
@@ -974,7 +975,7 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 
   void PandaMapReduceJob::execute()
   {
-
+	ShowLog("show log 1.0");
 	//////////////////////////
 	InitPandaRuntime();
 	//////////////////////////
@@ -1025,8 +1026,11 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	
 	StartPandaGlobalPartition();
 	StartPandaPartitionCheckSends(true);
+	ShowLog("after StartPandaPartitionCheckSends");
+
 	StartPandaExitMessager();
-	
+
+	ShowLog("after StartPandaExitMessager");	
 	/////////////////////////////////
 	//	Shuffle Stage Done
 	/////////////////////////////////
@@ -1035,7 +1039,7 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	
 	//Copy recved bucket data into sorted array
 	StartPandaSortBucket();
-	
+	ShowLog("after StartPandaSortBucket");	
 	//TODO schedule
 	int start_task_id = 0;
 	int end_task_id = this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len;
