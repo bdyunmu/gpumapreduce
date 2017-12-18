@@ -1,9 +1,9 @@
 /*
 Copyright 2013 The Trustees of Indiana University.  All rights reserved.
-MapReduce Framework on GPUs and CPUs
-Code Name: Panda 0.43
+Panda MapReduce Framework on GPUs and CPUs
+Code Name: Panda 0.6
 File: PandaMPIMessage.cpp
-Time: 2013-07-11
+Time: 2017-12-11
 Developer: Hui Li (lihui@indiana.edu)
 This is the source code for Panda, a MapReduce runtime on GPUs and CPUs.
 */
@@ -19,7 +19,6 @@ namespace panda
 
 	PandaMPIMessage::PandaMPIMessage() : PandaMessage(false)
 	{
-	
 	
 	}//void
 
@@ -135,9 +134,9 @@ namespace panda
 				keyRecv[i] = new int[(counts[i * 3 + 1] + sizeof(int) - 1) / sizeof(int)];
 				valRecv[i] = new int[(counts[i * 3 + 2] + sizeof(int) - 1) / sizeof(int)];
 
-				MPI_Irecv((char*)(keyRecv[i]), counts[i * 3 + 1], MPI_CHAR, i, 1, MPI_COMM_WORLD, recvReqs + i * 3 + 1);
-				MPI_Irecv((char*)(valRecv[i]), counts[i * 3 + 2], MPI_CHAR, i, 2, MPI_COMM_WORLD, recvReqs + i * 3 + 2);
-				MPI_Irecv(keyPosKeySizeValPosValSize[i], 4*counts[i * 3 + 0], MPI_INT, i, 3, MPI_COMM_WORLD, recvReqs + i * 3 + 0);
+	MPI_Irecv((char*)(keyRecv[i]), counts[i * 3 + 1], MPI_CHAR, i, 1, MPI_COMM_WORLD, recvReqs + i * 3 + 1);
+	MPI_Irecv((char*)(valRecv[i]), counts[i * 3 + 2], MPI_CHAR, i, 2, MPI_COMM_WORLD, recvReqs + i * 3 + 2);
+	MPI_Irecv(keyPosKeySizeValPosValSize[i], 4*counts[i * 3 + 0], MPI_INT, i, 3, MPI_COMM_WORLD, recvReqs + i * 3 + 0);
 
 				MPI_Wait(recvReqs + i * 3 + 1, &stat[1]);
 				MPI_Wait(recvReqs + i * 3 + 2, &stat[2]);

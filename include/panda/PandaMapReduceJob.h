@@ -47,6 +47,9 @@ namespace panda
 	bool getEnableGPUCard()	{return enableGPUCard;}
 	bool getEnableGPU() {return enableGPU;}
 	bool getEnableCPU() {return enableCPU;}
+        void setEnableCPU(bool b) {enableCPU = b;}
+	void setEnableGPU(bool b) {enableGPU = b;}
+
 	bool enableGPU;
 	bool enableGPUCard;
 	bool enableCPU;

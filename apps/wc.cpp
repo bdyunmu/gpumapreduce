@@ -4,7 +4,6 @@
 #include <panda/PreLoadedPandaChunk.h>
 #include <panda/PandaMessage.h>
 #include <panda/PandaMapReduceJob.h>
-
 #include <panda/PandaMapReduceWorker.h>
 
 #include <cudacpp/Event.h>
@@ -18,18 +17,18 @@
 int main(int argc, char ** argv)
 {
 
+ 	if (argc != 2)
+        {
+           ShowLog("word count with panda on cpu and gpu");
+           ShowLog("usage: %s [txt path]", argv[0]);
+           exit(-1);//
+        }//if
+	if(strlen(argv[1])<2)
+	{
+	ShowLog("txt path too short");
+	exit(-1);
+	}
 
- 		if (argc != 2)
-                {
-                        ShowLog("panda word count with cpu and gpu");
-                        ShowLog("usage: %s [txt path]", argv[0]);
-                        exit(-1);//[Dimensions] [numClusters]
-                }//if
-		if(strlen(argv[1])<2)
-		{
-		ShowLog("txt path too short");
-		exit(-1);
-		}
 	//panda::MapReduceJob  * job = new panda::PandaMapReduceJob(argc, argv, true);
 	panda::MapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv, false,false,true);
 	int rank, size;
@@ -37,6 +36,8 @@ int main(int argc, char ** argv)
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 
 	job->setMessage(new panda::PandaMPIMessage(true));
+	job->setEnableCPU(true);
+	job->setEnableGPU(true);
 
 	//todo here
 
@@ -47,7 +48,7 @@ int main(int argc, char ** argv)
 	char strInput[1024];
 	sprintf(fn,argv[1]);
 	int  chunk_size = 1024;
-	ShowLog("rank:%d, after MPI_Comm_size",rank);
+	ShowLog("rank:%d, start processing txt data",rank);
 	char *chunk_data = (char *)malloc(sizeof(char)*(chunk_size+1000));
 	FILE *wcfp;
 	wcfp = fopen(fn, "r");
@@ -62,16 +63,20 @@ int main(int argc, char ** argv)
 			
 		strcpy((chunk_data + total_len),str);
 		total_len += (int)strlen(str);
-		ShowLog("MPI_Comm_size addInput");
-		if(total_len>chunk_size){
+		if(total_len>=chunk_size){
+			ShowLog("word count job->addInput");
 			job->addInput(new panda::PreLoadedPandaChunk((char *)chunk_data, total_len, NUM_ELEMENTS ));
-			job->execute();
+			//job->execute();
 			total_len=0;
 		}//if
 	}//while
+
 	//job->execute();
-	ShowLog("after MPI_Comm_size last one");
+	ShowLog("rank:%d finishing processing txt data",rank);
 	}//if
-	delete job;
+
+	job->execute();
+	//delete job;
+	MPI_Finalize();
 	return 0;
 }//int main

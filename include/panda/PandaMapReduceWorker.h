@@ -14,6 +14,7 @@
 
 
 void PandaExecuteMapTasksOnGPUCard(panda_gpu_card_context pg);
+
 namespace panda
 {
 
@@ -35,7 +36,7 @@ namespace panda
 	  bool enableGPU;
 	  bool enableGPUCard;
 
-      std::vector<Chunk * > chunks;
+      	  std::vector<Chunk * > chunks;
 
 	  std::vector<MapTask*>		gpuCardMapTasks;
 	  std::vector<MapTask *>	gpuMapTasks;
@@ -57,7 +58,7 @@ namespace panda
 	  void PandaInitMapReduceOnGPUCard();
 
 	  void PandaLaunchMessageThread();
-      //void PandaLaunchPartitionCheckSends(const bool sync);
+          //void PandaLaunchPartitionCheckSends(const bool sync);
 	  void PandaLaunchCombinerOnGPU();
 	  void PandaLaunchCombinerOnGPUCard();
 	  void PandaLaunchSortResultsOnGPU();

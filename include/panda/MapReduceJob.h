@@ -24,6 +24,8 @@ namespace panda
       virtual void addCPUMapTasks(Chunk *chunk) = 0;
       virtual void addGPUMapTasks(Chunk *chunk) = 0;
       virtual void execute() = 0;
+      virtual void setEnableGPU(bool b) = 0;
+      virtual void setEnableCPU(bool b) = 0;
   };
 }
 

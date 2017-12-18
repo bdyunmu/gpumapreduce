@@ -648,12 +648,21 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
   void PandaMapReduceJob::addInput(Chunk * chunk)
   {
 	  //chunks.push_back(chunk);
-	  if(this->getEnableCPU())
+	  static bool last = false;
+
+	  if(this->getEnableCPU()&&last){
 		addCPUMapTasks(chunk);
-	  if(this->getEnableGPU())
+		ShowLog("addCPUMapTasks");
+	  }
+	  if(this->getEnableGPU()&&!last){
 		addGPUMapTasks(chunk);
-	  if(this->getEnableGPUCard())
+		ShowLog("addGPUMapTasks");
+	  }
+	  /*if(this->getEnableGPUCard())
 		addGPUCardMapTasks(chunk);
+	  */
+	  //depricated!
+	  last = !last;
   }//void
 
   void PandaMapReduceJob::addGPUCardMapTasks(panda::Chunk *chunk)
@@ -1028,7 +1037,7 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	StartPandaPartitionCheckSends(true);
 	ShowLog("after StartPandaPartitionCheckSends");
 
-	StartPandaExitMessager();
+	//ToDO StartPandaExitMessager();
 
 	ShowLog("after StartPandaExitMessager");	
 	/////////////////////////////////
