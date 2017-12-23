@@ -1,7 +1,7 @@
 #ifndef __CUDACPP_STREAM_H__
 #define __CUDACPP_STREAM_H__
 
-#include <driver_types.h>
+//#include <driver_types.h>
 
 
 namespace cudacpp

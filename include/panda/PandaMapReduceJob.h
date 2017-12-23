@@ -30,7 +30,7 @@ namespace panda
 	std::vector<MapTask *>	gpuMapTasks;
 	std::vector<MapTask*>   gpuCardMapTasks;
 	std::vector<ReduceTask *> reduceTasks;
-	//void ExecutePandaGPUCombiner(panda_gpu_context *pgc);	
+	//To remove void ExecutePandaGPUCombiner(panda_gpu_context *pgc);	
 	panda_gpu_card_context *pGPUCardContext;
 	void addGPUCardMapTasks(panda::Chunk *chunk);
 	void AddReduceTask4GPU(panda_gpu_context* pgc, panda_node_context *pnc, int start_row_id, int end_row_id);	

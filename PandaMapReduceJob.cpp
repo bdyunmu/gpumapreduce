@@ -151,7 +151,6 @@ namespace panda
 
 	int PandaMapReduceJob::StartPandaCPUMapTasks()
 	{
-		ShowLog("8.0");
 		panda_cpu_context *pcc = this->pCPUContext;
 		panda_node_context *pnc = this->pNodeContext;
 
@@ -161,7 +160,7 @@ namespace panda
 
 		
 		int num_cpus_cores = pcc->num_cpus_cores;
-		ShowLog("9.0:num_cpus_cores:%d",pcc->num_cpus_cores);	
+		
 		int totalKeySize = 0;
 		int totalValSize = 0;
 		for(int i=0; i<pcc->input_key_vals.num_input_record; i++){
@@ -177,7 +176,7 @@ namespace panda
 		pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p = (keyval_arr_t *)malloc(sizeof(keyval_arr_t)*pcc->input_key_vals.num_input_record);
 		pcc->intermediate_key_vals.intermediate_keyval_arr_arr_len = pcc->input_key_vals.num_input_record;
 		memset(pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p, 0, sizeof(keyval_arr_t)*pcc->input_key_vals.num_input_record);
-		ShowLog("10.0");
+
 		for (int i=0; i < num_cpus_cores; i++){
 			
 			pcc->panda_cpu_task_thread_info[i].pcc = (panda_cpu_context  *)(this->pCPUContext);
@@ -224,7 +223,7 @@ namespace panda
 			if (pthread_join(pcc->panda_cpu_task_thread[tid],&exitstat)!=0)
 				ShowError("joining failed tid:%d",tid);
 		}//for
-		ShowLog("11.0");	
+	
 	}//int PandaMapReduceJob::StartPandaCPUMapTasks()
 
 int PandaMapReduceJob::StartPandaMapTasksOnGPUCard()
@@ -232,9 +231,10 @@ int PandaMapReduceJob::StartPandaMapTasksOnGPUCard()
 }
 
 
+ //void InitGPUCardMapReduce(gpu_card_context* d_g_state)
  int PandaMapReduceJob::StartPandaGPUMapTasks()
 	{		
-	ShowLog("hi here 0.0");
+
 	panda_gpu_context *pgc = this->pGPUContext;
 
 	//-------------------------------------------------------
@@ -248,13 +248,12 @@ int PandaMapReduceJob::StartPandaMapTasksOnGPUCard()
 	//if (pgc->input_key_vals.num_reducers<=0) {pgc->num_reducers = (NUM_BLOCKS)*(NUM_THREADS);}
 
 	//-------------------------------------------------------
-	//1, prepare buffer to store input data
+	//1, prepare buffer to store intermediate results
 	//-------------------------------------------------------
 
 	keyval_arr_t *h_keyval_arr_arr = (keyval_arr_t *)malloc(sizeof(keyval_arr_t)*pgc->input_key_vals.num_input_record);
 	keyval_arr_t *d_keyval_arr_arr;
 	cudaMalloc((void**)&(d_keyval_arr_arr),pgc->input_key_vals.num_input_record*sizeof(keyval_arr_t));
-	ShowLog("hi here 1.0 cudaMallc");
 	
 	for (int i=0; i<pgc->input_key_vals.num_input_record;i++){
 		h_keyval_arr_arr[i].arr = NULL;
@@ -264,14 +263,13 @@ int PandaMapReduceJob::StartPandaMapTasksOnGPUCard()
 	keyval_arr_t **d_keyval_arr_arr_p;
 	cudaMalloc((void***)&(d_keyval_arr_arr_p),pgc->input_key_vals.num_input_record*sizeof(keyval_arr_t*));
 	pgc->intermediate_key_vals.d_intermediate_keyval_arr_arr_p = d_keyval_arr_arr_p;
-
-	ShowLog("hi here 2.0 num_input_records:%d",pgc->input_key_vals.num_input_record);		
+		
 	int *count = NULL;
 	cudaMalloc((void**)(&count),pgc->input_key_vals.num_input_record*sizeof(int));
 	pgc->intermediate_key_vals.d_intermediate_keyval_total_count = count;
 	cudaMemset(pgc->intermediate_key_vals.d_intermediate_keyval_total_count,0,
 		pgc->input_key_vals.num_input_record*sizeof(int));
-	ShowLog("hi here 3.0");		
+
 	//----------------------------------------------
 	//3, determine the number of threads to run
 	//----------------------------------------------
@@ -284,7 +282,6 @@ int PandaMapReduceJob::StartPandaMapTasksOnGPUCard()
 	cudaThreadSynchronize();
 	
 	int numGPUCores = getGPUCoresNum();
-
 	dim3 blocks(THREAD_BLOCK_SIZE, THREAD_BLOCK_SIZE);
 	int numBlocks = (numGPUCores*16+(blocks.x*blocks.y)-1)/(blocks.x*blocks.y);
     	dim3 grids(numBlocks, 1);
@@ -293,7 +290,6 @@ int PandaMapReduceJob::StartPandaMapTasksOnGPUCard()
 
 	cudaDeviceSynchronize();
 	double t1 = PandaTimer();
-	ShowLog("hi here 4.0  num cores:%d",numGPUCores);	
 	
 	StartPandaGPUMapPartitioner(*pgc,grids,blocks);
 	
@@ -931,20 +927,16 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	//	StartPandaMapTasksOnGPUCard();
 	if(this->getEnableCPU())
 		StartPandaCPUMapTasks();
-
-	ShowLog("12.0");
- 
+	  
 	if(this->getEnableGPU())
 		StartPandaGPUCombiner();
-	ShowLog("13.0 GPU Combiner");
 	if(this->getEnableCPU())
 		StartPandaCPUCombiner();
-	ShowLog("14.0 CPU Combiner");
 	//if(this->getEnableGPUCard())
 	//	StartPandaGPUCardCombiner();
 
     	if (messager != NULL) messager->MsgFinalize();
-	ShowLog("15.0 MsgFinalize");
+	
 	if(this->getEnableGPU()){
 		StartPandaSortGPUResults();			
 		StartPandaLocalMergeGPUOutput();	

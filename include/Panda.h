@@ -75,6 +75,7 @@ extern int gCommRank;
 
 #ifdef _DEBUG
 #define ShowLog(...) do{printf("[%d]",gCommRank);printf("[%s]\t",__FUNCTION__);printf(__VA_ARGS__);printf("\n");fflush(stdout);}while(0)
+#define ShowLog2(...) do{printf("[%s]\t",__FUNCTION__);printf(__VA_ARGS__);printf("\n");}while(0)
 #else
 #define ShowLog(...) //do{printf(__VA_ARGS__);printf("\n");}while(0)
 #endif
@@ -624,6 +625,12 @@ void PandaEmitMapOutputOnGPUCard(void *key, void *val, int keySize, int valSize,
 void PandaEmitMapOutputOnCPU(void *key,void *val,int keySize,int valSize,panda_cpu_context *pcc,int map_task_idx);
 void PandaEmitCombinerOutputOnCPU(void *key, void *val, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx);
 void PandaEmitReduceOutputOnCPU(void*	key, void*	val, int	keySize, int	valSize, panda_cpu_context *pcc);
+
+
+extern "C"
+void PandaEmitCPUMapOutput(void *key, void * val, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx);
+__device__ void PandaGPUEmitMapOutput(void *key, void *val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx);
+
 #if 0
 __device__ void PandaEmitCombinerOutputOnGPU(void* key, void* val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx);
 __device__ void PandaEmitReduceOutputOnGPU(void*	key, void*	val, int	keySize, int	valSize, panda_gpu_context *pgc);

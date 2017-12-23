@@ -47,9 +47,9 @@ int getGPUCoresNum() {
 	else
 			sm_per_multiproc = arch_cores_sm[2];
 
+	//return ((gpu_dev.multiProcessorCount)*(sm_per_multiproc));
+	ShowLog("Configure Device ID:%d: Device Name:%s MultProcessorCount:%d sm_per_multiproc:%d", 0, gpu_dev.name,gpu_dev.multiProcessorCount,sm_per_multiproc);
 	return ((gpu_dev.multiProcessorCount)*(sm_per_multiproc));
-	//ShowLog("Configure Device ID:%d: Device Name:%s MultProcessorCount:%d sm_per_multiproc:%d", i, gpu_dev.name,gpu_dev.multiProcessorCount,sm_per_multiproc);
-
 }
 
 void sleep(int sleepMs)

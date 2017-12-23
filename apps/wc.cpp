@@ -41,7 +41,7 @@ int main(int argc, char ** argv)
 
 	//todo here
 
-	if (rank == 0)
+	//if (rank == 0)
 	{
     	char fn[256];
 	char str[512];
@@ -66,7 +66,6 @@ int main(int argc, char ** argv)
 		if(total_len>=chunk_size){
 			ShowLog("word count job->addInput");
 			job->addInput(new panda::PreLoadedPandaChunk((char *)chunk_data, total_len, NUM_ELEMENTS ));
-			//job->execute();
 			total_len=0;
 		}//if
 	}//while

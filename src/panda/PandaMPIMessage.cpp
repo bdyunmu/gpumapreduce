@@ -59,10 +59,10 @@ namespace panda
 	void PandaMPIMessage::run()
 	{
 
-		ShowLog("start PandaMPIMessage thread to run at [%d/%d]", commRank, commSize);
+		ShowLog("start PandaMPIMessage thread. run() MPI thread [%d/%d]", commRank, commSize);
 		int finishedWorkers	= 0;
 
-		bool  * workerDone					= new bool[commSize];
+		bool  * workerDone				= new bool[commSize];
 		bool  * recvingCount				= new bool[commSize];
 		int   * counts						= new int [commSize * 3];	
 		int   * zeroCounts					= new int [commSize * 3];	//[3];
@@ -93,6 +93,7 @@ namespace panda
 			//ShowLog("counts[0]:%d counts[1]:%d counts[2]:%d",counts[0],counts[1],counts[2]);
 		}//for
 		//MPI_Barrier(MPI_COMM_WORLD);
+		//ShowLog("counts[0]:%d counts[1]:%d counts[2]:%d",counts[0],counts[1],counts[2]);
 		
 		int flag;
 		innerLoopDone 	= false;
@@ -115,7 +116,7 @@ namespace panda
 			while (++index < MAX_SENDS_PER_LOOP && pollUnsent())
 			{
 				//sleep(100);
-				//ShowLog("loop to send unsent data and sleep 100ms");
+				ShowLog("loop to send unsent data and sleep 100ms");
 			}//while
 			pollPending();	
 
@@ -260,7 +261,7 @@ namespace panda
 		int zeroCount[3];
 		zeroCount[0] = zeroCount[1] = zeroCount[2] = 0;
 		PandaMessagePackage * data = NULL;
-        MPI_Request* zeroReqs = (MPI_Request*)malloc(sizeof(MPI_Request)*commSize);
+        	MPI_Request* zeroReqs = (MPI_Request*)malloc(sizeof(MPI_Request)*commSize);
 
 		do {
 			addDataLock.lock();
