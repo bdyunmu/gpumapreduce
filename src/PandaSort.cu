@@ -141,7 +141,7 @@ void ExecutePandaGPUSort(panda_gpu_context* pgc){
 			int jKeySize = h_sorted_keyval_pos_arr[j].keySize;
 			char *key_i = (char *)(intermediate_key_shared_buff + h_intermediate_keyvals_pos_arr[i].keyPos);
 			char *key_j = (char *)(sorted_keys_shared_buff + h_sorted_keyval_pos_arr[j].keyPos);
-			if (cpu_compare(key_i,iKeySize,key_j,jKeySize)!=0)
+			if (panda_cpu_compare(key_i,iKeySize,key_j,jKeySize)!=0)
 				continue;
 
 			//found the match
@@ -269,7 +269,7 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 				char *key_k = (char *)(sorted_intermediate_keyvals_arr[k].key);
 				int keySize_k = sorted_intermediate_keyvals_arr[k].keySize;
 
-				if ( cpu_compare(key_i, keySize_i, key_k, keySize_k) != 0 )
+				if ( panda_cpu_compare(key_i, keySize_i, key_k, keySize_k) != 0 )
 					continue;
 
 				//found the match
@@ -346,7 +346,7 @@ void ExecutePandaShuffleMergeGPU(panda_node_context *pnc, panda_gpu_context *pgc
 			key_1 = sorted_intermediate_keyvals_arr[j].key;
 			keySize_1 = sorted_intermediate_keyvals_arr[j].keySize;
 
-			if(cpu_compare(key_0,keySize_0,key_1,keySize_1)!=0)
+			if(panda_cpu_compare(key_0,keySize_0,key_1,keySize_1)!=0)
 				continue;
 
 			val_t *vals = sorted_intermediate_keyvals_arr[j].vals;
@@ -860,7 +860,7 @@ void PandaShuffleMergeCPU(panda_context *d_g_state_0, cpu_context *d_g_state_1){
 			key_0 = panda_sorted_intermediate_keyvals_arr[j].key;
 			keySize_0 = panda_sorted_intermediate_keyvals_arr[j].keySize;
 			
-			if(cpu_compare(key_0,keySize_0,key_1,keySize_1)!=0)
+			if(panda_cpu_compare(key_0,keySize_0,key_1,keySize_1)!=0)
 				continue;
 
 			//copy values from cpu_contex to panda context

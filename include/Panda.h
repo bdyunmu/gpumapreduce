@@ -629,7 +629,16 @@ void PandaEmitReduceOutputOnCPU(void*	key, void*	val, int	keySize, int	valSize, 
 
 extern "C"
 void PandaEmitCPUMapOutput(void *key, void * val, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx);
+extern "C"
+void PandaCPUEmitCombinerOutput(void *key, void *val, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx); 
+extern "C"
+void PandaCPUEmitReduceOutput (void* key, void * val, int keySize, int valSize, panda_cpu_context *pcc);
+
+
 __device__ void PandaGPUEmitMapOutput(void *key, void *val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx);
+__device__ void PandaGPUEmitCombinerOutput(void* key, void * val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx);
+__device__ void PandaGPUEmitReduceOutput(void * key, void *val, int keySize, int valSize, panda_gpu_context *pgc);
+
 
 #if 0
 __device__ void PandaEmitCombinerOutputOnGPU(void* key, void* val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx);
