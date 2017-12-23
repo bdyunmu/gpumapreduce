@@ -10,7 +10,7 @@ INCFLAGS    = -I. -I/opt/openmpi/include
 CFLAGS      = $(OPTFLAGS) $(INCFLAGS) -DBLOCK_SHARED_MEM_OPTIMIZATION=0 
 NVCCFLAGS   = $(CFLAGS) -arch=sm_50
 LDFLAGS	    = -L/opt/openmpi/lib/ -L./libs
-LIBS        = -lmpi -lmpi_cxx -lpthread
+LIBS        = -lmpi -lpthread
 
 #  note:
 #  with openmpi add -lmpi_cxx
@@ -24,7 +24,7 @@ MPICC       = mpicxx
 NVCC        = nvcc
 
 NVCCFLAGS  += -lcudart
-INCFLAGS   += -I/usr/include/ 
+INCFLAGS   += -I/usr/include/  -I/usr/local/cuda/include
 INCFLAGS   += -I./include -I./apps/ -I./include/panda -I./ 
 LDFLAGS    += -L/usr/local/cuda/lib64/ 
 
