@@ -208,7 +208,8 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 	int merged_key_arr_len = 0;
 	keyvals_t * merged_keyvals_arr = NULL;
 
-	int num_threads = pcc->num_cpus_cores;
+	int num_threads = pcc->num_cpus_cores > pcc->input_key_vals.num_input_record? pcc->input_key_vals.num_input_record:pcc->num_cpus_cores;
+
 	int num_records_per_thread = (pcc->input_key_vals.num_input_record)/(num_threads);
 	
 	int start_idx = 0;
@@ -250,7 +251,7 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 		char *val_p,*key_p;
 		int counter = 0;
 		//bool local_combiner = pnc->local_combiner;
-		//TODO
+		//TODO sorting there is no need to combine the vals 
 		bool local_combiner = true;
 
 		for(int local_idx = 0; local_idx<(shared_arr_len); local_idx++){

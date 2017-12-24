@@ -37,7 +37,7 @@ int main(int argc, char ** argv)
 
 	job->setMessage(new panda::PandaMPIMessage(true));
 	job->setEnableCPU(true);
-	job->setEnableGPU(true);
+	//job->setEnableGPU(true);
 
 	//todo here
 

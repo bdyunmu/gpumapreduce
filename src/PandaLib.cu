@@ -1,4 +1,4 @@
-/*	
+/*
 	
 	Copyright 2012 The Trustees of Indiana University.  All rights reserved.
 	CGL MapReduce Framework on GPUs and CPUs.
@@ -242,7 +242,6 @@ void *RunPandaCPUCombinerThread(void *ptr){
 		(val_t_arr[index]).valSize = first_kv_p->valSize;
 		(val_t_arr[index]).val = (char*)shared_buff + first_kv_p->valPos;
 
-		//ShowLog("hi i:%d",i);
 		for (int j=i+1;j<unmerged_shared_arr_len;j++){
 
 			keyval_pos_t *next_kv_p = (keyval_pos_t *)((char *)shared_buff + shared_buff_len - sizeof(keyval_pos_t)*(unmerged_shared_arr_len-j));
@@ -262,19 +261,18 @@ void *RunPandaCPUCombinerThread(void *ptr){
 		int valCount = index+1;
 		total_intermediate_keyvalue_pairs += valCount;
 		if(valCount>1){
-		//cpu_combiner(iKey,val_t_arr,iKeySize,(valCount),d_g_state,start_idx);
-		int aa = 1;	
-		}   //int
+			panda_cpu_combiner(iKey,val_t_arr,iKeySize,(valCount),pcc,start_idx);
+		}//int
 		else{
 			first_kv_p->next_idx = _COMBINE;
 			first_kv_p->task_idx = start_idx;
 		}
 		num_keyval_pairs_after_combiner++;
 	}//for
-	ShowLog("hi 3 9.999");
+	ShowLog("cpu combiner thread is done.");
 	free(val_t_arr);
 
-	//d_g_state->intermediate_keyval_total_count[start_idx] = num_keyval_pairs_after_combiner;
+	pcc->intermediate_key_vals.intermediate_keyval_total_count[start_idx] = num_keyval_pairs_after_combiner;
 	/*
 	ShowLog("CPU_GROUP_ID:[%d] Map_Idx:%d  Done:%d Combiner: %d => %d Compress Ratio:%f",
 		d_g_state->cpu_group_id, 
@@ -311,7 +309,7 @@ void ExecutePandaGPUCombiner(panda_gpu_context * pgc){
 
 void ExecutePandaCPUCombiner(panda_cpu_context *pcc){
 
-	ShowLog("13.5");
+	ShowLog("13.50");
 	if (pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p == NULL)	{ ShowError("intermediate_keyval_arr_arr_p == NULL"); exit(-1); }
 	if (pcc->intermediate_key_vals.intermediate_keyval_arr_arr_len <= 0)	{ ShowError("no any input keys"); exit(-1); }
 	if (pcc->num_cpus_cores <= 0)	{ ShowError("pcc->num_cpus == 0"); exit(-1); }
@@ -322,7 +320,7 @@ void ExecutePandaCPUCombiner(panda_cpu_context *pcc){
 
 	keyval_arr_t *d_keyval_arr_p;
 	int *count = NULL;
-	ShowLog("13.6 num_input_record:%d",pcc->input_key_vals.num_input_record);
+	ShowLog("13.60 num_input_record:%d",pcc->input_key_vals.num_input_record);
 	ShowLog("13.65 num_cpus_cores:%d",pcc->num_cpus_cores);
 
 	int num_threads = pcc->num_cpus_cores > pcc->input_key_vals.num_input_record ? pcc->input_key_vals.num_input_record : pcc->num_cpus_cores;
@@ -360,6 +358,8 @@ void ExecutePandaGPUCardCombiner(panda_gpu_card_context *pgcc){
 void ExecutePandaSortBucket(panda_node_context *pnc)
 {
 	  int numBucket = pnc->recv_buckets.savedKeysBuff.size();
+	  ShowLog("Hey Important :  !!!get numBucket:%d",numBucket);
+
 	  keyvals_t *sorted_intermediate_keyvals_arr = pnc->sorted_key_vals.sorted_intermediate_keyvals_arr;
 	  char *key_0, *key_1;
 	  int keySize_0, keySize_1;
@@ -1038,11 +1038,11 @@ __device__ void PandaEmitReduceOutputOnGPU(
 
 }//__device__ 
 
-void PandaEmitReduceOutputOnCPU (	void*		key,
-								void*		val,
-								int		keySize,
-								int		valSize,
-								panda_cpu_context *pcc){
+void PandaEmitReduceOutputOnCPU (void*	key,
+				void*		val,
+				int		keySize,
+				int		valSize,
+				panda_cpu_context *pcc){
 
 			/*keyval_t *p = &(pcc->reduced_key_vals.reduced_keyval_arr[TID]);
 			p->keySize = keySize;
@@ -1453,11 +1453,11 @@ void *PandaThreadLaunchCombinerOnCPU(void *ptr){
 	keyval_arr_t *kv_arr_p	= (keyval_arr_t *)&(pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[start_idx]);
 
 	int unmerged_shared_arr_len = *kv_arr_p->shared_arr_len;
-    int *shared_buddy			= kv_arr_p->shared_buddy;
-    int shared_buddy_len		= kv_arr_p->shared_buddy_len;
-    char *shared_buff = kv_arr_p->shared_buff;
-    int shared_buff_len = *kv_arr_p->shared_buff_len;
-    int shared_buff_pos = *kv_arr_p->shared_buff_pos;
+    	int *shared_buddy			= kv_arr_p->shared_buddy;
+    	int shared_buddy_len		= kv_arr_p->shared_buddy_len;
+    	char *shared_buff = kv_arr_p->shared_buff;
+    	int shared_buff_len = *kv_arr_p->shared_buff_len;
+    	int shared_buff_pos = *kv_arr_p->shared_buff_pos;
 
 	val_t *val_t_arr = (val_t *)malloc(sizeof(val_t)*unmerged_shared_arr_len);
 	if (val_t_arr == NULL) ShowError("there is no enough memory");
@@ -1783,7 +1783,7 @@ void PandaEmitMapOutputOnCPU(void *key, void *val, int keySize, int valSize, pan
 	
 	if(map_task_idx >= pcc->input_key_vals.num_input_record) {	ShowError("error ! map_task_idx >= d_g_state->num_input_record");		return;	}
 	keyval_arr_t *kv_arr_p = &(pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[map_task_idx]);
-
+	
 	char *buff = (char*)(kv_arr_p->shared_buff);
 	
 	if (!((*kv_arr_p->shared_buff_pos) + keySize + valSize < (*kv_arr_p->shared_buff_len) - sizeof(keyval_pos_t)*((*kv_arr_p->shared_arr_len)+1))){
@@ -1825,7 +1825,7 @@ void PandaEmitMapOutputOnCPU(void *key, void *val, int keySize, int valSize, pan
 	memcpy((char *)(buff) + kv_p->valPos, val, valSize);
 	kv_p->valSize = valSize;
 	(kv_arr_p->arr) = kv_p;
-
+	
 }//__device__
 
 #endif //__PANDALIB_CU__

@@ -179,16 +179,20 @@ namespace panda
 		const int valSize,
 		const int maxlen)
 	{
+		ShowLog("1.1");
 		PandaMessagePackage * data  = new PandaMessagePackage;
+		data->counts = new int[4];
 
-		data->flag		= new volatile bool;
+		data->flag	= new volatile bool;
 		data->waiting	= new volatile bool;
-		*data->flag		= false;
+		*data->flag	= false;
 		*data->waiting	= false;
+		data->reqs = (MPI_Request *)malloc(sizeof(MPI_Request)*4);	
 
 		//write to disk for fault tolerance
 		if (copySendData)
 		{
+		ShowLog("1.2");
 			if (keySize > 0 && keys != NULL)
 			{
 				data->keysBuff = new char[keySize];
@@ -225,10 +229,10 @@ namespace panda
 			data->valsBuff						= vals;
 			data->keyPosKeySizeValPosValSize	= keyPosKeySizeValPosValSize;
 		}//else
-
+		ShowLog("1.3");
 		data->keyBuffSize	= keySize;
 		data->valBuffSize	= valSize;
-		data->rank			= rank;
+		data->rank		= rank;
 
 		if (rank == commRank)
 		{
@@ -244,19 +248,20 @@ namespace panda
 			data->counts[2] = valSize;
 			data->done[0]   = data->done[1] = data->done[2] = data->done[3] = false;
 		} 	//else
-
+		ShowLog("1.4");
 		PandaMessageIORequest * req = new PandaMessageIORequest(data->flag, data->waiting, 
 			4*data->counts[0]*sizeof(int) + data->counts[1] + data->counts[2]);
 		data->cond = &req->condition();
 		addDataLock.lock();
 		needsToBeSent.push_back(data);
 		addDataLock.unlock();
+		ShowLog("1.5");
 		return req;
 	}
 
 
 	bool PandaMPIMessage::pollUnsent()
-	{
+		{
 
 		int zeroCount[3];
 		zeroCount[0] = zeroCount[1] = zeroCount[2] = 0;
@@ -283,19 +288,19 @@ namespace panda
 			return false;
 
 		ShowLog("start to send out a data from %d to %d  data: maxlen:%d  keySize:%d  valSize:%d",
-			commRank, data->rank, data->counts[0], data->counts[1], data->counts[2]);
+					commRank, data->rank, data->counts[0], data->counts[1], data->counts[2]);
 
 		if (data->rank == commRank)
 		{
 			if (data->counts[0] == 0)
 			{
-				//ShowLog("data->counts[0] == 0 add null data to local bucket");
-				PandaAddRecvedBucket((char *)(data->keysBuff), (char *)(data->valsBuff), data->keyPosKeySizeValPosValSize, data->keyBuffSize, data->valBuffSize,data->counts[0]);
+	//ShowLog("data->counts[0] == 0 add null data to local bucket");
+	PandaAddRecvedBucket((char *)(data->keysBuff), (char *)(data->valsBuff), data->keyPosKeySizeValPosValSize, data->keyBuffSize, data->valBuffSize,data->counts[0]);
 			}
 			else if (data->counts[0] > 0)
 			{
-				//ShowLog("data->counts[0] > 0 add data to local bucket");
-				PandaAddRecvedBucket((char *)(data->keysBuff), (char *)(data->valsBuff), data->keyPosKeySizeValPosValSize, data->keyBuffSize, data->valBuffSize,data->counts[0]);
+	//ShowLog("data->counts[0] > 0 add data to local bucket");
+	PandaAddRecvedBucket((char *)(data->keysBuff), (char *)(data->valsBuff), data->keyPosKeySizeValPosValSize, data->keyBuffSize, data->valBuffSize,data->counts[0]);
 			}	//if
 			else if (data->counts[0] < 0)
 			{
@@ -345,6 +350,7 @@ namespace panda
 				ShowError("!  data->valBuffSize != data->counts[2]");
 
 			if(data->counts[0] > 0){
+			ShowLog("MPI_Isend 123456769");
 			MPI_Isend(data->counts,      3,    MPI_INT,     data->rank,  0,  MPI_COMM_WORLD, &data->reqs[0]);
 			MPI_Isend(data->keysBuff,    data->keyBuffSize, MPI_CHAR, data->rank, 1, MPI_COMM_WORLD, &data->reqs[1]);
 			MPI_Isend(data->valsBuff,    data->valBuffSize, MPI_CHAR, data->rank, 2, MPI_COMM_WORLD, &data->reqs[2]);
@@ -437,7 +443,7 @@ namespace panda
 		memcpy(valSizeArray, keyPosKeySizeValPosValSize+3*maxlen, maxlen*sizeof(int));
 		pnc->recv_buckets.valSize.push_back(valSizeArray);
 
-		int *counts = new int[3];
+		int *counts = new int[4];
 		counts[0] = maxlen;
 		counts[1] = keyBuffSize;
 		counts[2] = valBuffSize;

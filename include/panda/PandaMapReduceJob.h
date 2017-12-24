@@ -126,7 +126,7 @@ namespace panda
                                      const int singleValSize);
       virtual void partitionSubDoNullPartitioner(const int numKeys);
       virtual void partitionSubSendData(const int singleKeySize, const int singleValSize);
-      virtual void StartPandaPartitionCheckSends(const bool sync);
+      //virtual void StartPandaPartitionCheckSends(const bool sync);
 
       virtual void partitionSub(void * const memPool,
                                 void * const keySpace,

@@ -20,6 +20,7 @@ namespace oscpp
 	}//
 
 	void AsyncIORequest::sync(){
+
 	}
 
 	bool AsyncIORequest::hasError(){

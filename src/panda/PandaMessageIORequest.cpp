@@ -1,5 +1,6 @@
 #include <panda/PandaMessageIORequest.h>
 #include <oscpp/Thread.h>
+#include <Panda.h>
 
 namespace panda
 {
@@ -35,11 +36,13 @@ namespace panda
 
   bool PandaMessageIORequest::query()
   {
+	ShowLog("query:%d",(int)*flag);
     return *flag;
   }//bool
 
   void PandaMessageIORequest::sync()
   {
+	ShowLog("sync cond.lock");
     cond.lockMutex();
     if (*flag)
     {
@@ -47,6 +50,7 @@ namespace panda
       return;
     }
     *waiting = true;
+	ShowLog("sync cond.wait");
     cond.wait();
     *waiting = false;
     cond.unlockMutex();

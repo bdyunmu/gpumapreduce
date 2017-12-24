@@ -501,9 +501,9 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
     MessageThread->start();
   }
 
-  
-  //check whether the intermediate task has been send out
-  void PandaMapReduceJob::StartPandaPartitionCheckSends(const bool sync)
+
+#if 0
+  //void PandaMapReduceJob::StartPandaPartitionCheckSends(const bool sync)
   {
     std::vector<oscpp::AsyncIORequest * > newReqs;
     for (unsigned int j = 0; j < sendReqs.size(); ++j)
@@ -514,6 +514,7 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
     }
     sendReqs = newReqs;
   }
+#endif
 
   //The Hash Partition or Shuffle stage at the program.
   //TODO   3/6/2013
@@ -546,32 +547,24 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 
   void PandaMapReduceJob::map()
   {	
-    StartPandaMessageThread();
-    MPI_Barrier(MPI_COMM_WORLD);
-    //enqueueAllChunks();
-    StartPandaPartitionCheckSends(true);
-    //collectVariablesFromMessageAndKill();
-    //freeMapVariables();
+    //StartPandaMessageThread();
+    //StartPandaPartitionCheckSends(true);
   }	
-
   void PandaMapReduceJob::sort()
   {
   }
-
   void PandaMapReduceJob::reduce()
   {
-    //kernelStream = memcpyStream = cudacpp::Stream::nullStream;
-    //enqueueReductions();
-    //cudacpp::Runtime::sync();
   }
 
   PandaMapReduceJob::PandaMapReduceJob(int argc,
-                                               char ** argv,
-                                               const bool accumulateMapResults,
-                                               const bool accumulateReduceResults,
-                                               const bool syncOnPartitionSends)
+                                      char ** argv,
+                                      const bool accumulateMapResults,
+                                      const bool accumulateReduceResults,
+                                      const bool syncOnPartitionSends)
     : MapReduceJob(argc, argv)
   {
+	syncPartSends = true;
   }
 
   PandaMapReduceJob::~PandaMapReduceJob()
@@ -763,12 +756,23 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 
   void PandaMapReduceJob::PandaPartitionCheckSends(const bool sync)
   {
+    ShowLog("12345: sendReq.size:%d",sendReqs.size());
     std::vector<oscpp::AsyncIORequest * > newReqs;
+
     for (unsigned int j = 0; j < sendReqs.size(); ++j)
     {
-      if (sync) sendReqs[j]->sync();
-      if (sendReqs[j]->query()) delete sendReqs[j];
-      else    newReqs.push_back(sendReqs[j]);
+      if (sync) {
+	ShowLog("sync ....");
+	sendReqs[j]->sync();
+	}
+      if (sendReqs[j]->query()) {
+	ShowLog("delete sendReqs :%d",j);	
+	delete sendReqs[j];
+	}
+      else {   
+	ShowLog("newReqs.push_back");
+	newReqs.push_back(sendReqs[j]);
+	}
     }//for
     sendReqs = newReqs;
   }//void
@@ -809,7 +813,6 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 		  this->pNodeContext->buckets.counts.push_back(counts_i);
 
 	  }//for
-
 	  keyvals_t *sorted_intermediate_keyvals_arr1 = this->pNodeContext->sorted_key_vals.sorted_intermediate_keyvals_arr;
 	  ShowLog("this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len:%d", this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len);
 
@@ -820,11 +823,11 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 		val_t *vals  = sorted_intermediate_keyvals_arr1[i].vals;
 		int len = sorted_intermediate_keyvals_arr1[i].val_arr_len;
 		for (int j=0;j<len;j++){
-			ShowLog("keySize:%d  valSize:%d buckeId:%d",keySize, vals[j].valSize, bucketId);
+			ShowLog("key:%s keySize:%d  valSize:%d Dump to buckeId:%d",key, keySize, vals[j].valSize, bucketId);
 			PandaAddKeyValue2Bucket(bucketId, (char *)key, keySize,(char *)(vals[j].val),vals[j].valSize);
 		}//for
 	  }//for
-	  //ShowLog("PandaAddKeyValue2Bucket Done\n");
+	  ShowLog("PandaAddKeyValue2Bucket Done\n");
   }//void
 
   void PandaMapReduceJob::StartPandaCPUReduceTasks(){
@@ -833,11 +836,9 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 
   void PandaMapReduceJob::StartPandaPartitionSubSendData()
   {
-
-	  
-
     for (int index = 0; index < commSize; ++index)
     {
+	  ShowLog("()()()()index:%d",index);
 	  int curlen	= this->pNodeContext->buckets.counts[index][0];
 	  int maxlen	= this->pNodeContext->buckets.counts[index][1];
 	  int keySize	= this->pNodeContext->buckets.counts[index][2];
@@ -874,39 +875,42 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	  }//for
 
       int i = (index + commRank + commSize - 1) % commSize;
-      
+      ShowLog("19.0 index:%d message->sendTo : %d commSize:%d ",index,i,commSize);
       if (keySize+valSize > 0) // it can happen that we send nothing.
       {
         oscpp::AsyncIORequest * ioReq = messager->sendTo(i,
                                                        	keyBuff,
                                                        	valBuff,
-						   								keyPosKeySizeValPosValSize,
+							keyPosKeySizeValPosValSize,
                                                        	keySize,
                                                      	valSize,
-						   								curlen);
+							curlen);
+	ShowLog("Öimportant Ҫ19.5 index:%d message->sendTo : %d commSize:%d ",index,i,commSize);
         sendReqs.push_back(ioReq);
       }//if
+      ShowLog("20.0 index:%d message->sendTo : %d commSize:%d ",index,i,commSize);
     }
+	ShowLog("---------((())))------------");	
   }//void
 
   void PandaMapReduceJob::StartPandaGlobalPartition()
   {
-
+          ShowLog("1.0##########StartPandaPartitionSubSendData is done");
 	  PandaPartitionCheckSends(false);
 	  StartPandaDoPartitionOnCPU();
+	  ShowLog("2.0##########StartPandaPartitionSubSendData is done");
 	  StartPandaPartitionSubSendData();
-	  ShowLog("StartPandaPartitionSubSendData is done");
+	  ShowLog("3.0##########StartPandaPartitionSubSendData is done");
 
       if (syncPartSends) PandaPartitionCheckSends(true);
-	ShowLog("PandaPartitionCheckSends is done");
-	  /*
+	  ShowLog("4.0##########PandaPartitionCheckSends is done");
+	/*
 	  this->pNodeContext->buckets.savedKeysBuff.clear();
 	  this->pNodeContext->buckets.savedValsBuff.clear();
 	  this->pNodeContext->buckets.keyPos.clear();
 	  this->pNodeContext->buckets.valPos.clear();
 	  this->pNodeContext->buckets.counts.clear();
-	  */
-
+	*/
   }//void
 
   void PandaMapReduceJob::execute()
@@ -932,7 +936,6 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	if(this->getEnableCPU())
 		StartPandaCPUMapTasks();
 
-	ShowLog("12.0");
  
 	if(this->getEnableGPU())
 		StartPandaGPUCombiner();
@@ -940,10 +943,12 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	if(this->getEnableCPU())
 		StartPandaCPUCombiner();
 	ShowLog("14.0 CPU Combiner");
+
 	//if(this->getEnableGPUCard())
 	//	StartPandaGPUCardCombiner();
 
-    	if (messager != NULL) messager->MsgFinalize();
+    	//if (messager != NULL) messager->MsgFinalize();
+
 	ShowLog("15.0 MsgFinalize");
 	if(this->getEnableGPU()){
 		StartPandaSortGPUResults();			
@@ -962,11 +967,11 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	//	Shuffle Stage Start  //
 	///////////////////////////
 	
-	MPI_Barrier(MPI_COMM_WORLD);
+	//MPI_Barrier(MPI_COMM_WORLD);
 	
 	StartPandaGlobalPartition();
-	StartPandaPartitionCheckSends(true);
-	ShowLog("after StartPandaPartitionCheckSends");
+	//StartPandaPartitionCheckSends(true);
+	ShowLog("%T^*@#$ after StartPandaPartitionCheckSends");
 
 	//ToDO StartPandaExitMessager();
 
@@ -979,28 +984,34 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	
 	//Copy recved bucket data into sorted array
 	StartPandaSortBucket();
-	ShowLog("after StartPandaSortBucket");	
+	ShowLog("StartPandaSortBucket");
+
 	//TODO schedule
 	int start_task_id = 0;
 	int end_task_id = this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len;
+	ShowLog("Get number of tasks:%d",end_task_id);
 
 	if(this->getEnableGPU())
 		StartPandaCopyRecvedBucketToGPU(0, 0);
 	if(this->getEnableCPU())
 		StartPandaCopyRecvedBucketToCPU(0, 0);
-	if(this->getEnableGPUCard())
-		StartPandaCopyRecvedBucketToGPUCard(0, end_task_id);
+
+	ShowLog("StartPandaCopyRecvedBucketToCPU");
+
+	//if(this->getEnableGPUCard())
+	//	StartPandaCopyRecvedBucketToGPUCard(0, end_task_id);
 	
 	//StartPandaAssignReduceTaskToGPU(start_task_id, end_task_id);
 	//StartPandaAssignReduceTaskToGPUCard(start_task_id, end_task_id);
+	
 	if(this->getEnableGPU())
 		StartPandaReduceTasksOnGPU();
-	if(this->getEnableGPUCard())
-		StartPandaReduceTasksOnGPUCard();
+	//if(this->getEnableGPUCard())
+	//	StartPandaReduceTasksOnGPUCard();
 
 	//StartPandaCPUReduceTasks();
 
-    MPI_Barrier(MPI_COMM_WORLD);
+    	//MPI_Barrier(MPI_COMM_WORLD);
 
   }
 }
