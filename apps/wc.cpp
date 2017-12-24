@@ -22,7 +22,7 @@ int main(int argc, char ** argv)
            ShowLog("word count with panda on cpu and gpu");
            ShowLog("usage: %s [txt path]", argv[0]);
            exit(-1);//
-        }//if
+        }  //if
 	if(strlen(argv[1])<2)
 	{
 	ShowLog("txt path too short");

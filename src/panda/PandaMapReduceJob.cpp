@@ -539,7 +539,7 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 
     MessageThread->join();
     delete MessageThread;
-	ShowLog("MessageThread Join() completed.");
+    ShowLog("(############################)MessageThread Join() completed.");
 
   }//void
 
@@ -973,7 +973,8 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	//StartPandaPartitionCheckSends(true);
 	ShowLog("%T^*@#$ after StartPandaPartitionCheckSends");
 
-	//ToDO StartPandaExitMessager();
+	//ToDO 
+	StartPandaExitMessager();
 
 	ShowLog("after StartPandaExitMessager");	
 	/////////////////////////////////
@@ -996,7 +997,7 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	if(this->getEnableCPU())
 		StartPandaCopyRecvedBucketToCPU(0, 0);
 
-	ShowLog("StartPandaCopyRecvedBucketToCPU");
+	ShowLog("StartPandaCopyRecvedBucketToCPU_+++++++++++++++++++");
 
 	//if(this->getEnableGPUCard())
 	//	StartPandaCopyRecvedBucketToGPUCard(0, end_task_id);
