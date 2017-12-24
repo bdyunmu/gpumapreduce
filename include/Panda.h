@@ -675,7 +675,7 @@ void PandaExecuteSortOnCPU(panda_cpu_context *pcc, panda_node_context *pnc);
 void PandaExecuteSortOnGPU(panda_gpu_context *pgc);
 
 void PandaExecuteSortBucketOnCPU(panda_node_context *pnc);
-
+void ExecutePandaCPUReduceTasks(panda_cpu_context *pcc);
 int getCPUCoresNum();
 int getGPUCoresNum();
 

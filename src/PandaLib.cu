@@ -504,17 +504,20 @@ panda_cpu_context *CreatePandaCPUContext(){
 	
 }//gpu_context
 
-//void ExecutePandaCPUReduceTasks(panda_cpu_context *pcc){
+void ExecutePandaCPUReduceTasks(panda_cpu_context *pcc){
 		
 		//panda_cpu_context *pcc = this->pCPUContext;
-		//if (pcc->sorted_key_vals.sorted_keyvals_arr_len <= 0) return;
-		//for (int map_idx = 0; map_idx < pcc->sorted_key_vals.sorted_keyvals_arr_len; map_idx++){
-		//	keyvals_t *kv_p = (keyvals_t *)(&(pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[map_idx]));
-		//	if (kv_p->val_arr_len <=0) ShowError("kv_p->val_arr_len <=0");
-		//	else	panda_cpu_reduce(kv_p->key, kv_p->vals, kv_p->keySize, kv_p->val_arr_len, pcc);
-		//}//for
+		ShowLog("sorted_keyvals_arr_len:%d",pcc->sorted_key_vals.sorted_keyvals_arr_len);
+		if (pcc->sorted_key_vals.sorted_keyvals_arr_len <= 0) return;
+		for (int map_idx = 0; map_idx < pcc->sorted_key_vals.sorted_keyvals_arr_len; map_idx++){
+			keyvals_t *kv_p = (keyvals_t *)(&(pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[map_idx]));
+			if (kv_p->val_arr_len <=0) 
+				ShowError("kv_p->val_arr_len <=0");
+			else	
+				panda_cpu_reduce(kv_p->key, kv_p->vals, kv_p->keySize, kv_p->val_arr_len, pcc);
+		}//for
 		
-//}//void
+}//void
 
 
 void PandaExecuteReduceTasksOnGPUCard(panda_gpu_card_context *pgcc){
@@ -818,7 +821,7 @@ void PandaCPUEmitReduceOutput (	void*		key,
 			p->val = malloc(valSize);
 			memcpy(p->val,val,valSize);
 	*/
-			ShowLog("[panda_cpu_output]: key:%s  val:%d\n",(char*)key,*(int *)val);
+			ShowLog("[panda_reduce_output]: key:%s  val:%d\n",(char*)key,*(int *)val);
 
 }
 
