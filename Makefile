@@ -6,26 +6,22 @@
 all: panda
 
 OPTFLAGS    = -O2
-INCFLAGS    = -I. -I/opt/openmpi/include
-CFLAGS      = $(OPTFLAGS) $(INCFLAGS) -DBLOCK_SHARED_MEM_OPTIMIZATION=0 
-NVCCFLAGS   = $(CFLAGS) -arch=sm_50
-LDFLAGS	    = -L/opt/openmpi/lib/ -L./libs
+INCFLAGS    = -I/opt/openmpi/include
+CFLAGS      = $(OPTFLAGS) $(INCFLAGS) -DBLOCK_SHARED_MEM_OPTIMIZATION=0
+NVCCFLAGS   = $(CFLAGS)
+LDFLAGS	    = -L/opt/openmpi/lib/
 LIBS        = -lmpi -lpthread
 
 #  note:
-#  with openmpi add -lmpi_cxx
-#  gcc usess -fopenmp
-#  icc uses -opnemp
 #  support word count code
 
-OMPFLAGS    = -fopenmp
 CC          = mpicxx
 MPICC       = mpicxx
 NVCC        = nvcc
 
-NVCCFLAGS  += -lcudart
+NVCCFLAGS  += -lcudart -arch=sm_50
 INCFLAGS   += -I/usr/include/  -I/usr/local/cuda/include
-INCFLAGS   += -I./include -I./apps/ -I./include/panda -I./ 
+INCFLAGS   += -I./include -I./apps/ -I./include/panda -I./
 LDFLAGS    += -L/usr/local/cuda/lib64/ 
 
 APP_CPP_FILES	:= $(wildcard apps/*.cpp)
@@ -52,12 +48,10 @@ TARGET_OBJ_FILES:=
 WC_OBJ_CU_FILES	:=
 
 panda: panda_word_count
-panda_word_count: $(APP_OBJ_FILES) $(TARGET_OBJ_FILES) $(OS_OBJ_FILES) $(PANDA_OBJ_FILES) \
+
+panda_word_count: $(APP_OBJ_FILES) $(OS_OBJ_FILES) $(PANDA_OBJ_FILES) \
 		$(CUDA_OBJ_FILES) $(CU_OBJ_FILES) $(APP_CU_OBJ_FILES)
 		$(NVCC) $(LIBS) $(NVCCFLAGS) $(LDFLAGS) -o $@ $^
-
-test: obj/test.o $(OS_OBJ_FILES) $(PANDA_OBJ_FILES)
-		$(MPICC) $(LIBS) $(LDFLAGS) -o $@ $^
 
 obj/%.o: apps/%.cpp $(APP_H_FILES) 
 	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
@@ -81,4 +75,4 @@ cuobj/%.o: apps/%.cu $(APP_H_FILES)
 	nvcc $(LIBS) $(NVCCFLAGS) $((C_FLAGS) $(INCFLAGS) -c -o $@ $<
 
 clean:
-	rm -rf obj/*.o cuobj/*.o panda_word_count test
+	rm -rf obj/*.o cuobj/*.o panda_word_count 

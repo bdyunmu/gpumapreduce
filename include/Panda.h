@@ -5,7 +5,7 @@
 	File: Panda.h 
 	First Version:		2012-07-01 V0.1
 	Last  Version:		2012-09-01 V0.3
-	Last Updates:		2017-11-07 V0.45
+	Last Updates:		2017-12-24 V0.60
 
 	Developer: Hui Li (lihui@indiana.edu)
 	This is the source code for Panda, a MapReduce runtime on GPUs and CPUs.
@@ -51,9 +51,9 @@
 	}while (0)
 
 #define THREADS_PER_BLOCK	(blockDim.x * blockDim.y)
-#define BLOCK_ID			(gridDim.y	* blockIdx.x  + blockIdx.y)
-#define THREAD_ID			(blockDim.x	* threadIdx.y + threadIdx.x)
-#define TID					(BLOCK_ID * THREADS_PER_BLOCK + THREAD_ID)
+#define BLOCK_ID		(gridDim.y	* blockIdx.x  + blockIdx.y)
+#define THREAD_ID		(blockDim.x	* threadIdx.y + threadIdx.x)
+#define TID			(BLOCK_ID * THREADS_PER_BLOCK + THREAD_ID)
 //#define TID (BLOCK_ID * blockDim.x + THREAD_ID)
 
 //NOTE NUM_THREADS*NUM_BLOCKS > STRIDE !
@@ -142,9 +142,6 @@ struct job_configuration
 
 	int num_cpus_cores;
 	int auto_tuning_sample_rate;
-
-	//double cpu_ratio;
-	//int matrix_size;
 		
 };//job_configuration;
 
@@ -182,33 +179,14 @@ extern "C" struct dim3;
 //extern "C"
 //void __checkCudaErrors(cudaError err, const char *file, const int line );
 
-/*
-class dim3{
-public:
-	int x;
-	int y;
-	int z;
-	dim3(int, int);
-};
-*/
 
 struct panda_gpu_context;
 
-//int cudaMemcpy(void *, void *, int, int);
 int cudaMemGetInfo(void *, size_t *);
-//void cudaMemcpyHostToDevice();
-//int cudaMalloc(void *,int);
 int cudaMemset(void *,int,int);
-//void cudaDeviceSynchronize();
 void PandaLaunchMapPartitionerOnGPU(panda_gpu_context,dim3,dim3);
 void PandaLaunchMapTasksOnGPU(panda_gpu_context, int, int , dim3,dim3);
-//int cudaSetDevice(int);
-//int cudaGetDeviceCount(int *);
 double PandaTimer();
-/*struct cudaDeviceProp {
-	int name;
-};*/
-//int cudaGetDeviceProperties(cudaDeviceProp *,int);
 
 struct keyval_pos_t
 {
@@ -239,18 +217,6 @@ struct sorted_keyval_pos_t
    int val_arr_len;
    val_pos_t * val_pos_arr;
 };// sorted_keyval_pos_t;
-
-//used for unsorted values
-#if 0
-struct keyval_t
-{
-   void *key;
-   void *val;
-   int keySize;
-   int valSize;
-   int task_idx;//map_task_idx, reduce_task_idx
-};// keyval_t;
-#endif
 
 //two direction - bounded share buffer
 // from left to right  key val buffer
@@ -308,83 +274,10 @@ struct panda_cpu_task_info_t {
 
 };// panda_cpu_task_info_t;
 
-#if 0
-struct cpu_context
-{
-	bool iterative_support;		
-	bool local_combiner;
-	int cpu_group_id;
-	int num_input_record;
-	int num_cpus_cores;
-
-	keyval_t *input_keyval_arr;
-	keyval_arr_t *intermediate_keyval_arr_arr_p;
-	keyvals_t *sorted_intermediate_keyvals_arr;
-	int sorted_keyvals_arr_len;
-	int *intermediate_keyval_total_count;
-
-	pthread_t  *panda_cpu_task;
-	panda_cpu_task_info_t *panda_cpu_task_info;
-};
-#endif
-
-
 struct panda_gpu_card_context
 {
-
-	struct{
-	int num_input_record;
-	keyval_t *input_keyval_arr;
-	} input_key_vals;
-
-	struct{
-	int *intermediate_keyval_total_count;
-	keyval_arr_t *intermediate_keyval_arr_arr_p;
-	int intermediate_keyval_arr_arr_len;
-	} intermediate_key_vals;
-	
-	struct{
-	keyvals_t *sorted_intermediate_keyvals_arr;
-	int sorted_keyvals_arr_len;
-	}sorted_key_vals;
-	
-	struct{
-	int reduced_keyval_arr_len;
-	keyval_t* reduced_keyval_arr;
-	} reduced_key_vals;
-	
-	struct{
-	int reduced_keyval_arr_len;
-	keyval_t* reduced_keyval_arr;
-	} output_key_vals;
-
 };// gpu_card_context;
 
-
-#if 0
-//typedef 
-struct panda_context{
-
-	keyval_t * input_keyval_arr;
-	keyval_arr_t *intermediate_keyval_arr_arr_p;
-	keyvals_t * sorted_intermediate_keyvals_arr;
-	int sorted_keyvals_arr_len;
-	
-	int num_cpus_groups;
-	int num_gpu_core_groups;
-	int num_gpu_card_groups;
-	int num_all_dev_groups;
-
-	//struct cpu_context *cpu_context;
-	//struct gpu_context *gpu_core_context;
-	//struct gpu_context *gpu_card_context;
-
-	float cpu_ratio;
-	float gpu_core_ratio;
-	float gpu_card_ratio;
-
-};
-#endif
 
 //typedef
 struct panda_gpu_context
@@ -588,28 +481,6 @@ struct panda_runtime_context
 	int num_all_dev_groups;
 };
 
-#if 0
-//typedef
-struct  thread_info_t {
-
-	char *device_name;
-	int tid;			//accelerator group id
-	//int num_gpu_core_groups;		//
-	//int num_cpus;		//num of processors
-	char device_type;
-
-	void *d_g_state;	//device context
-	void *job_conf;		//job configuration
-
-	void *pcc;
-	void *pnc;
-
-	void *panda;
-	int start_idx;
-	int end_idx;
-
-};// thread_info_t;
-#endif
 
 #define GPU_CORE_ACC		0x01
 #define GPU_CARD_ACC		0x05

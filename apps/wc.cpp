@@ -37,9 +37,7 @@ int main(int argc, char ** argv)
 
 	job->setMessage(new panda::PandaMPIMessage(true));
 	job->setEnableCPU(true);
-	//job->setEnableGPU(true);
-
-	//todo here
+	job->setEnableGPU(true);
 
 	//if (rank == 0)
 	{
@@ -48,7 +46,7 @@ int main(int argc, char ** argv)
 	char strInput[1024];
 	sprintf(fn,argv[1]);
 	int  chunk_size = 1024;
-	ShowLog("rank:%d, start processing txt data",rank);
+	ShowLog("rank:[%d], start processing txt data",rank);
 	char *chunk_data = (char *)malloc(sizeof(char)*(chunk_size+1000));
 	FILE *wcfp;
 	wcfp = fopen(fn, "r");

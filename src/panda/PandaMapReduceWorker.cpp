@@ -34,16 +34,11 @@ namespace panda
 
   void PandaMapReduceWorker::PandaLaunchSortResultsOnGPUCard()
   {
-	  PandaExecuteSortOnGPUCard(this->pGPUCardContext, this->pNodeContext);
+	  //PandaExecuteSortOnGPUCard(this->pGPUCardContext, this->pNodeContext);
   }
 
   int PandaMapReduceWorker::PandaLaunchReduceTasksOnGPUCard()
 	{
-		int gpu_id, num_tasks;
-		cudaGetDevice(&gpu_id);
-		num_tasks = this->pGPUCardContext->sorted_key_vals.sorted_keyvals_arr_len;
-		ShowLog("Start %d reduce tasks on GPU id:%d",num_tasks, gpu_id);
-		PandaExecuteReduceTasksOnGPUCard(this->pGPUCardContext);
 		return 0;
 	}// int PandaMapReduceWorker
 
@@ -149,53 +144,6 @@ namespace panda
 					   
 int PandaMapReduceWorker::PandaLaunchMapTasksOnGPUCard()
 {
-
-	panda_gpu_card_context *pgcc = this->pGPUCardContext;
-	if (pgcc->input_key_vals.num_input_record <0)
-	{
-		ShowLog("Error: no any input keys");
-		exit(-1);
-	}//if
-
-	if (pgcc->input_key_vals.input_keyval_arr == NULL)
-	{
-		ShowLog("Error: input_keyval_arr == NULL");
-		exit(-1);
-	}//if
-
-	pgcc->intermediate_key_vals.intermediate_keyval_arr_arr_p = (keyval_arr_t *)malloc(sizeof(keyval_arr_t)*pgcc->input_key_vals.num_input_record);
-	pgcc->intermediate_key_vals.intermediate_keyval_arr_arr_len = pgcc->input_key_vals.num_input_record;
-	pgcc->intermediate_key_vals.intermediate_keyval_total_count = (int *)malloc(pgcc->input_key_vals.num_input_record*sizeof(int));
-	memset(pgcc->intermediate_key_vals.intermediate_keyval_total_count, 0, pgcc->input_key_vals.num_input_record * sizeof(int));
-
-	char *buff		=	(char *)malloc(sizeof(char)*GPU_SHARED_BUFF_SIZE);
-	int *int_arr	=	(int *)malloc(sizeof(int)*(pgcc->input_key_vals.num_input_record + 3));
-	int *buddy		=	int_arr+3;
-	
-	int buddy_len	=	pgcc->input_key_vals.num_input_record;
-	for (int i=0;i<buddy_len;i++){
-		buddy [i]	=	i;
-	}//for
-
-	ShowLog("pgcc->input_key_vals.num_input_record:%d",pgcc->input_key_vals.num_input_record);	
-	for (int map_idx = 0; map_idx < pgcc->input_key_vals.num_input_record; map_idx++){
-
-		(pgcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[map_idx].shared_buff)		= buff;
-		(pgcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[map_idx].shared_buff_len)	= int_arr;
-		(pgcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[map_idx].shared_buff_pos)	= int_arr+1;
-		(pgcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[map_idx].shared_arr_len)		= int_arr+2;
-		(pgcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[map_idx].arr_len)			= 0;
-		
-		*(pgcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[map_idx].shared_buff_len)	= GPU_SHARED_BUFF_SIZE;
-		*(pgcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[map_idx].shared_buff_pos)	= 0;
-		*(pgcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[map_idx].shared_arr_len)	= 0;
-		(pgcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[map_idx].shared_buddy)		= buddy;
-		(pgcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[map_idx].shared_buddy_len)	= buddy_len;
-
-	}//for
-
-	PandaExecuteMapTasksOnGPUCard(*pgcc);
-
 }
 
 
@@ -352,27 +300,6 @@ int PandaMapReduceWorker::PandaLaunchMapTasksOnGPUCard()
 
 void PandaMapReduceWorker::PandaInitMapReduceOnGPUCard()
 {
-	this->pGPUCardContext = CreatePandaGPUCardContext();
-	int numGPUCardMapTasks = gpuCardMapTasks.size();
-	if (numGPUCardMapTasks <=0){
-		ShowLog("there is no GPU Card information\n");
-		return;
-	}//if
-
-	this->pGPUCardContext->input_key_vals.num_input_record = numGPUCardMapTasks;
-	this->pGPUCardContext->input_key_vals.input_keyval_arr = (keyval_t *)malloc(numGPUCardMapTasks * sizeof(keyval_t));
-
-	for (unsigned int i = 0; i < numGPUCardMapTasks; i++) {
-		void *key = this->gpuCardMapTasks[i]->key;
-		int keySize = this->gpuCardMapTasks[i]->keySize;
-		void *val = this->gpuCardMapTasks[i]->val;
-		int valSize = this->gpuCardMapTasks[i]->valSize;
-
-		this->pGPUCardContext->input_key_vals.input_keyval_arr[i].key = key;
-		this->pGPUCardContext->input_key_vals.input_keyval_arr[i].keySize = keySize;
-		this->pGPUCardContext->input_key_vals.input_keyval_arr[i].val = val;
-		this->pGPUCardContext->input_key_vals.input_keyval_arr[i].valSize = valSize;
-	}//for
 }
 
 void PandaMapReduceWorker::PandaInitMapReduceOnGPU()
@@ -569,12 +496,6 @@ void PandaMapReduceWorker::PandaInitMapReduceOnGPU()
 
   void PandaMapReduceWorker::addGPUCardMapTasks(panda::Chunk *chunk)
   {
-	  void *key		= chunk->getKey();
-	  void *val		= chunk->getVal();
-	  int keySize	= chunk->getKeySize();
-	  int valSize	= chunk->getValSize();
-	  MapTask *pMapTask = new MapTask(keySize,key,valSize,val);
-	  gpuCardMapTasks.push_back(pMapTask);
   }//void
 		
   void PandaMapReduceWorker::addCPUMapTasks(panda::Chunk *chunk)
@@ -628,8 +549,6 @@ void PandaMapReduceWorker::PandaInitMapReduceOnGPU()
 
   void PandaMapReduceWorker::PandaLaunchCopyRecvedBucketToGPUCard(int start_task_id, int end_task_id)
   {
-	  ShowLog("copy %d chunks to GPUCard", (end_task_id - start_task_id) );
-	  AddReduceTaskOnGPUCard(this->pGPUCardContext,this->pNodeContext, start_task_id, end_task_id);
   }//void
 
   void PandaMapReduceWorker::PandaLaunchCopyRecvedBucketToCPU(int start_task_id, int end_task_id)
@@ -893,85 +812,10 @@ void PandaMapReduceWorker::PandaInitMapReduceOnGPU()
 
   }//void
 
+  //2017/12/24
+  //PandaMapReduceWorker is deprecated.
   void PandaMapReduceWorker::execute()
   {
 		
-	//while (true){
-	
-	//////////////////
-	PandaInitRuntime();		
-	//////////////////
-	
-	ShowLog("gpuMapTasks:%lu  gpuCardMapTasks:%lu  cpuMapTasks:%lu",gpuMapTasks.size(),gpuCardMapTasks.size(), cpuMapTasks.size());
-	
-	if(this->getEnableGPU())
-		PandaInitMapReduceOnGPU();
-	if(this->getEnableGPUCard())
-		PandaInitMapReduceOnGPUCard();
-	if(this->getEnableCPU())
-		PandaInitMapReduceOnCPU();
-	
-	if(this->getEnableGPU())
-		PandaLaunchMapTasksOnGPUHost();
-	if(this->getEnableGPUCard())
-		PandaLaunchMapTasksOnGPUCard();
-	if(this->getEnableCPU())
-		PandaLaunchMapTasksOnCPU();
-	  
-	if(this->getEnableGPU())
-		PandaLaunchCombinerOnGPU();
-	if(this->getEnableCPU())
-		PandaLaunchCombinerOnCPU();
-	if(this->getEnableGPUCard())
-		PandaLaunchCombinerOnGPUCard();
-   	
-	if(this->getEnableGPU()){
-		PandaLaunchSortResultsOnGPU();			
-		PandaLaunchLocalMergeOutputOnGPU();	
-	}//if
-	
-	if(this->getEnableCPU()){
-		PandaLaunchSortResultsOnCPU();
-	}//if
-
-	if(this->getEnableGPUCard()){
-		PandaLaunchSortResultsOnGPUCard();
-	}
-
-	///////////////////////////
-	//	Shuffle Stage Start  //
-	///////////////////////////
-	
-	MPI_Barrier(MPI_COMM_WORLD);
-
-	PandaLaunchGlobalHashPartition();
-
-	PandaLaunchExitMessager();
-	/////////////////////////////////
-	//	Shuffle Stage Done
-	/////////////////////////////////
-	MPI_Barrier(MPI_COMM_WORLD);
-	//Copy recved bucket data into sorted array
-	PandaLaunchSortBucket();
-	//TODO schedule
-	int start_task_id = 0;
-	int end_task_id = this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len;
-
-	if(this->getEnableGPU())
-		PandaLaunchCopyRecvedBucketToGPU(0, 0);
-	if(this->getEnableCPU())
-		PandaLaunchCopyRecvedBucketToCPU(0, 0);
-	if(this->getEnableGPUCard())
-		PandaLaunchCopyRecvedBucketToGPUCard(0, end_task_id);
-	//StartPandaAssignReduceTaskToGPU(start_task_id, end_task_id);
-	//StartPandaAssignReduceTaskToGPUCard(start_task_id, end_task_id);
-	if(this->getEnableGPU())
-		PandaLaunchReduceTasksOnGPU();
-	if(this->getEnableGPUCard())
-		PandaLaunchReduceTasksOnGPUCard();
-		//if(this->getEnableCPU())
-		//PandaLaunchReduceTasksOnCPU();
-	MPI_Barrier(MPI_COMM_WORLD);
-	  //}//while true
   }
 }

@@ -10,7 +10,6 @@
 #include <panda/PartialReducer.h>
 
 #include <panda/PandaMapReduceWorker.h>
-
 #include <panda/PandaMapReduceJob.h>
 #include <panda/EmitConfiguration.h>
 
@@ -536,20 +535,6 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
   }
 
 
-#if 0
-  //void PandaMapReduceJob::StartPandaPartitionCheckSends(const bool sync)
-  {
-    std::vector<oscpp::AsyncIORequest * > newReqs;
-    for (unsigned int j = 0; j < sendReqs.size(); ++j)
-    {
-      if (sync) sendReqs[j]->sync();
-      if (sendReqs[j]->query()) delete sendReqs[j];
-      else                      newReqs.push_back(sendReqs[j]);
-    }
-    sendReqs = newReqs;
-  }
-#endif
-
   //The Hash Partition or Shuffle stage at the program.
   //TODO   3/6/2013
   void PandaMapReduceJob::partitionSub(void * const memPool,
@@ -573,7 +558,7 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 
     MessageThread->join();
     delete MessageThread;
-    ShowLog("(############################)MessageThread Join() completed.");
+    ShowLog("MessageThread Join() completed.");
 
   }//void
 
@@ -632,8 +617,8 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 		
   void PandaMapReduceJob::addCPUMapTasks(panda::Chunk *chunk)
   {
-	  void *key		= chunk->getKey();
-	  void *val		= chunk->getVal();
+	  void *key	= chunk->getKey();
+	  void *val	= chunk->getVal();
 	  int keySize	= chunk->getKeySize();
 	  int valSize	= chunk->getValSize();
 	  MapTask *pMapTask = new MapTask(keySize,key,valSize,val);
@@ -872,7 +857,6 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
   {
     for (int index = 0; index < commSize; ++index)
     {
-	  ShowLog("()()()()index:%d",index);
 	  int curlen	= this->pNodeContext->buckets.counts[index][0];
 	  int maxlen	= this->pNodeContext->buckets.counts[index][1];
 	  int keySize	= this->pNodeContext->buckets.counts[index][2];
@@ -909,7 +893,6 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	  }//for
 
       int i = (index + commRank + commSize - 1) % commSize;
-      ShowLog("19.0 index:%d message->sendTo : %d commSize:%d ",index,i,commSize);
       if (keySize+valSize > 0) // it can happen that we send nothing.
       {
         oscpp::AsyncIORequest * ioReq = messager->sendTo(i,
@@ -919,12 +902,10 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
                                                        	keySize,
                                                      	valSize,
 							curlen);
-	ShowLog("Öimportant Ҫ19.5 index:%d message->sendTo : %d commSize:%d ",index,i,commSize);
         sendReqs.push_back(ioReq);
       }//if
       ShowLog("20.0 index:%d message->sendTo : %d commSize:%d ",index,i,commSize);
     }
-	ShowLog("---------((())))------------");	
   }//void
 
   void PandaMapReduceJob::StartPandaGlobalPartition()
@@ -958,15 +939,11 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 
 	if(this->getEnableGPU())
 		InitPandaGPUMapReduce();
-	//if(this->getEnableGPUCard())
-	//	InitPandaGPUCardMapReduce();
 	if(this->getEnableCPU())
 		InitPandaCPUMapReduce();
 
 	if(this->getEnableGPU())
 		StartPandaGPUMapTasks();
-	//if(this->getEnableGPUCard())
-	//	StartPandaMapTasksOnGPUCard();
 	if(this->getEnableCPU())
 		StartPandaCPUMapTasks();
 
@@ -978,12 +955,8 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 		StartPandaCPUCombiner();
 	ShowLog("14.0 CPU Combiner");
 
-	//if(this->getEnableGPUCard())
-	//	StartPandaGPUCardCombiner();
-
     	//if (messager != NULL) messager->MsgFinalize();
 
-	ShowLog("15.0 MsgFinalize");
 	if(this->getEnableGPU()){
 		StartPandaSortGPUResults();			
 		StartPandaLocalMergeGPUOutput();	
@@ -993,10 +966,6 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 		StartPandaSortCPUResults();
 	}//if
 
-	//if(this->getEnableGPUCard()){
-	//	StartPandaSortGPUCardResults(0,0);
-	//}
-
 	///////////////////////////
 	//	Shuffle Stage Start  //
 	///////////////////////////
@@ -1004,13 +973,11 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	//MPI_Barrier(MPI_COMM_WORLD);
 	
 	StartPandaGlobalPartition();
-	//StartPandaPartitionCheckSends(true);
-	ShowLog("%T^*@#$ after StartPandaPartitionCheckSends");
+	ShowLog("StartPandaPartitionCheckSends Done");
 
-	//ToDO 
 	StartPandaExitMessager();
 
-	ShowLog("after StartPandaExitMessager");	
+	ShowLog("StartPandaExitMessager Done");	
 	/////////////////////////////////
 	//	Shuffle Stage Done
 	/////////////////////////////////
