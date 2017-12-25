@@ -38,9 +38,9 @@ extern int gCommRank;
 
 __global__ void ExecutePandaGPUMapPartitioner(panda_gpu_context pgc)
 {
-	ShowLog2("6.0");
-	ShowLog2("gridDim.x:%d gridDim.y:%d gridDim.z:%d blockDim.x:%d blockDim.y:%d blockDim.z:%d blockIdx.x:%d blockIdx.y:%d blockIdx.z:%d\n",
-	  		gridDim.x,gridDim.y,gridDim.z,blockDim.x,blockDim.y,blockDim.z,blockIdx.x,blockIdx.y,blockIdx.z);
+	//ShowLog2("6.0");
+	//ShowLog2("gridDim.x:%d gridDim.y:%d gridDim.z:%d blockDim.x:%d blockDim.y:%d blockDim.z:%d blockIdx.x:%d blockIdx.y:%d blockIdx.z:%d\n",
+	// 		gridDim.x,gridDim.y,gridDim.z,blockDim.x,blockDim.y,blockDim.z,blockIdx.x,blockIdx.y,blockIdx.z);
 	int num_records_per_thread = (pgc.input_key_vals.num_input_record + (gridDim.x*blockDim.x*blockDim.y)-1)/(gridDim.x*blockDim.x*blockDim.y);
 	int block_start_idx = num_records_per_thread * blockIdx.x * blockDim.x * blockDim.y;
 	int thread_start_idx = block_start_idx 
@@ -54,7 +54,7 @@ __global__ void ExecutePandaGPUMapPartitioner(panda_gpu_context pgc)
 	if (thread_start_idx >= thread_end_idx)
 		return;
 
-	//if(TID==0) 	ShowWarn("hi 0 -- num_records_per_thread:%d",num_records_per_thread);
+	if(TID==0) 	ShowWarn("hi 0 -- num_records_per_thread:%d",num_records_per_thread);
 
 	int buddy_arr_len = num_records_per_thread;
 	int * int_arr = (int*)malloc((4+buddy_arr_len)*sizeof(int));
@@ -98,9 +98,7 @@ __global__ void ExecutePandaGPUMapPartitioner(panda_gpu_context pgc)
 
 void StartPandaGPUMapPartitioner(panda_gpu_context pgc, dim3 grids, dim3 blocks)
 {
-   ShowLog("5.0");
    ExecutePandaGPUMapPartitioner<<<grids,blocks>>>(pgc);
-   ShowLog("7.0");
 }
 
 
@@ -154,6 +152,137 @@ void* ExecutePandaCPUMapThread(void * ptr)
 
 void ExecutePandaReduceTasksOnGPUCard(panda_gpu_card_context *pgcc){
 }//void
+
+
+void ExecutePandaReduceTasksOnGPU(panda_gpu_context *pgc)
+{
+	if (pgc->sorted_key_vals.d_sorted_keyvals_arr_len <= 0)
+		return;
+
+	cudaThreadSynchronize(); 
+	pgc->reduced_key_vals.d_reduced_keyval_arr_len = pgc->sorted_key_vals.d_sorted_keyvals_arr_len;
+
+	cudaMalloc((void **)&(pgc->reduced_key_vals.d_reduced_keyval_arr), 
+		sizeof(keyval_t)*pgc->reduced_key_vals.d_reduced_keyval_arr_len);
+
+	pgc->output_key_vals.totalKeySize = 0;
+	pgc->output_key_vals.totalValSize = 0;
+	pgc->output_key_vals.h_reduced_keyval_arr_len = pgc->reduced_key_vals.d_reduced_keyval_arr_len;
+	pgc->output_key_vals.h_reduced_keyval_arr = (keyval_t*)(malloc(sizeof(keyval_t)*pgc->output_key_vals.h_reduced_keyval_arr_len));
+
+	cudaThreadSynchronize(); 
+	int numGPUCores = getGPUCoresNum();
+	dim3 blocks(THREAD_BLOCK_SIZE, THREAD_BLOCK_SIZE);
+	int numBlocks = (numGPUCores*16+(blocks.x*blocks.y)-1)/(blocks.x*blocks.y);
+        dim3 grids(numBlocks, 1);
+	
+	int total_gpu_threads = (grids.x*grids.y*blocks.x*blocks.y);
+	ShowLog("reduce len:%d intermediate len:%d output len:%d sorted keySize%d: sorted valSize:%d",
+		pgc->reduced_key_vals.d_reduced_keyval_arr_len, 
+		pgc->intermediate_key_vals.d_intermediate_keyval_arr_arr_len,
+		pgc->output_key_vals.h_reduced_keyval_arr_len,
+		pgc->sorted_key_vals.totalKeySize, 
+		pgc->sorted_key_vals.totalValSize);
+
+	PandaReducePartitioner<<<grids,blocks>>>(*pgc);
+
+	cudaMemcpy(pgc->output_key_vals.h_reduced_keyval_arr,
+		pgc->reduced_key_vals.d_reduced_keyval_arr,
+		sizeof(keyval_t)*pgc->reduced_key_vals.d_reduced_keyval_arr_len,
+		cudaMemcpyDeviceToHost);
+
+	for (int i = 0; i<pgc->reduced_key_vals.d_reduced_keyval_arr_len; i++){
+		pgc->output_key_vals.totalKeySize += (pgc->output_key_vals.h_reduced_keyval_arr[i].keySize+3)/4*4;
+		pgc->output_key_vals.totalValSize += (pgc->output_key_vals.h_reduced_keyval_arr[i].valSize+3)/4*4;
+	}//for
+	
+	ShowLog("Output total keySize:%f KB valSize:%f KB\n",(float)(pgc->output_key_vals.totalKeySize)/1024.0,(float)(pgc->output_key_vals.totalValSize)/1024.0);
+
+	pgc->output_key_vals.h_KeyBuff = malloc(sizeof(char)*pgc->output_key_vals.totalKeySize);
+	pgc->output_key_vals.h_ValBuff = malloc(sizeof(char)*pgc->output_key_vals.totalValSize);
+
+	cudaMalloc(&(pgc->output_key_vals.d_KeyBuff), sizeof(char)*pgc->output_key_vals.totalKeySize );
+	cudaMalloc(&(pgc->output_key_vals.d_ValBuff), sizeof(char)*pgc->output_key_vals.totalValSize );
+
+	copyDataFromDevice2Host4Reduce<<<grids,blocks>>>(*pgc);
+
+	cudaMemcpy(
+			pgc->output_key_vals.h_KeyBuff,
+			pgc->output_key_vals.d_KeyBuff,
+			pgc->output_key_vals.totalKeySize,
+		cudaMemcpyDeviceToHost);
+
+	cudaMemcpy(
+		pgc->output_key_vals.h_ValBuff,
+		pgc->output_key_vals.d_ValBuff,
+		pgc->output_key_vals.totalValSize,
+		cudaMemcpyDeviceToHost);
+
+	int val_pos, key_pos;
+	val_pos = key_pos = 0;
+	void *val, *key;
+
+	for (int i = 0; i<pgc->output_key_vals.h_reduced_keyval_arr_len; i++){
+		
+		val = (char *)pgc->output_key_vals.h_ValBuff + val_pos;
+		key = (char *)pgc->output_key_vals.h_KeyBuff + key_pos;
+		pgc->output_key_vals.h_reduced_keyval_arr[i].key = key;
+		pgc->output_key_vals.h_reduced_keyval_arr[i].val = val;
+		ShowLog("key:%s val:%d\n",key,*(int*)val);
+
+		val_pos += (pgc->output_key_vals.h_reduced_keyval_arr[i].valSize+3)/4*4;
+		key_pos += (pgc->output_key_vals.h_reduced_keyval_arr[i].keySize+3)/4*4;
+
+	}//for
+
+	//TODO
+	cudaThreadSynchronize(); 
+
+}//void
+
+
+__global__ void PandaReducePartitioner(panda_gpu_context pgc)
+{
+	//ShowError("ReducePartitioner Panda_GPU_Context");
+	//int num_records_per_thread = (d_g_state.d_sorted_keyvals_arr_len + (gridDim.x*blockDim.x*blockDim.y)-1)/(gridDim.x*blockDim.x*blockDim.y);
+	int num_records_per_thread = (pgc.sorted_key_vals.d_sorted_keyvals_arr_len + (gridDim.x*blockDim.x*blockDim.y)-1)/(gridDim.x*blockDim.x*blockDim.y);
+	int block_start_idx = num_records_per_thread * blockIdx.x * blockDim.x * blockDim.y;
+	int thread_start_idx = block_start_idx 
+		+ ((threadIdx.y*blockDim.x + threadIdx.x)/STRIDE)*num_records_per_thread*STRIDE
+		+ ((threadIdx.y*blockDim.x + threadIdx.x)%STRIDE);
+
+	int thread_end_idx = thread_start_idx + num_records_per_thread*STRIDE;
+	
+	if (thread_end_idx > pgc.sorted_key_vals.d_sorted_keyvals_arr_len)
+		thread_end_idx = pgc.sorted_key_vals.d_sorted_keyvals_arr_len;
+
+	if (thread_start_idx >= thread_end_idx)
+		return;
+
+	int start_idx, end_idx;
+	for(int reduce_task_idx=thread_start_idx; reduce_task_idx < thread_end_idx; reduce_task_idx+=STRIDE){
+
+		if (reduce_task_idx==0)
+			start_idx = 0;
+		else
+			start_idx = pgc.sorted_key_vals.d_pos_arr_4_sorted_keyval_pos_arr[reduce_task_idx-1];
+		end_idx = pgc.sorted_key_vals.d_pos_arr_4_sorted_keyval_pos_arr[reduce_task_idx];
+		val_t *val_t_arr = (val_t*)malloc(sizeof(val_t)*(end_idx-start_idx));
+		
+		int keySize = pgc.sorted_key_vals.d_keyval_pos_arr[start_idx].keySize;
+		int keyPos = pgc.sorted_key_vals.d_keyval_pos_arr[start_idx].keyPos;
+		void *key = (char*)pgc.sorted_key_vals.d_sorted_keys_shared_buff+keyPos;
+				
+		for (int index = start_idx;index<end_idx;index++){
+			int valSize = pgc.sorted_key_vals.d_keyval_pos_arr[index].valSize;
+			int valPos = pgc.sorted_key_vals.d_keyval_pos_arr[index].valPos;
+			val_t_arr[index-start_idx].valSize = valSize;
+			val_t_arr[index-start_idx].val = (char*)pgc.sorted_key_vals.d_sorted_vals_shared_buff + valPos;
+		}   //for
+		if( end_idx - start_idx == 0) GpuShowError("gpu_reduce valCount ==0");
+		else panda_gpu_reduce(key, val_t_arr, keySize, end_idx-start_idx, pgc);
+	}//for
+}
 
 
 __global__ void PandaRunGPUMapTasks(panda_gpu_context pgc, int curIter, int totalIter)
@@ -883,8 +1012,10 @@ __device__ void PandaGPUEmitMapOutput(void *key, void *val, int keySize, int val
 	memcpy((char *)(buff) + kv_p->valPos, val, valSize);
 	kv_p->valSize = valSize;
 	(kv_arr_p->arr) = kv_p;
-	//kv_arr_p->arr_len++;
-	//d_g_state->d_intermediate_keyval_total_count[map_task_idx] = kv_arr_p->arr_len;
+
+	kv_arr_p->arr_len++;
+	pgc->intermediate_key_vals.d_intermediate_keyval_total_count[map_task_idx] = kv_arr_p->arr_len;
+
 }//__device__
 
 __device__ void PandaGPUEmitCombinerOutput(void *key, void *val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx){
@@ -1316,6 +1447,8 @@ __global__ void GPUCombiner(panda_gpu_context pgc)
 	int *buddy = kv_arr_p->shared_buddy;
 
 	int unmerged_shared_arr_len = *kv_arr_p->shared_arr_len;
+	GpuShowError("$$$$$$$$$$$$$$unmerged_shared_arr_len:%d",unmerged_shared_arr_len);
+
 	val_t *val_t_arr = (val_t *)malloc(sizeof(val_t)*unmerged_shared_arr_len);
 	if (val_t_arr == NULL) GpuShowError("there is no enough memory");
 

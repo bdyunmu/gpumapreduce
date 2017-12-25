@@ -9,7 +9,6 @@
 #include <panda/PandaMessage.h>
 #include <panda/PartialReducer.h>
 
-#include <panda/PandaMapReduceWorker.h>
 #include <panda/PandaMapReduceJob.h>
 #include <panda/EmitConfiguration.h>
 
@@ -23,13 +22,82 @@
 #include <cstring>
 #include <string>
 
-extern int gCommRank;
+int gCommRank = 0;
 
 namespace panda
 {
 
-  void PandaMapReduceJob::AddReduceTask4GPU(panda_gpu_context* pgc, panda_node_context *pnc, int start_row_id, int end_row_id){
-	}
+  void PandaMapReduceJob::AddReduceTask4GPU(panda_gpu_context* pgc, panda_node_context *pnc, int start_task_id, int end_task_id){
+	
+	if(end_task_id <= start_task_id)
+		return;
+		
+	keyvals_t * sorted_intermediate_keyvals_arr = pnc->sorted_key_vals.sorted_intermediate_keyvals_arr;
+		
+	int total_count = 0;
+	for(int i=start_task_id;i<end_task_id;i++){
+		total_count += sorted_intermediate_keyvals_arr[i].val_arr_len;
+	}//for
+
+	ShowLog("start_task_id:%d end_task_id:%d  total_count:%d", start_task_id, end_task_id, total_count);
+		
+	int totalKeySize = 0;
+	int totalValSize = 0;
+	for(int i=start_task_id;i<end_task_id;i++){
+		totalKeySize += (sorted_intermediate_keyvals_arr[i].keySize+3)/4*4;
+		for (int j=0;j<sorted_intermediate_keyvals_arr[i].val_arr_len;j++)
+		totalValSize += (sorted_intermediate_keyvals_arr[i].vals[j].valSize+3)/4*4;
+	}//for
+	
+	ShowLog("start_task_id:%d end_task_id:%d totalKeySize:%d totalValSize:%d  total_count:%d", 
+		start_task_id, end_task_id, totalKeySize, totalValSize, total_count);
+
+	cudaMalloc((void **)&(pgc->sorted_key_vals.d_sorted_keys_shared_buff), totalKeySize);
+	cudaMalloc((void **)&(pgc->sorted_key_vals.d_sorted_vals_shared_buff), totalValSize);
+	cudaMalloc((void **)&(pgc->sorted_key_vals.d_keyval_pos_arr), sizeof(keyval_pos_t)*total_count);
+
+	pgc->sorted_key_vals.h_sorted_keys_shared_buff = malloc(sizeof(char)*totalKeySize);
+	pgc->sorted_key_vals.h_sorted_vals_shared_buff = malloc(sizeof(char)*totalValSize);
+		
+	char *sorted_keys_shared_buff = (char *)pgc->sorted_key_vals.h_sorted_keys_shared_buff;
+	char *sorted_vals_shared_buff = (char *)pgc->sorted_key_vals.h_sorted_vals_shared_buff;
+	char *keyval_pos_arr = (char *)malloc(sizeof(keyval_pos_t)*total_count);
+
+	ShowLog("start_task_id:%d end_task_id:%d  total_count:%d", start_task_id, end_task_id, total_count);
+		
+	int sorted_key_arr_len = end_task_id - start_task_id;
+	keyval_pos_t *tmp_keyval_pos_arr = (keyval_pos_t *)malloc(sizeof(keyval_pos_t)*total_count);
+		
+	//ShowLog("GPU_ID:[%d] total #different intermediate records:%d total records:%d totalKeySize:%d KB totalValSize:%d KB", 
+	//	//	d_g_state->gpu_id, end_task_id - start_task_id, total_count, totalKeySize/1024, totalValSize/1024);
+	//			
+	int *pos_arr_4_pos_arr = (int*)malloc(sizeof(int)*(sorted_key_arr_len));
+	memset(pos_arr_4_pos_arr,0,sizeof(int)*sorted_key_arr_len);
+	int index = 0;
+	int keyPos = 0;
+	int valPos = 0;
+	for (int i = start_task_id; i < end_task_id; i++){
+		keyvals_t* p = (keyvals_t*)&(sorted_intermediate_keyvals_arr[i]);
+		memcpy(sorted_keys_shared_buff+keyPos,p->key, p->keySize);
+		for (int j=0;j<p->val_arr_len;j++){
+			tmp_keyval_pos_arr[index].keyPos = keyPos;
+			tmp_keyval_pos_arr[index].keySize = p->keySize;
+			tmp_keyval_pos_arr[index].valPos = valPos;
+			tmp_keyval_pos_arr[index].valSize = p->vals[j].valSize;
+			memcpy(sorted_vals_shared_buff + valPos,p->vals[j].val,p->vals[j].valSize);
+			valPos += (p->vals[j].valSize+3)/4*4;
+			index++;
+		}//for
+		keyPos += (p->keySize+3)/4*4;
+		pos_arr_4_pos_arr[i-start_task_id] = index;
+	}//	
+	pgc->sorted_key_vals.d_sorted_keyvals_arr_len = end_task_id-start_task_id;
+	cudaMemcpy(pgc->sorted_key_vals.d_keyval_pos_arr,tmp_keyval_pos_arr,sizeof(keyval_pos_t)*total_count,cudaMemcpyHostToDevice);
+	cudaMalloc((void**)&(pgc->sorted_key_vals.d_pos_arr_4_sorted_keyval_pos_arr),sizeof(int)*sorted_key_arr_len);
+	cudaMemcpy(pgc->sorted_key_vals.d_pos_arr_4_sorted_keyval_pos_arr,pos_arr_4_pos_arr,sizeof(int)*sorted_key_arr_len,cudaMemcpyHostToDevice);
+	cudaMemcpy(pgc->sorted_key_vals.d_sorted_keys_shared_buff, sorted_keys_shared_buff, sizeof(char)*totalKeySize,cudaMemcpyHostToDevice);
+	cudaMemcpy(pgc->sorted_key_vals.d_sorted_vals_shared_buff, sorted_vals_shared_buff, sizeof(char)*totalValSize,cudaMemcpyHostToDevice);
+}
 
   void PandaMapReduceJob::AddReduceTask4CPU(panda_cpu_context* pcc, panda_node_context *pnc, int start_task_id, int end_task_id){
 
@@ -161,23 +229,13 @@ namespace panda
 
  int PandaMapReduceJob::StartPandaReduceTasksOnGPU()
 	{
-
-		//InitGPUDevice(thread_info);
-		/*panda_context *panda = (panda_context *)(thread_info->panda);
-		gpu_context *d_g_state = (gpu_context *)(thread_info->d_g_state);
-		int num_gpu_core_groups = d_g_state->num_gpu_core_groups;
-		if ( num_gpu_core_groups <= 0){
-			ShowError("num_gpu_core_groups == 0 return");
-			return NULL;
-		}*///if
-
 		//TODO add input record gpu
 		//AddReduceInputRecordGPU(d_g_state,(panda->sorted_intermediate_keyvals_arr), thread_info->start_idx, thread_info->end_idx);
 
 		int gpu_id;
 		cudaGetDevice(&gpu_id);
 		ShowLog("Start GPU Reduce Tasks.  GPU_ID:%d",gpu_id);
-		//ExecutePandaReduceTasksOnGPU(this->pGPUContext);
+		ExecutePandaReduceTasksOnGPU(this->pGPUContext);
 		return 0;
 	}// int PandaMapReduceJob
 
@@ -267,7 +325,8 @@ int PandaMapReduceJob::StartPandaMapTasksOnGPUCard()
 
  int PandaMapReduceJob::StartPandaGPUMapTasks()
 	{		
-	ShowLog("hi here 0.0");
+
+	ShowLog("GPU Map Tasks");
 	panda_gpu_context *pgc = this->pGPUContext;
 
 	//-------------------------------------------------------
@@ -287,7 +346,7 @@ int PandaMapReduceJob::StartPandaMapTasksOnGPUCard()
 	keyval_arr_t *h_keyval_arr_arr = (keyval_arr_t *)malloc(sizeof(keyval_arr_t)*pgc->input_key_vals.num_input_record);
 	keyval_arr_t *d_keyval_arr_arr;
 	cudaMalloc((void**)&(d_keyval_arr_arr),pgc->input_key_vals.num_input_record*sizeof(keyval_arr_t));
-	ShowLog("hi here 1.0 cudaMallc");
+	ShowLog("GPU Map Tasks 2.0");
 	
 	for (int i=0; i<pgc->input_key_vals.num_input_record;i++){
 		h_keyval_arr_arr[i].arr = NULL;
@@ -298,13 +357,13 @@ int PandaMapReduceJob::StartPandaMapTasksOnGPUCard()
 	cudaMalloc((void***)&(d_keyval_arr_arr_p),pgc->input_key_vals.num_input_record*sizeof(keyval_arr_t*));
 	pgc->intermediate_key_vals.d_intermediate_keyval_arr_arr_p = d_keyval_arr_arr_p;
 
-	ShowLog("hi here 2.0 num_input_records:%d",pgc->input_key_vals.num_input_record);		
+	ShowLog("GPU Map Tasks 3.0 num_input_records:%d",pgc->input_key_vals.num_input_record);		
 	int *count = NULL;
 	cudaMalloc((void**)(&count),pgc->input_key_vals.num_input_record*sizeof(int));
 	pgc->intermediate_key_vals.d_intermediate_keyval_total_count = count;
 	cudaMemset(pgc->intermediate_key_vals.d_intermediate_keyval_total_count,0,
-		pgc->input_key_vals.num_input_record*sizeof(int));
-	ShowLog("hi here 3.0");		
+					pgc->input_key_vals.num_input_record*sizeof(int));
+	ShowLog("GPU Map Tasks 4.0");		
 	//----------------------------------------------
 	//3, determine the number of threads to run
 	//----------------------------------------------
@@ -326,7 +385,7 @@ int PandaMapReduceJob::StartPandaMapTasksOnGPUCard()
 
 	cudaDeviceSynchronize();
 	double t1 = PandaTimer();
-	ShowLog("hi here 4.0  num cores:%d",numGPUCores);	
+	ShowLog("GPU Map Tasks 5.0  num gpu cores:%d",numGPUCores);	
 	
 	StartPandaGPUMapPartitioner(*pgc,grids,blocks);
 	
@@ -335,7 +394,7 @@ int PandaMapReduceJob::StartPandaMapTasksOnGPUCard()
 
 	int num_records_per_thread = (pgc->input_key_vals.num_input_record + (total_gpu_threads)-1)/(total_gpu_threads);
 	int totalIter = num_records_per_thread;
-	//ShowLog("GPUMapPartitioner:%f totalIter:%d",t2-t1, totalIter);
+	ShowLog("num_records_per_thread:%d totalIter:%d",num_records_per_thread, totalIter);
 
 	for (int iter = 0; iter< totalIter; iter++){
 
@@ -947,13 +1006,10 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	if(this->getEnableCPU())
 		StartPandaCPUMapTasks();
 
- 
 	if(this->getEnableGPU())
 		StartPandaGPUCombiner();
-	ShowLog("13.0 GPU Combiner");
 	if(this->getEnableCPU())
 		StartPandaCPUCombiner();
-	ShowLog("14.0 CPU Combiner");
 
     	//if (messager != NULL) messager->MsgFinalize();
 
@@ -1007,19 +1063,11 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	}
 
 	ShowLog("+DONE+");
-
-	//if(this->getEnableGPUCard())
-	//	StartPandaCopyRecvedBucketToGPUCard(0, end_task_id);
 	
 	//StartPandaAssignReduceTaskToGPU(start_task_id, end_task_id);
-	//StartPandaAssignReduceTaskToGPUCard(start_task_id, end_task_id);
 	
 	if(this->getEnableGPU())
 		StartPandaReduceTasksOnGPU();
-
-	//if(this->getEnableGPUCard())
-	//	StartPandaReduceTasksOnGPUCard();
-	
 	if(this->getEnableCPU())
 		StartPandaCPUReduceTasks();
 

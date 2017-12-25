@@ -3,8 +3,8 @@
 
 #include <panda/PreLoadedPandaChunk.h>
 #include <panda/PandaMessage.h>
+#include <panda/PandaMPIMessage.h>
 #include <panda/PandaMapReduceJob.h>
-#include <panda/PandaMapReduceWorker.h>
 
 #include <cudacpp/Event.h>
 #include <cudacpp/Stream.h>
@@ -36,7 +36,7 @@ int main(int argc, char ** argv)
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 
 	job->setMessage(new panda::PandaMPIMessage(true));
-	job->setEnableCPU(true);
+	//job->setEnableCPU(true);
 	job->setEnableGPU(true);
 
 	//if (rank == 0)

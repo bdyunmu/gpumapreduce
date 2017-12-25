@@ -511,6 +511,12 @@ __device__ void PandaGPUEmitCombinerOutput(void* key, void * val, int keySize, i
 __device__ void PandaGPUEmitReduceOutput(void * key, void *val, int keySize, int valSize, panda_gpu_context *pgc);
 
 
+
+__global__ void copyDataFromDevice2Host1(panda_gpu_context pgc);
+__global__ void copyDataFromDevice2Host2(panda_gpu_context pgc);
+__global__ void copyDataFromDevice2Host4Reduce(panda_gpu_context pgc);
+__global__ void PandaReducePartitioner(panda_gpu_context pgc);
+
 #if 0
 __device__ void PandaEmitCombinerOutputOnGPU(void* key, void* val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx);
 __device__ void PandaEmitReduceOutputOnGPU(void*	key, void*	val, int	keySize, int	valSize, panda_gpu_context *pgc);

@@ -60,7 +60,7 @@ void ExecutePandaGPUSort(panda_gpu_context* pgc){
 	int numBlocks = (numGPUCores*16+(blocks.x*blocks.y)-1)/(blocks.x*blocks.y);
 	dim3 grids(numBlocks, 1);
 
-	//copyDataFromDevice2Host1<<<grids,blocks>>>(*pgc);
+	copyDataFromDevice2Host1<<<grids,blocks>>>(*pgc);
 	cudaThreadSynchronize();
 
 	//TODO intermediate keyval_arr use pos_arr
@@ -100,7 +100,7 @@ void ExecutePandaGPUSort(panda_gpu_context* pgc){
 	cudaMemcpy(pgc->intermediate_key_vals.d_intermediate_keyval_pos_arr, h_intermediate_keyvals_pos_arr, sizeof(keyval_pos_t)*total_count, cudaMemcpyHostToDevice);
 
 	cudaThreadSynchronize();
-	//copyDataFromDevice2Host2<<<grids,blocks>>>(*pgc);
+	copyDataFromDevice2Host2<<<grids,blocks>>>(*pgc);
 	cudaThreadSynchronize();
 
 	pgc->intermediate_key_vals.h_intermediate_keys_shared_buff = malloc(sizeof(char)*totalKeySize);
