@@ -179,7 +179,6 @@ namespace panda
 		const int valSize,
 		const int maxlen)
 	{
-		ShowLog("1.1");
 		PandaMessagePackage * data  = new PandaMessagePackage;
 		data->counts = new int[4];
 
@@ -192,7 +191,6 @@ namespace panda
 		//write to disk for fault tolerance
 		if (copySendData)
 		{
-		ShowLog("1.2");
 			if (keySize > 0 && keys != NULL)
 			{
 				data->keysBuff = new char[keySize];
@@ -229,7 +227,6 @@ namespace panda
 			data->valsBuff						= vals;
 			data->keyPosKeySizeValPosValSize	= keyPosKeySizeValPosValSize;
 		}//else
-		ShowLog("1.3");
 		data->keyBuffSize	= keySize;
 		data->valBuffSize	= valSize;
 		data->rank		= rank;
@@ -248,14 +245,12 @@ namespace panda
 			data->counts[2] = valSize;
 			data->done[0]   = data->done[1] = data->done[2] = data->done[3] = false;
 		} 	//else
-		ShowLog("1.4");
 		PandaMessageIORequest * req = new PandaMessageIORequest(data->flag, data->waiting, 
 			4*data->counts[0]*sizeof(int) + data->counts[1] + data->counts[2]);
 		data->cond = &req->condition();
 		addDataLock.lock();
 		needsToBeSent.push_back(data);
 		addDataLock.unlock();
-		ShowLog("1.5");
 		return req;
 	}
 

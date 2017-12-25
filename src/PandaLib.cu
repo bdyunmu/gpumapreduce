@@ -19,26 +19,21 @@
 #ifndef __PANDALIB_CU__
 #define __PANDALIB_CU__
 
-//#include "CmeansAPI.h"
 #include "Panda.h"
+#include "Global.h"
+
+//#include "CmeansAPI.h"
 //#include "cmeans/CmeansAPI.cu"
 
 #include "wc_api.h"
 #include "wc/wc_api.cu"
-#include "Global.h"
 
 extern int gCommRank;
-
-//----------------------------------------------
-//Get default job configuration
-//----------------------------------------------
-
 
 
 
 __global__ void ExecutePandaGPUMapPartitioner(panda_gpu_context pgc)
 {
-	//ShowLog2("6.0");
 	//ShowLog2("gridDim.x:%d gridDim.y:%d gridDim.z:%d blockDim.x:%d blockDim.y:%d blockDim.z:%d blockIdx.x:%d blockIdx.y:%d blockIdx.z:%d\n",
 	// 		gridDim.x,gridDim.y,gridDim.z,blockDim.x,blockDim.y,blockDim.z,blockIdx.x,blockIdx.y,blockIdx.z);
 	int num_records_per_thread = (pgc.input_key_vals.num_input_record + (gridDim.x*blockDim.x*blockDim.y)-1)/(gridDim.x*blockDim.x*blockDim.y);
@@ -54,7 +49,7 @@ __global__ void ExecutePandaGPUMapPartitioner(panda_gpu_context pgc)
 	if (thread_start_idx >= thread_end_idx)
 		return;
 
-	if(TID==0) 	ShowWarn("hi 0 -- num_records_per_thread:%d",num_records_per_thread);
+	//if(TID==0) ShowWarn("hi 0 -- num_records_per_thread:%d",num_records_per_thread);
 
 	int buddy_arr_len = num_records_per_thread;
 	int * int_arr = (int*)malloc((4+buddy_arr_len)*sizeof(int));
@@ -101,10 +96,6 @@ void StartPandaGPUMapPartitioner(panda_gpu_context pgc, dim3 grids, dim3 blocks)
    ExecutePandaGPUMapPartitioner<<<grids,blocks>>>(pgc);
 }
 
-
-void RunMapTasksOnGPUCardHost(panda_gpu_card_context pgcc){
-}//void
-
 void* ExecutePandaCPUMapThread(void * ptr)
 {
 
@@ -149,9 +140,6 @@ void* ExecutePandaCPUMapThread(void * ptr)
 	//ShowLog("CPU_GROUP_ID:[%d] Done :%d tasks",d_g_state->cpu_group_id, panda_cpu_task_info->end_row_idx - panda_cpu_task_info->start_row_idx);
 	return NULL;
 }//int 
-
-void ExecutePandaReduceTasksOnGPUCard(panda_gpu_card_context *pgcc){
-}//void
 
 
 void ExecutePandaReduceTasksOnGPU(panda_gpu_context *pgc)
@@ -310,12 +298,14 @@ __global__ void PandaRunGPUMapTasks(panda_gpu_context pgc, int curIter, int tota
 		panda_gpu_core_map(key, val, keySize, valSize, &pgc, map_task_idx);//
 		/////////////////////////////////////////////////////////////////////
 	}//for
+
 	keyval_arr_t *kv_arr_p = pgc.intermediate_key_vals.d_intermediate_keyval_arr_arr_p[thread_start_idx];
 	//char *shared_buff = (char *)(kv_arr_p->shared_buff);
 	//int shared_arr_len = *kv_arr_p->shared_arr_len;
 	//int shared_buff_len = *kv_arr_p->shared_buff_len;
 	pgc.intermediate_key_vals.d_intermediate_keyval_total_count[thread_start_idx] = *kv_arr_p->shared_arr_len;
-	//__syncthreads();
+	//printf("CUDA Debug thread_start_idx:%d  total_count:%d\n",thread_start_idx,*kv_arr_p->shared_arr_len);
+	__syncthreads();
 }//GPUMapPartitioner
 
 void *RunPandaCPUCombinerThread(void *ptr){
@@ -398,7 +388,7 @@ void *RunPandaCPUCombinerThread(void *ptr){
 		}
 		num_keyval_pairs_after_combiner++;
 	}//for
-	ShowLog("cpu combiner thread is done.");
+	//ShowLog("cpu combiner thread is done.");
 	free(val_t_arr);
 
 	pcc->intermediate_key_vals.intermediate_keyval_total_count[start_idx] = num_keyval_pairs_after_combiner;
@@ -417,9 +407,10 @@ void *RunPandaCPUCombinerThread(void *ptr){
 
 void RunGPUMapTasksHost(panda_gpu_context pgc, int curIter, int totalIter, dim3 grids, dim3 blocks){
 	PandaRunGPUMapTasks<<<grids,blocks>>>(pgc, totalIter -1 - curIter, totalIter);
+	cudaDeviceSynchronize();
 }//void
 
-__global__ void GPUCombiner(panda_gpu_context d_g_state);
+__global__ void GPUCombiner(panda_gpu_context pgc);
 
 void ExecutePandaGPUCombiner(panda_gpu_context * pgc){
 
@@ -438,7 +429,6 @@ void ExecutePandaGPUCombiner(panda_gpu_context * pgc){
 
 void ExecutePandaCPUCombiner(panda_cpu_context *pcc){
 
-	ShowLog("13.50");
 	if (pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p == NULL)	{ ShowError("intermediate_keyval_arr_arr_p == NULL"); exit(-1); }
 	if (pcc->intermediate_key_vals.intermediate_keyval_arr_arr_len <= 0)	{ ShowError("no any input keys"); exit(-1); }
 	if (pcc->num_cpus_cores <= 0)	{ ShowError("pcc->num_cpus == 0"); exit(-1); }
@@ -472,22 +462,17 @@ void ExecutePandaCPUCombiner(panda_cpu_context *pcc){
 			ShowError("Thread creation failed!");
 		start_task_idx = end_task_idx;
 	}//for
-	ShowLog("13.7 num_threads:%d",num_threads);
 	
 	for (int tid = 0; tid<num_threads; tid++){
 		void *exitstat;
 		if (pthread_join(pcc->panda_cpu_task_thread[tid],&exitstat)!=0) ShowError("joining failed");
 	}//for
-	ShowLog("13.8");
 }//void
 
-void ExecutePandaGPUCardCombiner(panda_gpu_card_context *pgcc){
-}//void
 
 void ExecutePandaSortBucket(panda_node_context *pnc)
 {
 	  int numBucket = pnc->recv_buckets.savedKeysBuff.size();
-	  ShowLog("Hey Important :  !!!get numBucket:%d",numBucket);
 
 	  keyvals_t *sorted_intermediate_keyvals_arr = pnc->sorted_key_vals.sorted_intermediate_keyvals_arr;
 	  char *key_0, *key_1;
@@ -603,9 +588,6 @@ panda_gpu_context *CreatePandaGPUContext(){
 	return pgc;
 }//gpu_context
 
-panda_gpu_card_context *CreatePandaGPUCardContext(){
-}//gpu_context
-
 
 panda_cpu_context *CreatePandaCPUContext(){
 	
@@ -636,7 +618,7 @@ panda_cpu_context *CreatePandaCPUContext(){
 void ExecutePandaCPUReduceTasks(panda_cpu_context *pcc){
 		
 		//panda_cpu_context *pcc = this->pCPUContext;
-		ShowLog("sorted_keyvals_arr_len:%d",pcc->sorted_key_vals.sorted_keyvals_arr_len);
+		//ShowLog("sorted_keyvals_arr_len:%d",pcc->sorted_key_vals.sorted_keyvals_arr_len);
 		if (pcc->sorted_key_vals.sorted_keyvals_arr_len <= 0) return;
 		for (int map_idx = 0; map_idx < pcc->sorted_key_vals.sorted_keyvals_arr_len; map_idx++){
 			keyvals_t *kv_p = (keyvals_t *)(&(pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[map_idx]));
@@ -648,9 +630,6 @@ void ExecutePandaCPUReduceTasks(panda_cpu_context *pcc){
 		
 }//void
 
-
-void PandaExecuteReduceTasksOnGPUCard(panda_gpu_card_context *pgcc){
-}//void
 
 
 void PandaExecuteSortBucketOnCPU(panda_node_context *pnc)
@@ -776,9 +755,6 @@ void AddReduceTaskOnCPU(panda_cpu_context* pcc, panda_node_context *pnc, int sta
 
 }//void AddReduceTaskOnCPU
 
-void AddReduceTaskOnGPUCard(panda_gpu_card_context* pgcc, panda_node_context *pnc, int start_task_id, int end_task_id){
-}
-
 
 void AddReduceTaskOnGPU(panda_gpu_context* pgc, panda_node_context *pnc, int start_task_id, int end_task_id){
 	
@@ -794,7 +770,7 @@ void AddReduceTaskOnGPU(panda_gpu_context* pgc, panda_node_context *pnc, int sta
 		total_count += sorted_intermediate_keyvals_arr[i].val_arr_len;
 	}//for
 
-	ShowLog("start_task_id:%d end_task_id:%d  total_count:%d", start_task_id, end_task_id, total_count);
+	//ShowLog("start_task_id:%d end_task_id:%d  total_count:%d", start_task_id, end_task_id, total_count);
 		
 	int totalKeySize = 0;
 	int totalValSize = 0;
@@ -1377,51 +1353,9 @@ void PandaLaunchMapPartitionerOnGPU(panda_gpu_context pgc, dim3 grids, dim3 bloc
    PandaExecuteMapPartitionerOnGPU<<<grids,blocks>>>(pgc);
 }
 
-//TODO change into cudaStream in future
-__global__ void PandaExecuteMapTasksOnGPU(panda_gpu_context pgc, int curIter, int totalIter)
-{
-
-	//ShowLog("gridDim.x:%d gridDim.y:%d gridDim.z:%d blockDim.x:%d blockDim.y:%d blockDim.z:%d blockIdx.x:%d blockIdx.y:%d blockIdx.z:%d\n",
-	//  gridDim.x,gridDim.y,gridDim.z,blockDim.x,blockDim.y,blockDim.z,blockIdx.x,blockIdx.y,blockIdx.z);
-	int num_records_per_thread = (pgc.input_key_vals.num_input_record + (gridDim.x*blockDim.x*blockDim.y)-1)/(gridDim.x*blockDim.x*blockDim.y);
-	int block_start_idx = num_records_per_thread * blockIdx.x * blockDim.x * blockDim.y;
-	int thread_start_idx = block_start_idx 
-		+ ((threadIdx.y*blockDim.x + threadIdx.x)/STRIDE)*num_records_per_thread*STRIDE
-		+ ((threadIdx.y*blockDim.x + threadIdx.x)%STRIDE);
-	//ShowLog("num_records_per_thread:%d block_start_idx:%d gridDim.x:%d gridDim.y:%d gridDim.z:%d blockDim.x:%d blockDim.y:%d blockDim.z:%d",num_records_per_thread, block_start_idx, gridDim.x,gridDim.y,gridDim.z,blockDim.x,blockDim.y,blockDim.z);
-	int thread_end_idx = thread_start_idx + num_records_per_thread*STRIDE;
-	if (thread_end_idx > pgc.input_key_vals.num_input_record)
-		thread_end_idx = pgc.input_key_vals.num_input_record;
-	if (thread_start_idx + curIter*STRIDE >= thread_end_idx)
-		return;
-	for(int map_task_idx = thread_start_idx + curIter*STRIDE; map_task_idx < thread_end_idx; map_task_idx += totalIter*STRIDE){
-		char *key = (char *)(pgc.input_key_vals.d_input_keys_shared_buff) + pgc.input_key_vals.d_input_keyval_pos_arr[map_task_idx].keyPos;
-		char *val = (char *)(pgc.input_key_vals.d_input_vals_shared_buff) + pgc.input_key_vals.d_input_keyval_pos_arr[map_task_idx].valPos;
-		int valSize = pgc.input_key_vals.d_input_keyval_pos_arr[map_task_idx].valSize;
-		int keySize = pgc.input_key_vals.d_input_keyval_pos_arr[map_task_idx].keySize;
-		/////////////////////////////////////////////////////////////////////
-		panda_gpu_core_map(key, val, keySize, valSize, &pgc, map_task_idx);//
-		/////////////////////////////////////////////////////////////////////
-	}//for
-	keyval_arr_t *kv_arr_p = pgc.intermediate_key_vals.d_intermediate_keyval_arr_arr_p[thread_start_idx];
-	//char *shared_buff = (char *)(kv_arr_p->shared_buff);
-	//int shared_arr_len = *kv_arr_p->shared_arr_len;
-	//int shared_buff_len = *kv_arr_p->shared_buff_len;
-	pgc.intermediate_key_vals.d_intermediate_keyval_total_count[thread_start_idx] = *kv_arr_p->shared_arr_len;
-	//__syncthreads();
-}//GPUMapPartitioner
-
-
-//void PandaPandaLaunchMapTasksOnGPU(*pgc, totalIter -1 - iter, totalIter, grids,blocks);
 void PandaLaunchMapTasksOnGPU(panda_gpu_context pgc, int curIter, int totalIter, dim3 grids, dim3 blocks){
-	
-	PandaExecuteMapTasksOnGPU<<<grids,blocks>>>(pgc, totalIter -1 - curIter, totalIter);
-	
 }//void
 
-
-void PandaExecuteMapTasksOnGPUCard(panda_gpu_card_context pgcc){
-}//void
 
 
 __global__ void GPUCombiner(panda_gpu_context pgc)
@@ -1512,9 +1446,6 @@ __global__ void GPUCombiner(panda_gpu_context pgc)
 }//GPUMapPartitioner
 
 
-
-void PandaExecuteCombinerOnGPUCard(panda_gpu_card_context *pgcc){
-}//void
 
 
 void PandaExecuteCombinerOnGPU(panda_gpu_context * pgc){
@@ -1909,9 +1840,6 @@ void* PandaThreadExecuteMapOnCPU(void * ptr)
 	return NULL;
 }//int 
 
-
-void PandaEmitMapOutputOnGPUCard(void *key, void *val, int keySize, int valSize, panda_gpu_card_context *pgcc, int map_task_idx){
-}//__device__
 
 
 

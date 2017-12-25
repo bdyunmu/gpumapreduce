@@ -29,14 +29,13 @@ int main(int argc, char ** argv)
 	exit(-1);
 	}
 
-	//panda::MapReduceJob  * job = new panda::PandaMapReduceJob(argc, argv, true);
 	panda::MapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv, false,false,true);
 	int rank, size;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 
 	job->setMessage(new panda::PandaMPIMessage(true));
-	//job->setEnableCPU(true);
+	job->setEnableCPU(true);
 	job->setEnableGPU(true);
 
 	//if (rank == 0)

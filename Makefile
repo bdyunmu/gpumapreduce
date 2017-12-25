@@ -19,7 +19,7 @@ CC          = mpicxx
 MPICC       = mpicxx
 NVCC        = nvcc
 
-NVCCFLAGS  += -lcudart -arch=sm_50
+NVCCFLAGS  += -lcudart -arch=sm_20
 INCFLAGS   += -I/usr/include/  -I/usr/local/cuda/include
 INCFLAGS   += -I./include -I./apps/ -I./include/panda -I./
 LDFLAGS    += -L/usr/local/cuda/lib64/ 
