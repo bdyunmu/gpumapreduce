@@ -175,7 +175,7 @@ extern "C"
 void ExecutePandaSortBucket(panda_node_context *pnc);
 extern "C"
 void ExecutePandaCPUCombiner(panda_cpu_context *pcc);
-extern "C" struct dim3;
+//extern "C" struct dim3;
 //extern "C"
 //void __checkCudaErrors(cudaError err, const char *file, const int line );
 
@@ -256,7 +256,6 @@ struct keyvals_t
    val_t * vals;
 };// keyvals_t;
 
-//job_configuration;
 //typedef 
 struct panda_cpu_context;
 struct panda_node_context;
@@ -516,18 +515,6 @@ __global__ void copyDataFromDevice2Host1(panda_gpu_context pgc);
 __global__ void copyDataFromDevice2Host2(panda_gpu_context pgc);
 __global__ void copyDataFromDevice2Host4Reduce(panda_gpu_context pgc);
 __global__ void PandaReducePartitioner(panda_gpu_context pgc);
-
-#if 0
-__device__ void PandaEmitCombinerOutputOnGPU(void* key, void* val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx);
-__device__ void PandaEmitReduceOutputOnGPU(void*	key, void*	val, int	keySize, int	valSize, panda_gpu_context *pgc);
-__device__ void PandaEmitMapOutputOnGPU(void *key, void *val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx);
-
-__global__ void PandaExecuteMapPartitionerOnGPU(panda_gpu_context pgc);
-__global__ void copyDataFromDevice2Host4Reduce(panda_gpu_context pgc);
-__global__ void PandaExecuteMapTasksOnGPU(panda_gpu_context pgc, int curIter, int totalIter);
-void PandaLaunchMapTasksOnGPUCard(panda_gpu_card_context pgcc);
-void PandaLaunchMapTasksOnGPU(panda_gpu_context pgc, int curIter, int totalIter, dim3 grids, dim3 blocks);
-#endif
 
 //void *PandaThreadLaunchMapOnCPU(void *ptr);
 void *PandaThreadLaunchCombinerOnCPU(void *ptr);
