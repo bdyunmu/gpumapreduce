@@ -12,6 +12,9 @@ NVCCFLAGS   = $(CFLAGS)
 LDFLAGS	    = -L/opt/openmpi/lib/
 LIBS        = -lmpi -lpthread
 
+OBJ_DIR	    = ./obj
+CUOBJ_DIR   = ./cuobj
+
 #  note:
 #  support word count code
 
@@ -47,7 +50,18 @@ CU_OBJ_FILES 	:= $(addprefix cuobj/,$(notdir $(CUDA_CU_FILES:.cu=.o)))
 TARGET_OBJ_FILES:=
 WC_OBJ_CU_FILES	:=
 
-panda: panda_word_count
+panda: obj_dir cuobj_dir panda_word_count
+
+obj_dir:
+	@if test ! -d $(OBJ_DIR);\
+	then \
+	  mkdir $(OBJ_DIR);\
+	fi	
+cuobj_dir:
+	@if test ! -d $(CUOBJ_DIR);\
+	then \
+	  mkdir $(CUOBJ_DIR);\
+	fi
 
 panda_word_count: $(APP_OBJ_FILES) $(OS_OBJ_FILES) $(PANDA_OBJ_FILES) \
 		$(CUDA_OBJ_FILES) $(CU_OBJ_FILES) $(APP_CU_OBJ_FILES)
