@@ -26,7 +26,7 @@
 //#include "cmeans/CmeansAPI.cu"
 
 #include "wc_api.h"
-#include "wc/wc_api.cu"
+//#include "wc/wc_api.cu"
 
 extern int gCommRank;
 

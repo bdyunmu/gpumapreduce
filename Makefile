@@ -22,7 +22,7 @@ CC          = mpicxx
 MPICC       = mpicxx
 NVCC        = nvcc
 
-NVCCFLAGS  += -lcudart -arch=sm_20
+NVCCFLAGS  += -lcudart -arch=sm_30 --relocatable-device-code=true
 INCFLAGS   += -I/usr/include/  -I/usr/local/cuda/include
 INCFLAGS   += -I./include -I./apps/ -I./include/panda -I./
 LDFLAGS    += -L/usr/local/cuda/lib64/ 
@@ -82,11 +82,11 @@ obj/%.o: src/cudacpp/%.cpp $(CUDA_H_FILES)
 obj/%.o: ./%.cpp $(OS_H_FILES) $(PANDA_H_FILES) $(CUDA_H_FILES) $(H_FILES)
 	$(MPICC) $(LIBS) $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
 
-cuobj/%.o: src/%.cu $(CUDA_H_FILES) $(H_FILES)
-	nvcc $(LIBS) $(NVCCFLAGS) $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
-
 cuobj/%.o: apps/%.cu $(APP_H_FILES)
-	nvcc $(LIBS) $(NVCCFLAGS) $((C_FLAGS) $(INCFLAGS) -c -o $@ $<
+	nvcc -I./include -I./apps --relocatable-device-code=true -c -o $@ $<
+
+cuobj/%.o: src/%.cu $(CUDA_H_FILES) $(H_FILES)
+	nvcc -I./include -I./apps --relocatable-device-code=true -c -o $@ $<
 
 clean:
 	rm -rf obj/*.o cuobj/*.o panda_word_count 
