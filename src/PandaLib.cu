@@ -1,18 +1,13 @@
 /*
 	
-	Copyright 2012 The Trustees of Indiana University.  All rights reserved.
-	CGL MapReduce Framework on GPUs and CPUs.
-	
-	Code Name: Panda
+	Copyright 2012 The Trustees of Indiana University && Ruijie Network.  All rights reserved.
+	Panda: co-processing SPMD computations on GPUs and CPUs.
 	
 	File: PandaLib.cu
 	First Version:		2012-07-01 V0.1
-	Current Version:	2012-09-01 V0.3
-	Last Updates:		2013-06-27 V0.44
-	Last UPdates: 		2017-12-20 v0.6	
+	Last UPdates: 		2018-04-28 v0.61	
 	Developer: Hui Li (lihui@indiana.edu)  
 			  (huili@ruijie.com.cn)
-	This is the source code for Panda, a MapReduce runtime on GPUs and CPUs.
 
  */
 
@@ -21,11 +16,10 @@
 
 #include "Panda.h"
 #include "Global.h"
+#include "PandaAPI.h"
 
 //#include "CmeansAPI.h"
 //#include "cmeans/CmeansAPI.cu"
-
-#include "wc_api.h"
 //#include "wc/wc_api.cu"
 
 extern int gCommRank;
@@ -1728,7 +1722,7 @@ void PandaExecuteReduceTasksOnGPU(panda_gpu_context *pgc)
 	int numBlocks = (numGPUCores*16+(blocks.x*blocks.y)-1)/(blocks.x*blocks.y);
     	dim3 grids(numBlocks, 1);
 	
-	int total_gpu_threads = (grids.x*grids.y*blocks.x*blocks.y);
+	//int total_gpu_threads = (grids.x*grids.y*blocks.x*blocks.y);
 	ShowLog("reduce len:%d intermediate len:%d output len:%d sorted keySize%d: sorted valSize:%d",
 		pgc->reduced_key_vals.d_reduced_keyval_arr_len, 
 		pgc->intermediate_key_vals.d_intermediate_keyval_arr_arr_len,
@@ -1798,7 +1792,7 @@ void* PandaThreadExecuteMapOnCPU(void * ptr)
 
 	panda_cpu_task_info_t *panda_cpu_task_info = (panda_cpu_task_info_t *)ptr;
 	panda_cpu_context  *pcc = (panda_cpu_context *) (panda_cpu_task_info->pcc);
-	panda_node_context *pnc = (panda_node_context *)(panda_cpu_task_info->pnc);
+	//panda_node_context *pnc = (panda_node_context *)(panda_cpu_task_info->pnc);
 	
 	int start_row_idx	=	panda_cpu_task_info->start_row_idx;
 	int end_row_idx		=	panda_cpu_task_info->end_row_idx;
@@ -1885,7 +1879,7 @@ void PandaEmitMapOutputOnCPU(void *key, void *val, int keySize, int valSize, pan
 	
 	kv_p->valPos = (*kv_arr_p->shared_buff_pos);
 	*kv_arr_p->shared_buff_pos += ((valSize+3)/4)*4;
-	char *val_p = (char *)(buff) + kv_p->valPos;
+	//char *val_p = (char *)(buff) + kv_p->valPos;
 	memcpy((char *)(buff) + kv_p->valPos, val, valSize);
 	kv_p->valSize = valSize;
 	(kv_arr_p->arr) = kv_p;

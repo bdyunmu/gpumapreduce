@@ -20,7 +20,7 @@
 #define __USER_CU__
 
 #include "Panda.h"
-#include "wc_api.h"
+#include "PandaAPI.h"
 
 __device__ void panda_gpu_core_reduce(void *key, val_t* vals, int keySize, int valCount, panda_gpu_context pgc)
 {

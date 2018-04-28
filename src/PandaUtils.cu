@@ -1,19 +1,15 @@
+/*
 
-/*	
-	Copyright 2012 The Trustees of Indiana University.  All rights reserved.
-	CGL MapReduce Framework on GPUs and CPUs
-	
-	Code Name: Panda 
-	
-	File: PandaUtils.cu 
-	First Version:		2012-07-01 V0.1
-	Current Version:	2012-09-01 V0.3	
-	Last Updates:		2012-09-02
-	Developer: Hui Li (lihui@indiana.edu)
-	This is the source code for Panda, a MapReduce runtime on GPUs and CPUs.
+        Copyright 2012 The Trustees of Indiana University && Ruijie Network.  All rights reserved.
+        Panda: co-processing SPMD computations on GPUs and CPUs.
 
- */
+        File: PandaUtils.cu
+        First Version:          2012-07-01 V0.1
+        Last UPdates:           2018-04-28 v0.61
+        Developer: Hui Li (lihui@indiana.edu)
+                          (huili@ruijie.com.cn)
 
+*/
 
 #include "Panda.h"
 
@@ -30,7 +26,6 @@
 
 #ifndef __PANDAUTILS_CU__
 #define __PANDAUTILS_CU__
-
 
 int getGPUCoresNum() { 
 	//assert(tid<total);

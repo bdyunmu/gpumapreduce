@@ -20,7 +20,9 @@ int main(int argc, char ** argv)
  	if (argc != 2)
         {
            ShowLog("word count with panda on cpu and gpu");
-           ShowLog("usage: %s [txt path]", argv[0]);
+	   ShowLog("cd gpumapreduce");
+	   ShowLog("make");
+	   ShowLog("mpirun -host node1,node2 -np 2 ./%s input.txt",argv[0]);
            exit(-1);//
         }  //if
 	if(strlen(argv[1])<2)
