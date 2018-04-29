@@ -48,7 +48,7 @@ WC_OBJ_CU_FILES	:=
 
 word_count: $(APP_WC_OBJ_FILES) $(OS_OBJ_FILES) $(PANDA_OBJ_FILES) \
 		$(CUDA_OBJ_FILES) $(CU_OBJ_FILES) $(APP_WC_CU_OBJ_FILES)
-		$(NVCC) $(LIBS) $(NVCCFLAGS) $(LDFLAGS) -o ../../bin/$@ $^
+		$(NVCC) $(LIBS) $(NVCCFLAGS) $(LDFLAGS) -o ../../bin/word_c $^
 
 ../../obj/%.o: ./%.cpp $(APP_WC_H_FILES) 
 	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<

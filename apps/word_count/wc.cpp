@@ -27,8 +27,8 @@ int main(int argc, char ** argv)
         }  //if
 	if(strlen(argv[1])<2)
 	{
-	ShowLog("txt path too short");
-	exit(-1);
+	  ShowLog("txt path too short");
+	  exit(-1);
 	}
 
 	panda::MapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv, false,false,true);
@@ -48,18 +48,15 @@ int main(int argc, char ** argv)
 	sprintf(fn,argv[1]);
 	int  chunk_size = 1024;
 	ShowLog("rank:[%d], start processing txt data",rank);
-	char *chunk_data = (char *)malloc(sizeof(char)*(chunk_size+1000));
+	char *chunk_data = (char *)malloc(sizeof(char)*2*(chunk_size));
 	FILE *wcfp;
 	wcfp = fopen(fn, "r");
-
 	const int NUM_ELEMENTS = 1;
 	int total_len = 0;
-
 	while(fgets(str,sizeof(str),wcfp) != NULL)
 	{
 		for (int i = 0; i < strlen(str); i++)
 		str[i] = toupper(str[i]);
-			
 		strcpy((chunk_data + total_len),str);
 		total_len += (int)strlen(str);
 		if(total_len>=chunk_size){
@@ -68,9 +65,7 @@ int main(int argc, char ** argv)
 			total_len=0;
 		}//if
 	}//while
-
-	//job->execute();
-	ShowLog("rank:%d finishing processing txt data",rank);
+	ShowLog("rank:[%d] finishing processing txt data",rank);
 	}//if
 
 	job->execute();

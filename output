@@ -1,0 +1,485 @@
+[0][MapReduceJob]	CommSize:1
+[0][main]	rank:[0], start processing txt data
+[0][main]	word count job->addInput
+[0][addInput]	addGPUMapTasks
+[0][main]	word count job->addInput
+[0][addInput]	addCPUMapTasks
+[0][main]	word count job->addInput
+[0][addInput]	addGPUMapTasks
+[0][main]	word count job->addInput
+[0][addInput]	addCPUMapTasks
+[0][main]	word count job->addInput
+[0][addInput]	addGPUMapTasks
+[0][main]	word count job->addInput
+[0][addInput]	addCPUMapTasks
+[0][main]	word count job->addInput
+[0][addInput]	addGPUMapTasks
+[0][main]	word count job->addInput
+[0][addInput]	addCPUMapTasks
+[0][main]	word count job->addInput
+[0][addInput]	addGPUMapTasks
+[0][main]	word count job->addInput
+[0][addInput]	addCPUMapTasks
+[0][main]	word count job->addInput
+[0][addInput]	addGPUMapTasks
+[0][main]	word count job->addInput
+[0][addInput]	addCPUMapTasks
+[0][main]	word count job->addInput
+[0][addInput]	addGPUMapTasks
+[0][main]	word count job->addInput
+[0][addInput]	addCPUMapTasks
+[0][main]	word count job->addInput
+[0][addInput]	addGPUMapTasks
+[0][main]	word count job->addInput
+[0][addInput]	addCPUMapTasks
+[0][main]	rank:0 finishing processing txt data
+[0][execute]	PandaMapReduceJob execute()
+[0][InitPandaRuntime]	commRank:0, commSize:1
+[0][execute]	gpuMapTasks:8  cpuMapTasks:8
+[0][run]	start PandaMPIMessage thread. run() MPI thread [0/1]
+[0][getGPUCoresNum]	Configure Device ID:0: Device Name:GeForce GTX 960 MultProcessorCount:4 sm_per_multiproc:32
+[0][StartPandaGPUMapTasks]	GridDim.X:8 GridDim.Y:1 BlockDim.X:16 BlockDim.Y:16 TotalGPUThreads:2048
+[0][StartPandaCPUMapTasks]	num_input_record:8, totalKeySize:0.031250 KB totalValSize:8.462891 KB num_cpus:8
+[0][getGPUCoresNum]	Configure Device ID:0: Device Name:GeForce GTX 960 MultProcessorCount:4 sm_per_multiproc:32
+[0][ExecutePandaCPUCombiner]	13.60 num_input_record:8
+[0][ExecutePandaCPUCombiner]	13.65 num_cpus_cores:8
+[0][0][RunPandaCPUCombinerThread]	CONTEXTII[RunPandaCPUCombinerThread]	[0][RunPandaCPUCombinerThread]	ITERATORIPS
+ITERATORIPS[0][RunPandaCPUCombinerThread]	NORMAL
+
+[0][RunPandaCPUCombinerThread]	CONTEXTP
+
+[0][0][0][RunPandaCPUCombinerThread]	NORMAL
+[RunPandaCPUCombinerThread]	[0][RunPandaCPUCombinerThread]	CONTEXTII
+[0][0][RunPandaCPUCombinerThread]	CONTEXTP
+[RunPandaCPUCombinerThread]	ITERATORIPS
+[0][0][RunPandaCPUCombinerThread]	CONTEXTP[0][RunPandaCPUCombinerThread]	EVEDUCETASK
+
+[0][RunPandaCPUCombinerThread]	PANDASORTBUCKETEVRATIONESAIS
+[0][RunPandaCPUCombinerThread]	EEEEEEVT
+[RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	CONTEXTII[0][RunPandaCPUCombinerThread]	VECTORIS
+[0][0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	CONTEXTPNORMAL
+EVEDUCETASK[0][RunPandaCPUCombinerThread]	EVEDUCETASK
+ASYNCIOREQUESTEST[0][RunPandaCPUCombinerThread]	PANDASORTBUCKETEVRATIONESAIS
+[0]
+
+
+
+[0][0][RunPandaCPUCombinerThread]	PIIIIPPN
+[RunPandaCPUCombinerThread]	CONTEXTII
+[0][RunPandaCPUCombinerThread]	CONTEXTP
+[0][0][RunPandaCPUCombinerThread]	EVEDUCETASK
+[0][0][RunPandaCPUCombinerThread]	PANDASORTBUCKETEVRATIONESAIS
+[0][0][RunPandaCPUCombinerThread]	PANDASORTBUCKETEVRATIONESAIS[RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	EEEEEEVT[0][RunPandaCPUCombinerThread]	EVDAADDRECVEDBUCKETEPCS
+EVEDUCETASK
+[RunPandaCPUCombinerThread]	CONTEXTII
+[0][0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	[0]
+[RunPandaCPUCombinerThread]	EEEEEEVT
+CONTEXTP[0][RunPandaCPUCombinerThread]	VECTORIS
+[RunPandaCPUCombinerThread]	[0][0][0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTEST[RunPandaCPUCombinerThread]	ITERATORIPS[RunPandaCPUCombinerThread]	PANDASORTBUCKETEVRATIONESAISASYNCIOREQUESTD
+
+
+
+CONTEXTP[0][RunPandaCPUCombinerThread]	
+[0][0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	[0]EVEDUCETASK
+PIIIIPPN[0][RunPandaCPUCombinerThread]	PANDASORTBUCKETEVRATIONESAIS
+[0]NORMAL[RunPandaCPUCombinerThread]	EEEEEEVT
+[RunPandaCPUCombinerThread]	[0][RunPandaCPUCombinerThread]	EEEEEEVT
+
+[0][0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	CONTEXTII
+[0][0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	
+VECTORIS[0][RunPandaCPUCombinerThread]	EVDAADDRECVEDBUCKETEPCS
+
+VECTORIS[0][RunPandaCPUCombinerThread]	EVEDUCETASK
+[0][RunPandaCPUCombinerThread]	PANDASORTBUCKETEVRATIONESAIS[0]
+[RunPandaCPUCombinerThread]	VECTORIS
+
+LENEMPKC[0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTEST
+[0][RunPandaCPUCombinerThread]	PIIIIPPN
+
+[0][0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTEST
+
+[0]EEEEEEVT[RunPandaCPUCombinerThread]	MAPTASKESAIS
+[0][RunPandaCPUCombinerThread]	EVDAADDRECVEDBUCKETEPCS
+[0][0][RunPandaCPUCombinerThread]	[0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTD
+[RunPandaCPUCombinerThread]	ASYNCIOREQUESTD
+CONTEXTP[0]
+[0][0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	VECTORIPN[0]
+
+EVEDUCETASK[0][RunPandaCPUCombinerThread]	
+
+[RunPandaCPUCombinerThread]	[0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTESTEEEEEEVT
+[0][0][RunPandaCPUCombinerThread]	MXTZNKST
+[RunPandaCPUCombinerThread]	[0]LENEMPKC
+[0][0][RunPandaCPUCombinerThread]	MAPTASKESAIS
+[0][RunPandaCPUCombinerThread]	[0][RunPandaCPUCombinerThread]	PANDASORTBUCKETEVRATIONESAIS
+[RunPandaCPUCombinerThread]	
+[0]VECTORIS[RunPandaCPUCombinerThread]	VECTORIS
+[RunPandaCPUCombinerThread]	PIIIIPPN[0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTEST
+[RunPandaCPUCombinerThread]	[0][RunPandaCPUCombinerThread]	PIIIIPPN
+[0]
+
+PIIIIPPN[0]
+[RunPandaCPUCombinerThread]	VECTORIPN
+[0]DEALLOCATEERS[RunPandaCPUCombinerThread]	MXTZNKST
+[RunPandaCPUCombinerThread]	[0][RunPandaCPUCombinerThread]	DEALLOCATEERS
+[0][RunPandaCPUCombinerThread]	[0]BASEES
+[0][RunPandaCPUCombinerThread]	[0]EEEELB
+[RunPandaCPUCombinerThread]	[0]EVDAADDRECVEDBUCKETEPCS
+EVDAADDRECVEDBUCKETEPCS[0]
+[0][0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTD
+
+[RunPandaCPUCombinerThread]	[0][RunPandaCPUCombinerThread]	BASEES
+[0][RunPandaCPUCombinerThread]	LENEMPKCEEEELB
+[RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	PANDAMESSAGEPACKAGEEST
+[RunPandaCPUCombinerThread]	[0][RunPandaCPUCombinerThread]	ATEEMPKVTORIPPN
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	AIPPCS
+[0]ASYNCIOREQUESTEST[RunPandaCPUCombinerThread]	NOEXCEPT
+[0][RunPandaCPUCombinerThread]	EVNINITIALIZED
+[0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTD
+[0]EEEEEEVT[RunPandaCPUCombinerThread]	LENEMPKC
+BASEIPISAIS[0]
+[0][RunPandaCPUCombinerThread]	VECTOR
+[0][RunPandaCPUCombinerThread]	EEERKSAIT
+[0][RunPandaCPUCombinerThread]	VECTORIS
+[0][0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTEST
+
+
+[0]EVDAADDRECVEDBUCKETEPCS
+[0][RunPandaCPUCombinerThread]	[0]ASYNCIOREQUESTD
+
+[0][0][RunPandaCPUCombinerThread]	PIIIIPPN
+[RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	LENEMPKC[RunPandaCPUCombinerThread]	[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	LENEMPKC
+
+[0][RunPandaCPUCombinerThread]	EVDAADDRECVEDBUCKETEPCS
+[0][RunPandaCPUCombinerThread]	PIIIIPPN
+[0][RunPandaCPUCombinerThread]	EVDAADDRECVEDBUCKETEPCSMAPTASKESAIS
+[0][0][RunPandaCPUCombinerThread]	MAPTASKESAISPANDAMESSAGEPACKAGEEST[0]
+[0][RunPandaCPUCombinerThread]	MAPTASKESAIS
+
+[RunPandaCPUCombinerThread]	MAPTASKESAIS
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	VECTORIPN
+[RunPandaCPUCombinerThread]	ASYNCIOREQUESTD
+[0][0][RunPandaCPUCombinerThread]	ATEEMPKVTORIPPN
+[0][RunPandaCPUCombinerThread]	AIPPCSNODEIS
+[0][0][RunPandaCPUCombinerThread]	NOEXCEPT
+[0][RunPandaCPUCombinerThread]	EVNINITIALIZED
+[0][RunPandaCPUCombinerThread]	BASEIPISAIS
+[0][RunPandaCPUCombinerThread]	FREEMAPVARIABLESEVIST
+[0][RunPandaCPUCombinerThread]	CONTEXTIPANDAMAPREDUCEJOB
+[0]
+ASYNCIOREQUESTD
+[0][RunPandaCPUCombinerThread]	[0]LENEMPKC
+[RunPandaCPUCombinerThread]	LENEMPKC
+[0][RunPandaCPUCombinerThread]	[0]MAPTASKESAIS
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	VECTOR
+[RunPandaCPUCombinerThread]	[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	VECTORIPN
+[0][RunPandaCPUCombinerThread]	[0][RunPandaCPUCombinerThread]	MAPTASKESAIS
+[0][RunPandaCPUCombinerThread]	VECTORIPN
+[RunPandaCPUCombinerThread]	VECTORIPN
+[0][RunPandaCPUCombinerThread]	MXTZNKSTEEERKSAIT
+MXTZNKSTIAPPVS[0][0]
+[0]
+[0][RunPandaCPUCombinerThread]	DEALLOCATEERS[0]
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	NODEIS
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	FREEMAPVARIABLESEVIST
+[0][RunPandaCPUCombinerThread]	CONTEXTIPANDAMAPREDUCEJOBVECTORIPN
+[0]
+[RunPandaCPUCombinerThread]	[0][RunPandaCPUCombinerThread]	MXTZNKST
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	DEALLOCATEERS
+
+[0]BASEES[RunPandaCPUCombinerThread]	
+[RunPandaCPUCombinerThread]	MXTZNKST
+[0][RunPandaCPUCombinerThread]	EPKVISDEALLOCATEERS
+IAPPVS[0]
+[0][RunPandaCPUCombinerThread]	[0]EPKVIS
+[0][RunPandaCPUCombinerThread]	
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	VECTORIPN
+[0][RunPandaCPUCombinerThread]	MXTZNKST
+[0][RunPandaCPUCombinerThread]	
+[0][RunPandaCPUCombinerThread]	MXTZNKSTPANDAMESSAGEPACKAGEEEPPEVVARIOUSSIZEPANDACHUNKC
+[0][RunPandaCPUCombinerThread]	EEEELB
+DEALLOCATEERS
+[0][RunPandaCPUCombinerThread]	BASEESBASEES
+[0][RunPandaCPUCombinerThread]	EEEELB[0]
+[0]PANDAMESSAGEPACKAGEEEPPEVVARIOUSSIZEPANDACHUNKC[0][RunPandaCPUCombinerThread]	PANDAMESSAGEPACKAGEEST
+DEALLOCATEERS
+[0][RunPandaCPUCombinerThread]	BASEES
+[0][RunPandaCPUCombinerThread]	EEEELB
+[0]
+[0][0][RunPandaCPUCombinerThread]	ATEEMPKVTORIPPN
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	AIPPCS
+[0][RunPandaCPUCombinerThread]	NOEXCEPT
+
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	DEALLOCATEERS
+[0][RunPandaCPUCombinerThread]	BASEES
+[0][RunPandaCPUCombinerThread]	EEEELB
+[0][RunPandaCPUCombinerThread]	PANDAMESSAGEPACKAGEEST
+[0]ITERATORIPN[RunPandaCPUCombinerThread]	
+BASEES
+[0]
+[0][0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	ATEEMPKVTORIPPN
+[0][RunPandaCPUCombinerThread]	AIPPCS[RunPandaCPUCombinerThread]	
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	NOEXCEPT
+[0][RunPandaCPUCombinerThread]	EVNINITIALIZED
+[0][RunPandaCPUCombinerThread]	BASEIPISAISEEEELB
+[RunPandaCPUCombinerThread]	[0][RunPandaCPUCombinerThread]	VECTORPANDAMESSAGEPACKAGEEST
+
+[0][RunPandaCPUCombinerThread]	EEEELBPANDAMESSAGEPACKAGEEST
+ITERATORIPN
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	ALLOCATOREV
+[0][RunPandaCPUCombinerThread]	TASKESAIS
+[0][RunPandaCPUCombinerThread]	PANDAMESSAGEPACKAGEEEEPT
+[0][RunPandaCPUCombinerThread]	ITERATOR
+[0][RunPandaCPUCombinerThread]	TYPEERKS
+[0][RunPandaCPUCombinerThread]	DIFFERENCE
+[0][RunPandaCPUCombinerThread]	ITERATORIT
+[0][RunPandaCPUCombinerThread]	ATEEMPKVTORIPPN
+[0][RunPandaCPUCombinerThread]	[0]AIPPCS
+[0][RunPandaCPUCombinerThread]	
+[0]
+[RunPandaCPUCombinerThread]	EVNINITIALIZED
+[RunPandaCPUCombinerThread]	ALLOCATOREV
+[0][RunPandaCPUCombinerThread]	ATEEMPKVTORIPPNTASKESAIS
+[0][RunPandaCPUCombinerThread]	[0]EEERKSAIT[0][0][RunPandaCPUCombinerThread]	PANDAMESSAGEPACKAGEEST
+
+[0][RunPandaCPUCombinerThread]	ATEEMPKVTORIPPN
+[0]PANDAMESSAGEPACKAGEEST[RunPandaCPUCombinerThread]	AIPPCS
+[0]NOEXCEPT[RunPandaCPUCombinerThread]	NOEXCEPT
+[RunPandaCPUCombinerThread]	NORMAL
+[0][RunPandaCPUCombinerThread]	EEEENS
+[0][RunPandaCPUCombinerThread]	CIOREQUESTEST
+[0][RunPandaCPUCombinerThread]	CONSTRUCTEPS
+[0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTEE
+[0][RunPandaCPUCombinerThread]	CHUNKE
+[0][RunPandaCPUCombinerThread]	ADDMAPTASKSEPNS
+[0][RunPandaCPUCombinerThread]	PANDAMAPREDUCEJOB
+[0][RunPandaCPUCombinerThread]	VECTORIPISAIS
+[0][RunPandaCPUCombinerThread]	VECTORIS
+[0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTEST
+[0][RunPandaCPUCombinerThread]	ITERATORIPKPN
+[0][RunPandaCPUCombinerThread]	NODEIS
+[0]
+
+
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	[0]BASEIPISAIS[0][RunPandaCPUCombinerThread]	ATEEMPKVTORIPPN
+EVNINITIALIZED[0]
+[0][RunPandaCPUCombinerThread]	BASEIPISAIS[RunPandaCPUCombinerThread]	
+[0][RunPandaCPUCombinerThread]	VECTOR
+[0][RunPandaCPUCombinerThread]	EEERKSAIT
+[0][RunPandaCPUCombinerThread]	PANDAMESSAGEPACKAGEEEEPT
+[0][RunPandaCPUCombinerThread]	ITERATOR
+[0][RunPandaCPUCombinerThread]	TYPEERKS
+[0][RunPandaCPUCombinerThread]	DIFFERENCE[RunPandaCPUCombinerThread]	EVNINITIALIZED
+[0][RunPandaCPUCombinerThread]	BASEIPISAIS
+[0][RunPandaCPUCombinerThread]	VECTOR[0]
+
+[0][RunPandaCPUCombinerThread]	FREEMAPVARIABLESEVISTVECTOR
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	AIPPCS
+[0][RunPandaCPUCombinerThread]	NOEXCEPT
+[0][RunPandaCPUCombinerThread]	EVNINITIALIZED
+[0][RunPandaCPUCombinerThread]	[0][RunPandaCPUCombinerThread]	NODEIS
+[0][RunPandaCPUCombinerThread]	EEERKSAITFREEMAPVARIABLESEVIST
+[0]
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	CONTEXTIPANDAMAPREDUCEJOB
+[0][RunPandaCPUCombinerThread]	IAPPVS
+[0][RunPandaCPUCombinerThread]	ITERATORIT
+[0][RunPandaCPUCombinerThread]	NORMAL
+[0][RunPandaCPUCombinerThread]	EEEENS
+[0][RunPandaCPUCombinerThread]	CIOREQUESTEST[0][RunPandaCPUCombinerThread]	EEERKSAIT
+[0][RunPandaCPUCombinerThread]	BASEIPISAISEPKVIS
+[0][RunPandaCPUCombinerThread]	
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	CONSTRUCTEPS
+[0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTEE
+[0][RunPandaCPUCombinerThread]	CHUNKE
+[0][RunPandaCPUCombinerThread]	ADDMAPTASKSEPNS
+[0][RunPandaCPUCombinerThread]	PANDAMAPREDUCEJOB
+[0][RunPandaCPUCombinerThread]	VECTORIPISAIS
+[0][RunPandaCPUCombinerThread]	VECTORIS
+[0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTEST
+[0][RunPandaCPUCombinerThread]	ITERATORIPKPN
+
+CONTEXTIPANDAMAPREDUCEJOB[0]
+[0]
+[0][RunPandaCPUCombinerThread]	NODEIS
+[0][RunPandaCPUCombinerThread]	FREEMAPVARIABLESEVIST
+[0][RunPandaCPUCombinerThread]	CONTEXTIPANDAMAPREDUCEJOB
+[0][RunPandaCPUCombinerThread]	IAPPVS
+[0][RunPandaCPUCombinerThread]	EPKVIS
+[0][RunPandaCPUCombinerThread]	PANDAMESSAGEPACKAGEEEPPEVVARIOUSSIZEPANDACHUNKC[RunPandaCPUCombinerThread]	NODEIS
+AIPPCS
+[0]PANDAMESSAGEPACKAGEEEPPEVVARIOUSSIZEPANDACHUNKC
+
+[0][RunPandaCPUCombinerThread]	VECTOR
+[0][RunPandaCPUCombinerThread]	EEERKSAIT
+[0][RunPandaCPUCombinerThread]	NODEIS
+[0][RunPandaCPUCombinerThread]	FREEMAPVARIABLESEVIST
+[0][0][RunPandaCPUCombinerThread]	FREEMAPVARIABLESEVIST
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	CONTEXTIPANDAMAPREDUCEJOB
+[0][RunPandaCPUCombinerThread]	IAPPVS
+[0][RunPandaCPUCombinerThread]	ITERATORIPN
+[0][RunPandaCPUCombinerThread]	ALLOCATOREV
+[0][RunPandaCPUCombinerThread]	TASKESAIS
+[0][RunPandaCPUCombinerThread]	PANDAMESSAGEPACKAGEEEEPT
+[0][RunPandaCPUCombinerThread]	ITERATOR
+[0][RunPandaCPUCombinerThread]	TYPEERKS[RunPandaCPUCombinerThread]	CONTEXTIPANDAMAPREDUCEJOB
+NOEXCEPT[RunPandaCPUCombinerThread]	[0]
+[0][RunPandaCPUCombinerThread]	IAPPVS
+[0][RunPandaCPUCombinerThread]	EPKVIS
+[0][RunPandaCPUCombinerThread]	PANDAMESSAGEPACKAGEEEPPEVVARIOUSSIZEPANDACHUNKC
+[0][RunPandaCPUCombinerThread]	ITERATORIPN
+[0][RunPandaCPUCombinerThread]	[0]EVNINITIALIZED
+[RunPandaCPUCombinerThread]	[0]
+[RunPandaCPUCombinerThread]	
+[RunPandaCPUCombinerThread]	BASEIPISAIS
+[0][RunPandaCPUCombinerThread]	VECTOR
+[0][RunPandaCPUCombinerThread]	[0][RunPandaCPUCombinerThread]	ITERATORIPN
+[0][RunPandaCPUCombinerThread]	ALLOCATOREV
+[0][RunPandaCPUCombinerThread]	TASKESAIS
+[0][RunPandaCPUCombinerThread]	PANDAMESSAGEPACKAGEEEEPT
+[0][RunPandaCPUCombinerThread]	EEERKSAITITERATOR
+[0][RunPandaCPUCombinerThread]	DIFFERENCETYPEERKS
+EPKVIS[0][0][RunPandaCPUCombinerThread]	ITERATORIT
+
+
+
+IAPPVS[0][0][RunPandaCPUCombinerThread]	
+[0][RunPandaCPUCombinerThread]	EPKVIS
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	PANDAMESSAGEPACKAGEEEPPEVVARIOUSSIZEPANDACHUNKC
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	ITERATORIPN
+[0]DIFFERENCE[RunPandaCPUCombinerThread]	ALLOCATOREV
+[0][RunPandaCPUCombinerThread]	[0]TASKESAIS
+[0][RunPandaCPUCombinerThread]	PANDAMESSAGEPACKAGEEEEPT
+[0][RunPandaCPUCombinerThread]	ITERATORNODEIS
+[0][RunPandaCPUCombinerThread]	
+[0][RunPandaCPUCombinerThread]	
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	FREEMAPVARIABLESEVIST
+[0][RunPandaCPUCombinerThread]	ITERATORIT
+[0][RunPandaCPUCombinerThread]	TYPEERKSNORMAL
+[0][RunPandaCPUCombinerThread]	EEEENSPANDAMESSAGEPACKAGEEEPPEVVARIOUSSIZEPANDACHUNKC
+[0][RunPandaCPUCombinerThread]	CIOREQUESTEST
+[0][RunPandaCPUCombinerThread]	CONSTRUCTEPS[0]
+[0][RunPandaCPUCombinerThread]	
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	DIFFERENCE
+[0]ASYNCIOREQUESTEE
+[0][RunPandaCPUCombinerThread]	
+[0]ALLOCATOREV
+[0][RunPandaCPUCombinerThread]	TASKESAISCONTEXTIPANDAMAPREDUCEJOB
+[0][RunPandaCPUCombinerThread]	IAPPVS
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	EPKVIS
+[0][RunPandaCPUCombinerThread]	PANDAMESSAGEPACKAGEEEPPEVVARIOUSSIZEPANDACHUNKCCHUNKE
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	ITERATORIPN
+[0][RunPandaCPUCombinerThread]	ALLOCATOREV
+[0][RunPandaCPUCombinerThread]	ITERATORIPNTASKESAIS
+[0][RunPandaCPUCombinerThread]	PANDAMESSAGEPACKAGEEEEPT
+[0][RunPandaCPUCombinerThread]	ITERATOR
+[0][RunPandaCPUCombinerThread]	
+[0][RunPandaCPUCombinerThread]	
+[0]NORMAL
+[0][RunPandaCPUCombinerThread]	EEEENS
+[0][RunPandaCPUCombinerThread]	CIOREQUESTEST
+[0][RunPandaCPUCombinerThread]	CONSTRUCTEPS
+[0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTEE
+[0][RunPandaCPUCombinerThread]	CHUNKE
+[0][RunPandaCPUCombinerThread]	ADDMAPTASKSEPNS
+[0][RunPandaCPUCombinerThread]	PANDAMAPREDUCEJOB
+[0][RunPandaCPUCombinerThread]	VECTORIPISAIS
+[0][RunPandaCPUCombinerThread]	VECTORIS
+[0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTESTTYPEERKS
+ITERATORIT[0][RunPandaCPUCombinerThread]	ITERATORIPKPN
+[0]
+[0][RunPandaCPUCombinerThread]	ADDMAPTASKSEPNS
+[0][RunPandaCPUCombinerThread]	PANDAMAPREDUCEJOB
+[0][RunPandaCPUCombinerThread]	VECTORIPISAIS
+[0][RunPandaCPUCombinerThread]	VECTORIS
+[0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTEST
+[0][RunPandaCPUCombinerThread]	ITERATORIPKPN
+
+ALLOCATOREV
+[0][RunPandaCPUCombinerThread]	TASKESAIS
+[0][RunPandaCPUCombinerThread]	PANDAMESSAGEPACKAGEEEEPT
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	ITERATOR
+[0][RunPandaCPUCombinerThread]	DIFFERENCETYPEERKS
+[0][RunPandaCPUCombinerThread]	
+[0][RunPandaCPUCombinerThread]	ITERATORIT
+[0][RunPandaCPUCombinerThread]	NORMALDIFFERENCE
+[0][RunPandaCPUCombinerThread]	
+[0][RunPandaCPUCombinerThread]	ITERATORIT
+[0][RunPandaCPUCombinerThread]	NORMAL
+[0][RunPandaCPUCombinerThread]	EEEENS
+[0]EEEENS[RunPandaCPUCombinerThread]	NORMAL
+[0][RunPandaCPUCombinerThread]	EEEENS
+[0][RunPandaCPUCombinerThread]	CIOREQUESTEST
+[0][RunPandaCPUCombinerThread]	CONSTRUCTEPS
+[0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTEE
+[0][RunPandaCPUCombinerThread]	CHUNKE
+[0][RunPandaCPUCombinerThread]	ADDMAPTASKSEPNS
+[0][RunPandaCPUCombinerThread]	PANDAMAPREDUCEJOB
+[0][RunPandaCPUCombinerThread]	VECTORIPISAIS
+[0][RunPandaCPUCombinerThread]	VECTORIS
+[0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTEST
+[0][RunPandaCPUCombinerThread]	ITERATORIPKPN
+[RunPandaCPUCombinerThread]	PANDAMESSAGEPACKAGEEEEPT
+[0][RunPandaCPUCombinerThread]	ITERATOR
+[0][RunPandaCPUCombinerThread]	TYPEERKS
+[0][RunPandaCPUCombinerThread]	DIFFERENCE
+[0][RunPandaCPUCombinerThread]	
+
+[0][0][RunPandaCPUCombinerThread]	CIOREQUESTEST
+[0][RunPandaCPUCombinerThread]	CONSTRUCTEPS
+[0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTEE
+[0][RunPandaCPUCombinerThread]	CHUNKE
+[0][RunPandaCPUCombinerThread]	ADDMAPTASKSEPNS
+[0][RunPandaCPUCombinerThread]	PANDAMAPREDUCEJOB
+[0][RunPandaCPUCombinerThread]	VECTORIPISAIS
+[0][RunPandaCPUCombinerThread]	VECTORIS
+[0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTEST
+[0][RunPandaCPUCombinerThread]	ITERATORIPKPN
+ITERATORIT
+[0][RunPandaCPUCombinerThread]	NORMAL
+[0][RunPandaCPUCombinerThread]	EEEENS
+[0][RunPandaCPUCombinerThread]	CIOREQUESTEST
+[0][RunPandaCPUCombinerThread]	CONSTRUCTEPS
+[0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTEE
+[0][RunPandaCPUCombinerThread]	CHUNKE
+[0][RunPandaCPUCombinerThread]	[RunPandaCPUCombinerThread]	CIOREQUESTEST
+[0][RunPandaCPUCombinerThread]	CONSTRUCTEPS
+[0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTEE
+[0][RunPandaCPUCombinerThread]	CHUNKE
+[0][RunPandaCPUCombinerThread]	ADDMAPTASKSEPNS
+[0][RunPandaCPUCombinerThread]	PANDAMAPREDUCEJOB
+[0][RunPandaCPUCombinerThread]	VECTORIPISAIS
+[0][RunPandaCPUCombinerThread]	VECTORIS
+[0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTEST
+[0][RunPandaCPUCombinerThread]	ITERATORIPKPN
+ADDMAPTASKSEPNS
+[0][RunPandaCPUCombinerThread]	PANDAMAPREDUCEJOB
+[0][RunPandaCPUCombinerThread]	VECTORIPISAIS
+[0][RunPandaCPUCombinerThread]	VECTORIS
+[0][RunPandaCPUCombinerThread]	ASYNCIOREQUESTEST
+[0][RunPandaCPUCombinerThread]	ITERATORIPKPN
+[0][ExecutePandaGPUSort]	Total Count of Intermediate Records:0
+[0][getGPUCoresNum]	Configure Device ID:0: Device Name:GeForce GTX 960 MultProcessorCount:4 sm_per_multiproc:32
+[0][ExecutePandaGPUSort]	(totalValSize<=0)||(totalKeySize<=0)  Exit!
+--------------------------------------------------------------------------
+mpirun has exited due to process rank 0 with PID 0 on
+node jinsan exiting improperly. There are three reasons this could occur:
+
+1. this process did not call "init" before exiting, but others in
+the job did. This can cause a job to hang indefinitely while it waits
+for all processes to call "init". By rule, if one process calls "init",
+then ALL processes must call "init" prior to termination.
+
+2. this process called "init", but exited without calling "finalize".
+By rule, all processes that call "init" MUST call "finalize" prior to
+exiting or it will be considered an "abnormal termination"
+
+3. this process called "MPI_Abort" or "orte_abort" and the mca parameter
+orte_create_session_dirs is set to false. In this case, the run-time cannot
+detect that the abort call was an abnormal termination. Hence, the only
+error message you will receive is this one.
+
+This may have caused other processes in the application to be
+terminated by signals sent by mpirun (as reported here).
+
+You can avoid this message by specifying -quiet on the mpirun command line.
+--------------------------------------------------------------------------

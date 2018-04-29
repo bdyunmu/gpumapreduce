@@ -433,8 +433,9 @@ void ExecutePandaCPUCombiner(panda_cpu_context *pcc){
 
 	keyval_arr_t *d_keyval_arr_p;
 	int *count = NULL;
-	ShowLog("13.60 num_input_record:%d",pcc->input_key_vals.num_input_record);
-	ShowLog("13.65 num_cpus_cores:%d",pcc->num_cpus_cores);
+
+	ShowLog("num_input_record:%d",pcc->input_key_vals.num_input_record);
+	ShowLog("num_cpus_cores:%d",pcc->num_cpus_cores);
 
 	int num_threads = pcc->num_cpus_cores > pcc->input_key_vals.num_input_record ? pcc->input_key_vals.num_input_record : pcc->num_cpus_cores;
 	

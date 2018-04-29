@@ -4,7 +4,12 @@ panda, a framework co-processing spmd computation on gpus and cpus
 		baoding yunmu co.ltd
 		2017.11.09
 
-docs/Co-processing SPMD computation on CPUs and GPUs cluster.pdf
+Title: docs/Co-processing SPMD computation on CPUs and GPUs cluster.pdf
+
+Support apps:
+1) word count
+2) cmeans
+
 -----------------------------------------------------------------
 steps to run sample:<br>
         1)cd gpumapreduce<br>
