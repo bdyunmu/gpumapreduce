@@ -13,7 +13,6 @@
 #include "Panda.h"
 
 #define MATRIX_BLOCK_SIZE 64
-
 #define ENABLE_MDL	0
 #define CPU_ONLY	0
 #define DEVICE		0
@@ -60,24 +59,6 @@
 //Number of cluster memberships computed by each thread in UpdateCenters
 #define NUM_CLUSTERS_PER_BLOCK 4
 
-__device__ void panda_gpu_core_map(void *KEY, void*VAL, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx);
-__device__ void panda_gpu_core_combiner(void *KEY, val_t* VAL, int keySize, int valCount, panda_gpu_context *pgc, int map_task_idx);
-__device__ void panda_gpu_core_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_gpu_context d_g_state);
-__device__ int  panda_gpu_core_compare(const void *d_a, int len_a, const void *d_b, int len_b);
-
-void panda_cpu_map(void *KEY, void*VAL, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx);
-void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context* pcc);
-int  panda_cpu_compare(const void *d_a, int len_a, const void *d_b, int len_b);
-void panda_cpu_combiner(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context *pcc, int map_task_idx);
-int  cpu_compare(const void *d_a, int len_a, const void *d_b, int len_b);
-void cmeans_cpu_map_cpp(void *key, void *val, int keySize, int valSize);
-void cmeans_cpu_reduce_cpp(void *key, val_t* vals, int keySize, int valCount);
-
-void panda_gpu_card_map(void *key, void *val, int keySize, int valSize, panda_gpu_card_context *pgcc, int map_task_idx);
-void panda_gpu_card_reduce(void *key, val_t* vals, int keySize, int valCount, panda_gpu_card_context *pgcc);
-void panda_gpu_card_combiner(void *KEY, val_t* VAL, int keySize, int valCount, panda_gpu_card_context *pgcc, int map_task_idx);
-int  panda_gpu_card_compare(const void *d_a, int len_a, const void *d_b, int len_b);
-
 struct CMEANS_KEY_T
 {
 	int map_task_id;
@@ -106,13 +87,5 @@ struct CMEANS_VAL_T
 	float myDenominators[1000];
 		
 };
-
-#if 0
-struct val_t
-{
-   void * val;
-   int valSize;
-};
-#endif
 
 #endif

@@ -23,8 +23,8 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include <CmeansAPI.h>
-
+#include "PandaAPI.h"
+#include "cmeans.h"
 
 #if 0
 typedef struct

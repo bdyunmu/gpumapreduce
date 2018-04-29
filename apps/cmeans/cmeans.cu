@@ -16,7 +16,6 @@ This is the source code for Panda, a MapReduce runtime on GPUs and CPUs.
 #include <panda/PandaMessage.h>
 #include <panda/PandaMapReduceJob.h>
 #include <panda/IntIntSorter.h>
-#include <panda/PandaMapReduceWorker.h>
 #include <cudacpp/Event.h>
 #include <cudacpp/Runtime.h>
 #include <cudacpp/Stream.h>
@@ -25,15 +24,64 @@ This is the source code for Panda, a MapReduce runtime on GPUs and CPUs.
 #include <cstdlib>
 #include <cstdio>
 #include <ctype.h>
-
-#include <CmeansAPI.h>
+#include "PandaAPI.h"
+#include "cmeans.h"
 
 
 //-----------------------------------------------------------------------
 //app name:
 //C-means:  fuzzy data clustering algorithm 
 //-----------------------------------------------------------------------
+__device__ void panda_gpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_gpu_context pgc){
+}
+__device__ int panda_gpu_core_compare(const void *key_a, int len_a, const void *key_b, int len_b){
+}
+__device__ void panda_gpu_core_combiner(void *KEY, val_t* VAL, int keySize, int valCount, panda_gpu_context *pgc, int map_task_idx){
+}
+__device__ void panda_gpu_core_map(void *KEY, void*VAL, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx){
+}
+__device__ void panda_gpu_core_reduce(void *key, val_t* vals, int keySize, int valCount, panda_gpu_context pgc){
+}
 
+int panda_cpu_compare(const void *key_a, int len_a, const void *key_b, int len_b)
+{
+        int short_len = len_a>len_b? len_b:len_a;
+        for(int i = 0;i<short_len;i++){
+                if(((char *)key_a)[i]>((char *)key_b)[i])
+                return 1;
+                if(((char *)key_a)[i]<((char *)key_b)[i])
+                return -1;
+        }
+        return 0;
+        /*
+        if (ka->i > kb->i)
+                return 1;
+        if (ka->i > kb->i)
+                return -1;
+        if (ka->i == kb->i)
+                return 0;
+        */
+
+}
+
+void panda_cpu_combiner(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context *pcc, int map_task_idx){
+
+                //int *count = (int *) malloc (sizeof(int));
+                int count = 0;
+                for (int i=0;i<valCount;i++){
+                         count += *((int *)(VAL[i].val));
+                }//for
+
+                PandaCPUEmitCombinerOutput(KEY,&count,keySize,sizeof(int),pcc, map_task_idx);
+
+}//reduce2
+
+void panda_cpu_map(void *KEY, void*VAL, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx){
+}
+
+void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context* pcc){
+
+}
 
 static float *GenPointsFloat(int numPt, int dim)
 {
@@ -44,6 +92,9 @@ static float *GenPointsFloat(int numPt, int dim)
 			matrix[i*dim+j] = (float)((rand() % 100)/73.0);
 	return matrix;
 }//static float 
+
+
+
 
 static float *GenInitCentersFloat(float* points, int numPt, int dim, int K)
 {
@@ -93,7 +144,7 @@ int main(int argc, char** argv)
 		MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 		MPI_Comm_size(MPI_COMM_WORLD, &size);
 		
-		job->setMessage(new panda::PandaFSMessage(true));
+		//job->setMessage(new panda::PandaFSMessage(true));
 		//pjob.setMessage(new panda::PandaMPIMessage(true));
 
 		float* d_points	 =	NULL;
@@ -162,7 +213,6 @@ int main(int argc, char** argv)
 		double t2 = PandaTimer();
 		ShowLog("Panda C-means take %f sec", t2-t1);
 #endif
-
 		return 0;
 }//	
 
