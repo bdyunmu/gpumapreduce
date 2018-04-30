@@ -18,13 +18,7 @@
 #include "Global.h"
 #include "PandaAPI.h"
 
-//#include "CmeansAPI.h"
-//#include "cmeans/CmeansAPI.cu"
-//#include "wc/wc_api.cu"
-
 extern int gCommRank;
-
-
 
 __global__ void ExecutePandaGPUMapPartitioner(panda_gpu_context pgc)
 {
@@ -408,9 +402,9 @@ __global__ void GPUCombiner(panda_gpu_context pgc);
 
 void ExecutePandaGPUCombiner(panda_gpu_context * pgc){
 
-	double t1 = PandaTimer();
+	//double t1 = PandaTimer();
 	cudaMemset(pgc->intermediate_key_vals.d_intermediate_keyval_total_count,0,pgc->input_key_vals.num_input_record*sizeof(int));
-
+	ShowLog("pgc->input_key_vals.num_input_record:%d",pgc->input_key_vals.num_input_record);
 	int numGPUCores = getGPUCoresNum();
 	dim3 blocks(THREAD_BLOCK_SIZE, THREAD_BLOCK_SIZE);
 	int numBlocks = (numGPUCores*16+(blocks.x*blocks.y)-1)/(blocks.x*blocks.y);
@@ -1354,21 +1348,23 @@ void PandaLaunchMapTasksOnGPU(panda_gpu_context pgc, int curIter, int totalIter,
 
 
 __global__ void GPUCombiner(panda_gpu_context pgc)
-{	
+{
 
-	//ShowLog("gridDim.x:%d gridDim.y:%d gridDim.z:%d blockDim.x:%d blockDim.y:%d blockDim.z:%d blockIdx.x:%d blockIdx.y:%d blockIdx.z:%d",
-	//  gridDim.x,gridDim.y,gridDim.z,blockDim.x,blockDim.y,blockDim.z,blockIdx.x,blockIdx.y,blockIdx.z);
-	
+	//GpuShowError("gridDim.x:%d gridDim.y:%d gridDim.z:%d blockDim.x:%d blockDim.y:%d blockDim.z:%d blockIdx.x:%d blockIdx.y:%d blockIdx.z:%d",
+	// gridDim.x,gridDim.y,gridDim.z,blockDim.x,blockDim.y,blockDim.z,blockIdx.x,blockIdx.y,blockIdx.z);
+
 	int num_records_per_thread = (pgc.input_key_vals.num_input_record + (gridDim.x*blockDim.x*blockDim.y)-1)/(gridDim.x*blockDim.x*blockDim.y);
+	//GpuShowError("num_records_per_thread:%d",num_records_per_thread);
+	
 	int block_start_idx = num_records_per_thread * blockIdx.x * blockDim.x * blockDim.y;
 	int thread_start_idx = block_start_idx 
 		+ ((threadIdx.y*blockDim.x + threadIdx.x)/STRIDE)*num_records_per_thread*STRIDE
 		+ ((threadIdx.y*blockDim.x + threadIdx.x)%STRIDE);
 
-	int thread_end_idx = thread_start_idx + num_records_per_thread*STRIDE;
+	int thread_end_idx = thread_start_idx + num_records_per_thread;//*STRIDE;
 	if (thread_end_idx > pgc.input_key_vals.num_input_record)
 		thread_end_idx = pgc.input_key_vals.num_input_record;
-
+	
 	if (thread_start_idx >= thread_end_idx)
 		return;
 
@@ -1376,10 +1372,13 @@ __global__ void GPUCombiner(panda_gpu_context pgc)
 	int *buddy = kv_arr_p->shared_buddy;
 
 	int unmerged_shared_arr_len = *kv_arr_p->shared_arr_len;
-	GpuShowError("$$$$$$$$$$$$$$unmerged_shared_arr_len:%d",unmerged_shared_arr_len);
+	GpuShowError("[GPUCombiner] unmerged_shared_arr_len:%d",unmerged_shared_arr_len);
 
 	val_t *val_t_arr = (val_t *)malloc(sizeof(val_t)*unmerged_shared_arr_len);
-	if (val_t_arr == NULL) GpuShowError("there is no enough memory");
+	if (val_t_arr == NULL) {
+	GpuShowError("[GPUCombiner] there is no enough memory. Return");
+	return;
+	}//if
 
 	int num_keyval_pairs_after_combiner = 0;
 	for (int i=0; i<unmerged_shared_arr_len;i++){
@@ -1399,7 +1398,8 @@ __global__ void GPUCombiner(panda_gpu_context pgc)
 
 		if((first_kv_p->keyPos%4!=0)||(first_kv_p->valPos%4!=0)){
 			GpuShowError("keyPos or valPos is not aligned with 4 bytes, results could be wrong");
-		}
+			return;
+		}//if
 
 		int index = 0;
 		first_kv_p = head_kv_p;
@@ -1435,16 +1435,14 @@ __global__ void GPUCombiner(panda_gpu_context pgc)
 	}//for
 	free(val_t_arr);
 	pgc.intermediate_key_vals.d_intermediate_keyval_total_count[thread_start_idx] = num_keyval_pairs_after_combiner;
-	////////////////////////////////////////////////////////////////////
 	__syncthreads();
 
-}//GPUMapPartitioner
+}//GPU
 
 
 
-
+#if 0
 void PandaExecuteCombinerOnGPU(panda_gpu_context * pgc){
-
 	double t1 = PandaTimer();
 	cudaMemset(pgc->intermediate_key_vals.d_intermediate_keyval_total_count,0,pgc->input_key_vals.num_input_record*sizeof(int));
 
@@ -1453,9 +1451,9 @@ void PandaExecuteCombinerOnGPU(panda_gpu_context * pgc){
 	int numBlocks = (numGPUCores*16+(blocks.x*blocks.y)-1)/(blocks.x*blocks.y);
     	dim3 grids(numBlocks, 1);
 	GPUCombiner<<<grids,blocks>>>(*pgc);
-
 	cudaThreadSynchronize();
 }
+#endif
 
 void PandaExecuteCombinerOnCPU(panda_cpu_context *pcc){
 	

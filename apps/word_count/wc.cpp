@@ -42,6 +42,7 @@ int main(int argc, char ** argv)
 
 	//if (rank == 0)
 	{
+
     	char fn[256];
 	char str[512];
 	char strInput[1024];
@@ -53,6 +54,7 @@ int main(int argc, char ** argv)
 	wcfp = fopen(fn, "r");
 	const int NUM_ELEMENTS = 1;
 	int total_len = 0;
+
 	while(fgets(str,sizeof(str),wcfp) != NULL)
 	{
 		for (int i = 0; i < strlen(str); i++)

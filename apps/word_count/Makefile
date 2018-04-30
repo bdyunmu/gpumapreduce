@@ -6,17 +6,17 @@
 all: word_count
 
 OPTFLAGS    = -O2
-INCFLAGS    = -I/opt/openmpi/include
+INCFLAGS    = -I/opt/openmpi-3.0.1/include
 CFLAGS      = $(OPTFLAGS) $(INCFLAGS) -DBLOCK_SHARED_MEM_OPTIMIZATION=0
 NVCCFLAGS   = $(CFLAGS)
-LDFLAGS	    = -L/opt/openmpi/lib/
+LDFLAGS	    = -L/opt/openmpi-3.0.1/lib/
 LIBS        = -lmpi -lpthread
 
-CC          = mpicxx
-MPICC       = mpicxx
-NVCC        = nvcc
+CC          = mpicc -g
+MPICC       = mpicxx -g
+NVCC        = nvcc -g 
 
-NVCCFLAGS  = -I/opt/openmpi/include -lcudart -arch=sm_30 -I../../include --relocatable-device-code=true
+NVCCFLAGS  = -I/opt/openmpi-3.0.1/include -lcudart -arch=sm_20 -I../../include --relocatable-device-code=true
 INCFLAGS   += -I/usr/include/  -I/usr/local/cuda/include
 INCFLAGS   += -I../../include -I../../include/panda
 LDFLAGS    += -L/usr/local/cuda/lib64/ 
@@ -48,7 +48,7 @@ WC_OBJ_CU_FILES	:=
 
 word_count: $(APP_WC_OBJ_FILES) $(OS_OBJ_FILES) $(PANDA_OBJ_FILES) \
 		$(CUDA_OBJ_FILES) $(CU_OBJ_FILES) $(APP_WC_CU_OBJ_FILES)
-		$(NVCC) $(LIBS) $(NVCCFLAGS) $(LDFLAGS) -o ../../bin/word_c $^
+		$(NVCC) $(LIBS) $(NVCCFLAGS) $(LDFLAGS) -o ../../bin/word_count $^
 
 ../../obj/%.o: ./%.cpp $(APP_WC_H_FILES) 
 	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
@@ -66,10 +66,10 @@ word_count: $(APP_WC_OBJ_FILES) $(OS_OBJ_FILES) $(PANDA_OBJ_FILES) \
 	$(MPICC) $(LIBS) $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
 
 ../../cuobj/%.o: ./%.cu $(APP_WC_H_FILES)
-	nvcc $(NVCCFLAGS) -c -o $@ $<
+	$(NVCC) $(NVCCFLAGS) -c -o $@ $<
 
 ../../cuobj/%.o: ../../src/%.cu $(CUDA_H_FILES) $(H_FILES)
-	nvcc $(NVCCFLAGS) -c -o $@ $<
+	$(NVCC) $(NVCCFLAGS) -c -o $@ $<
 
 clean:
 	rm -rf obj/*.o cuobj/*.o panda_word_count 

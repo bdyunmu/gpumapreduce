@@ -6,17 +6,17 @@
 all: cmeans 
 
 OPTFLAGS    = -O2
-INCFLAGS    = -I/opt/openmpi/include
+INCFLAGS    = -I/opt/openmpi-3.0.1/include
 CFLAGS      = $(OPTFLAGS) $(INCFLAGS) -DBLOCK_SHARED_MEM_OPTIMIZATION=0
 NVCCFLAGS   = $(CFLAGS)
-LDFLAGS	    = -L/opt/openmpi/lib/
+LDFLAGS	    = -L/opt/openmpi-3.0.1/lib/
 LIBS        = -lmpi -lpthread
 
 CC          = mpicxx
 MPICC       = mpicxx
 NVCC        = nvcc
 
-NVCCFLAGS  = -I/opt/openmpi/include -lcudart -arch=sm_30 -I../../include --relocatable-device-code=true
+NVCCFLAGS  = -I/opt/openmpi-3.0.1/include -lcudart -arch=sm_20 -I../../include --relocatable-device-code=true
 INCFLAGS   += -I/usr/include/  -I/usr/local/cuda/include
 INCFLAGS   += -I../../include  -I../../include/panda
 LDFLAGS    += -L/usr/local/cuda/lib64/

@@ -67,7 +67,7 @@ namespace panda
       devCounts[buf] = devCount;
       for (int i = 1; i < commSize; ++i)
       {
-		MPI_Recv(&devCount, 1, MPI_INT, i, 0, MPI_COMM_WORLD, &stat);
+	MPI_Recv(&devCount, 1, MPI_INT, i, 0, MPI_COMM_WORLD, &stat);
         MPI_Recv(buf, 1024, MPI_CHAR, i, 1, MPI_COMM_WORLD, &stat);
         // check to make sure each process on each node reports the same number of devices.
         hosts[buf].push_back(i);

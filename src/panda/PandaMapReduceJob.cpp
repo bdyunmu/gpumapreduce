@@ -209,9 +209,9 @@ namespace panda
   void PandaMapReduceJob::addMapTasks(Chunk *chunk){
   	}  			
   void PandaMapReduceJob::StartPandaLocalMergeGPUOutput()
-  {
+  	{
 	  ExecutePandaShuffleMergeGPU(this->pNodeContext, this->pGPUContext);
-  }//void
+  	}//void
 
   void PandaMapReduceJob::StartPandaSortGPUResults()
   {
@@ -996,13 +996,14 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 
 	if(this->getEnableGPU())
 		StartPandaGPUCombiner();
-	if(this->getEnableCPU())
+	if(this->getEnableCPU()){
 		StartPandaCPUCombiner();
+	}
 
     	//if (messager != NULL) messager->MsgFinalize();
 
 	if(this->getEnableGPU()){
-		StartPandaSortGPUResults();			
+		StartPandaSortGPUResults();		
 		StartPandaLocalMergeGPUOutput();	
 	}//if
 	
