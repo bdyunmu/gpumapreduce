@@ -1,6 +1,6 @@
 panda, a framework co-processing spmd computation on gpus and cpus
 =================================================================
-		li7hui@gmail.com
+		huili@ruijie.com.cn
 		ruijie network co.ltd
 		2017.11.09
 
