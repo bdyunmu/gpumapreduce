@@ -21,7 +21,6 @@
 #include <cudacpp/Runtime.h>
 #include <cudacpp/Event.h>
 
-
 #include <algorithm>
 #include <vector>
 #include <cstring>

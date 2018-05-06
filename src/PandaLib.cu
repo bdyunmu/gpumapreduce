@@ -858,7 +858,7 @@ __global__ void copyDataFromDevice2Host4Reduce(panda_gpu_context pgc)
                 val_pos += (pgc.reduced_key_vals.d_reduced_keyval_arr[i].valSize+3)/4*4;
                 key_pos += (pgc.reduced_key_vals.d_reduced_keyval_arr[i].keySize+3)/4*4;
         }//for
-	printf("hello world TID:%d thread_start_idx:%d thread_end_idx:%d val_pos:%d key_pos:%d\n",TID,thread_start_idx,thread_end_idx,val_pos,key_pos);
+	//printf("hello world TID:%d thread_start_idx:%d thread_end_idx:%d val_pos:%d key_pos:%d\n",TID,thread_start_idx,thread_end_idx,val_pos,key_pos);
 	
         for (int i = thread_start_idx; i < thread_end_idx;i++){
                 memcpy( (char *)(pgc.output_key_vals.d_KeyBuff) + key_pos,

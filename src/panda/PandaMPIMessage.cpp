@@ -345,7 +345,7 @@ namespace panda
 				ShowError("!  data->valBuffSize != data->counts[2]");
 
 			if(data->counts[0] > 0){
-			ShowLog("MPI_Isend 123456769");
+
 			MPI_Isend(data->counts,      3,    MPI_INT,     data->rank,  0,  MPI_COMM_WORLD, &data->reqs[0]);
 			MPI_Isend(data->keysBuff,    data->keyBuffSize, MPI_CHAR, data->rank, 1, MPI_COMM_WORLD, &data->reqs[1]);
 			MPI_Isend(data->valsBuff,    data->valBuffSize, MPI_CHAR, data->rank, 2, MPI_COMM_WORLD, &data->reqs[2]);
