@@ -326,7 +326,7 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 
 void ExecutePandaShuffleMergeGPU(panda_node_context *pnc, panda_gpu_context *pgc){
 
-	printf("[ExecutePandaShuffleMergeGPU] hello world...");
+	printf("[ExecutePandaShuffleMergeGPU]");
 	
 	char *sorted_keys_shared_buff_0 = (char *)pgc->sorted_key_vals.h_sorted_keys_shared_buff;
 	char *sorted_vals_shared_buff_0 = (char *)pgc->sorted_key_vals.h_sorted_vals_shared_buff;
@@ -505,7 +505,7 @@ __global__ void copyDataFromDevice2Host2(panda_gpu_context pgc)
 	char *val_p,*key_p;
 	int counter = 0;
 	//bool local_combiner = d_g_state.local_combiner;
-	bool local_combiner = true;
+	bool local_combiner = false;
 
 	for(int local_idx = 0; local_idx<(shared_arr_len); local_idx++){
 

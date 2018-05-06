@@ -103,7 +103,7 @@ namespace panda
       oscpp::Timer totalTimer;
       
       virtual int StartPandaReduceTasksOnGPU();
-      virtual int StartPandaReduceTasksOnGPUCard();
+      //virtual int StartPandaReduceTasksOnGPUCard();
       virtual void determineMaximumSpaceRequirements();
       virtual void allocateMapVariables();
       virtual void freeMapVariables();
@@ -159,7 +159,7 @@ namespace panda
 	  virtual void StartPandaDoPartitionOnCPU();
 	  virtual void StartPandaSortBucket();
 
-	  virtual void StartPandaAddReduceTask4GPU(int start_row_id, int end_row_id);
+	  //virtual void StartPandaAddReduceTask4GPU(int start_row_id, int end_row_id);
 	  virtual int  StartPandaGPUMapTasks();
 	  virtual int  StartPandaCPUMapTasks();
 	  virtual int  StartPandaGPUReduceTasks();
