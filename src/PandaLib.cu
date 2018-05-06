@@ -1469,16 +1469,8 @@ __global__ void GPUCombiner(panda_gpu_context pgc)
 
 
 #if 0
-void PandaExecuteCombinerOnGPU(panda_gpu_context * pgc){
-	double t1 = PandaTimer();
-	cudaMemset(pgc->intermediate_key_vals.d_intermediate_keyval_total_count,0,pgc->input_key_vals.num_input_record*sizeof(int));
-
-	int numGPUCores = getGPUCoresNum();
-	dim3 blocks(THREAD_BLOCK_SIZE, THREAD_BLOCK_SIZE);
-	int numBlocks = (numGPUCores*16+(blocks.x*blocks.y)-1)/(blocks.x*blocks.y);
-    	dim3 grids(numBlocks, 1);
-	GPUCombiner<<<grids,blocks>>>(*pgc);
-	cudaThreadSynchronize();
+void PandaExecuteCombinerOnGPU(panda_gpu_context * pgc)
+{
 }
 #endif
 
@@ -1728,89 +1720,6 @@ void PandaEmitCombinerOutputOnCPU(void *key, void *val, int keySize, int valSize
 #if 0
 void PandaExecuteReduceTasksOnGPU(panda_gpu_context *pgc)
 {
-	if (pgc->sorted_key_vals.d_sorted_keyvals_arr_len <= 0)
-		return;
-
-	cudaThreadSynchronize(); 
-	pgc->reduced_key_vals.d_reduced_keyval_arr_len = pgc->sorted_key_vals.d_sorted_keyvals_arr_len;
-	
-
-	cudaMalloc((void **)&(pgc->reduced_key_vals.d_reduced_keyval_arr), 
-		sizeof(keyval_t)*pgc->reduced_key_vals.d_reduced_keyval_arr_len);
-
-	pgc->output_key_vals.totalKeySize = 0;
-	pgc->output_key_vals.totalValSize = 0;
-	pgc->output_key_vals.h_reduced_keyval_arr_len = pgc->reduced_key_vals.d_reduced_keyval_arr_len;
-	pgc->output_key_vals.h_reduced_keyval_arr = (keyval_t*)(malloc(sizeof(keyval_t)*pgc->output_key_vals.h_reduced_keyval_arr_len));
-
-	cudaThreadSynchronize(); 
-	int numGPUCores = getGPUCoresNum();
-	dim3 blocks(THREAD_BLOCK_SIZE, THREAD_BLOCK_SIZE);
-	int numBlocks = (numGPUCores*16+(blocks.x*blocks.y)-1)/(blocks.x*blocks.y);
-    	dim3 grids(numBlocks, 1);
-	
-	//int total_gpu_threads = (grids.x*grids.y*blocks.x*blocks.y);
-	ShowLog("reduce len:%d intermediate len:%d output len:%d sorted keySize%d: sorted valSize:%d",
-		pgc->reduced_key_vals.d_reduced_keyval_arr_len, 
-		pgc->intermediate_key_vals.d_intermediate_keyval_arr_arr_len,
-		pgc->output_key_vals.h_reduced_keyval_arr_len,
-		pgc->sorted_key_vals.totalKeySize, 
-		pgc->sorted_key_vals.totalValSize);
-
-	GPUReducePartitioner<<<grids,blocks>>>(*pgc);
-
-	cudaMemcpy(pgc->output_key_vals.h_reduced_keyval_arr,
-		pgc->reduced_key_vals.d_reduced_keyval_arr,
-		sizeof(keyval_t)*pgc->reduced_key_vals.d_reduced_keyval_arr_len,
-		cudaMemcpyDeviceToHost);
-
-	for (int i = 0; i<pgc->reduced_key_vals.d_reduced_keyval_arr_len; i++){
-		pgc->output_key_vals.totalKeySize += (pgc->output_key_vals.h_reduced_keyval_arr[i].keySize+3)/4*4;
-		pgc->output_key_vals.totalValSize += (pgc->output_key_vals.h_reduced_keyval_arr[i].valSize+3)/4*4;
-	}//for
-	
-	pgc->output_key_vals.h_KeyBuff = malloc(sizeof(char)*pgc->output_key_vals.totalKeySize);
-	pgc->output_key_vals.h_ValBuff = malloc(sizeof(char)*pgc->output_key_vals.totalValSize);
-
-	cudaMalloc(&(pgc->output_key_vals.d_KeyBuff), sizeof(char)*pgc->output_key_vals.totalKeySize );
-	cudaMalloc(&(pgc->output_key_vals.d_ValBuff), sizeof(char)*pgc->output_key_vals.totalValSize );
-
-	ShowLog("[copyDataFromDevice2Host4Reduce] Output total keySize:%f KB valSize:%f KB\n",(float)(pgc->output_key_vals.totalKeySize)/1024.0,(float)(pgc->output_key_vals.totalValSize)/1024.0);
-	
-	copyDataFromDevice2Host4Reduce<<<grids,blocks>>>(*pgc);
-
-	cudaMemcpy(
-			pgc->output_key_vals.h_KeyBuff,
-			pgc->output_key_vals.d_KeyBuff,
-			pgc->output_key_vals.totalKeySize,
-			cudaMemcpyDeviceToHost);
-
-	cudaMemcpy(
-		pgc->output_key_vals.h_ValBuff,
-		pgc->output_key_vals.d_ValBuff,
-		pgc->output_key_vals.totalValSize,
-		cudaMemcpyDeviceToHost);
-
-	int val_pos, key_pos;
-	val_pos = key_pos = 0;
-	void *val, *key;
-
-	for (int i = 0; i<pgc->output_key_vals.h_reduced_keyval_arr_len; i++){
-		
-		val = (char *)pgc->output_key_vals.h_ValBuff + val_pos;
-		key = (char *)pgc->output_key_vals.h_KeyBuff + key_pos;
-		pgc->output_key_vals.h_reduced_keyval_arr[i].key = key;
-		pgc->output_key_vals.h_reduced_keyval_arr[i].val = val;
-		ShowLog("key:%s val:%d\n",key,*(int*)val);
-
-		val_pos += (pgc->output_key_vals.h_reduced_keyval_arr[i].valSize+3)/4*4;
-		key_pos += (pgc->output_key_vals.h_reduced_keyval_arr[i].keySize+3)/4*4;
-
-	}//for
-
-	//TODO
-	//cudaThreadSynchronize(); 
-
 }//void
 #endif
 

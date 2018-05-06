@@ -231,10 +231,9 @@ namespace panda
   }
 
 #if 0
-  int PandaMapReduceJob::StartPandaReduceTasksOnGPUCard()
-	{
-		return 0;
-	}// int PandaMapReduceJob
+int PandaMapReduceJob::StartPandaReduceTasksOnGPUCard()
+{
+}// int PandaMapReduceJob
 #endif
 
  int PandaMapReduceJob::StartPandaReduceTasksOnGPU()
@@ -717,11 +716,9 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
   }//void
 
 #if 0
-  void PandaMapReduceJob::StartPandaCopyRecvedBucketToGPUCard(int start_task_id, int end_task_id)
-  {
-	  //ShowLog("copy %d chunks to GPUCard", (end_task_id - start_task_id) );
-	  //AddReduceTaskOnGPUCard(this->pGPUCardContext,this->pNodeContext, start_task_id, end_task_id);
-  }//void
+void PandaMapReduceJob::StartPandaCopyRecvedBucketToGPUCard(int start_task_id, int end_task_id)
+{
+}//void
 #endif
 
   void PandaMapReduceJob::StartPandaCopyRecvedBucketToCPU(int start_task_id, int end_task_id)
