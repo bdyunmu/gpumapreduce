@@ -1,12 +1,12 @@
-/*
-Copyright 2013 The Trustees of Indiana University.  All rights reserved.
-Panda MapReduce Framework on GPUs and CPUs
-Code Name: Panda 0.6
+/***********************************************************************
+Copyright 2012 The Trustees of Indiana University.  All rights reserved.
+Panda:a MapReduce Framework on GPUs and CPUs
 File: PandaMPIMessage.cpp
 Time: 2017-12-11
-Developer: Hui Li (lihui@indiana.edu)
-This is the source code for Panda, a MapReduce runtime on GPUs and CPUs.
-*/
+
+Developer: Hui Li (huili@ruijie.com.cn)
+
+************************************************************************/
 
 #include <mpi.h>
 #include <panda/PandaMessageIORequest.h>

@@ -4,7 +4,7 @@
 # * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 all: panda
-panda: bin_dir obj_dir cuobj_dir word_count cmeans
+panda: bin_dir obj_dir cuobj_dir wordcount terasort
 
 BIN_DIR:=bin
 OBJ_DIR:=obj
@@ -26,11 +26,11 @@ cuobj_dir:
 	  mkdir $(CUOBJ_DIR);\
 	fi
 
-word_count:
-	make -C apps/word_count/
+wordcount:
+	make -C apps/wordcount/
 
-cmeans:
-	make -C apps/cmeans/
+terasort:
+	make -C apps/terasort/
 
 clean:
-	rm -rf obj/*.o cuobj/*.o bin/word_count bin/cmeans
+	rm -rf obj/*.o cuobj/*.o bin/wordcount bin/terasort

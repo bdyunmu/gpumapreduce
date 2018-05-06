@@ -1,0 +1,67 @@
+/*
+
+Copyright 2012 The Trustees of Indiana University.  All rights reserved.
+Panda: a MapReduce Framework on GPUs and CPUs
+File: main.cu 
+Time: 2017-11-11 
+Developer: Hui Li (huili@ruijie.com.cn)
+
+*/
+
+
+#include <mpi.h>
+#include <panda/PreLoadedPandaChunk.h>
+#include <panda/PandaMessage.h>
+#include <panda/PandaMapReduceJob.h>
+#include <panda/IntIntSorter.h>
+#include <cudacpp/Event.h>
+#include <cudacpp/Runtime.h>
+#include <cudacpp/Stream.h>
+#include <oscpp/Timer.h>
+#include <vector>
+#include <cstdlib>
+#include <cstdio>
+#include <ctype.h>
+#include "PandaAPI.h"
+#include "terasort.h"
+
+
+__device__ void panda_gpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_gpu_context pgc){
+}
+__device__ int panda_gpu_core_compare(const void *key_a, int len_a, const void *key_b, int len_b){
+}
+__device__ void panda_gpu_core_combiner(void *KEY, val_t* VAL, int keySize, int valCount, panda_gpu_context *pgc, int map_task_idx){
+}
+__device__ void panda_gpu_core_map(void *KEY, void*VAL, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx){
+}
+__device__ void panda_gpu_core_reduce(void *key, val_t* vals, int keySize, int valCount, panda_gpu_context pgc){
+}
+
+int panda_cpu_compare(const void *key_a, int len_a, const void *key_b, int len_b)
+{
+
+}
+
+void panda_cpu_combiner(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context *pcc, int map_task_idx){
+                //PandaCPUEmitCombinerOutput(KEY,&count,keySize,sizeof(int),pcc, map_task_idx);
+}//reduce2
+
+void panda_cpu_map(void *KEY, void*VAL, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx){
+}
+
+void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context* pcc){
+
+}
+
+int main(int argc, char** argv) 
+{		
+		if (argc != 5)
+		{
+			ShowLog("terasort");
+			ShowLog("usage: %s [numPt] [cpu/gpu ratio] [numMapperPerCPU] [numMapperPerGPU]", argv[0]);
+			exit(-1);//[Dimensions] [numClusters]
+		}//if
+
+		return 0;
+}//	
+

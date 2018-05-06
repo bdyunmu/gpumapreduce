@@ -3,7 +3,7 @@
 #    							  lihui@indiana.edu */
 # * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-all: word_count
+all: terasort 
 
 OPTFLAGS    = -O2
 INCFLAGS    = -I/opt/openmpi-3.0.1/include
@@ -12,31 +12,31 @@ NVCCFLAGS   = $(CFLAGS)
 LDFLAGS	    = -L/opt/openmpi-3.0.1/lib/
 LIBS        = -lmpi -lpthread
 
-CC          = mpicc -g
-MPICC       = mpicxx -g
-NVCC        = nvcc -g 
+CC          = mpicxx
+MPICC       = mpicxx
+NVCC        = nvcc
 
 NVCCFLAGS  = -I/opt/openmpi-3.0.1/include -lcudart -arch=sm_20 -I../../include --relocatable-device-code=true
 INCFLAGS   += -I/usr/include/  -I/usr/local/cuda/include
-INCFLAGS   += -I../../include -I../../include/panda
-LDFLAGS    += -L/usr/local/cuda/lib64/ 
+INCFLAGS   += -I../../include  -I../../include/panda
+LDFLAGS    += -L/usr/local/cuda/lib64/
 
-APP_WC_CPP_FILES:= $(wildcard ./*.cpp)
-APP_WC_CU_FILES	:= $(wildcard ./*.cu)
+APP_CMEANS_CPP_FILES:= $(wildcard ./*.cpp)
+APP_CMEANS_CU_FILES:= $(wildcard ./*.cu)
 
 OS_CPP_FILES 	:= $(wildcard ../../src/oscpp/*.cpp)
 PANDA_CPP_FILES := $(wildcard ../../src/panda/*.cpp)
 CUDA_CPP_FILES 	:= $(wildcard ../../src/cudacpp/*.cpp)
 CUDA_CU_FILES 	:= $(wildcard ../../src/*.cu)
 
-APP_WC_H_FILES	:= $(wildcard ./word_count*.h)
+APP_CEMANS_H_FILES:= $(wildcard ./terasort*.h)
 OS_H_FILES 	:= $(wildcard ../../include/oscpp/*.h)
 PANDA_H_FILES 	:= $(wildcard ../../include/panda/*.h)
 CUDA_H_FILES 	:= $(wildcard ../../include/cudacpp/*.h)
 H_FILES 	:= $(wildcard ../../include/*.h)
 
-APP_WC_OBJ_FILES:= $(addprefix ../../obj/,$(notdir $(APP_WC_CPP_FILES:.cpp=.o)))
-APP_WC_CU_OBJ_FILES:= $(addprefix ../../cuobj/,$(notdir $(APP_WC_CU_FILES:.cu=.o)))
+APP_CMEANS_OBJ_FILES:= $(addprefix ../../obj/,$(notdir $(APP_CMEANS_CPP_FILES:.cpp=.o)))
+APP_CMEANS_CU_OBJ_FILES:= $(addprefix ../../cuobj/,$(notdir $(APP_CMEANS_CU_FILES:.cu=.o)))
 
 OS_OBJ_FILES 	:= $(addprefix ../../obj/,$(notdir $(OS_CPP_FILES:.cpp=.o)))
 PANDA_OBJ_FILES := $(addprefix ../../obj/,$(notdir $(PANDA_CPP_FILES:.cpp=.o)))
@@ -46,12 +46,12 @@ CU_OBJ_FILES 	:= $(addprefix ../../cuobj/,$(notdir $(CUDA_CU_FILES:.cu=.o)))
 TARGET_OBJ_FILES:=
 WC_OBJ_CU_FILES	:=
 
-word_count: $(APP_WC_OBJ_FILES) $(OS_OBJ_FILES) $(PANDA_OBJ_FILES) \
-		$(CUDA_OBJ_FILES) $(CU_OBJ_FILES) $(APP_WC_CU_OBJ_FILES)
-		$(NVCC) $(LIBS) $(NVCCFLAGS) $(LDFLAGS) -o ../../bin/word_count $^
+terasort: $(APP_CMEANS_OBJ_FILES) $(OS_OBJ_FILES) $(PANDA_OBJ_FILES) \
+		$(CUDA_OBJ_FILES) $(CU_OBJ_FILES) $(APP_CMEANS_CU_OBJ_FILES)
+		$(NVCC) $(LIBS) $(NVCCFLAGS) $(LDFLAGS) -o ../../bin/$@ $^
 
-../../obj/%.o: ./%.cpp $(APP_WC_H_FILES) 
-	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
+../../obj/%.o: ./%.cpp $(APP_CMEANS_H_FILES)
+	$(MPICC) $(LIBS) $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
 
 ../../obj/%.o: ../../src/oscpp/%.cpp $(OS_H_FILES)	
 	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
@@ -66,10 +66,10 @@ word_count: $(APP_WC_OBJ_FILES) $(OS_OBJ_FILES) $(PANDA_OBJ_FILES) \
 	$(MPICC) $(LIBS) $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
 
 ../../cuobj/%.o: ./%.cu $(APP_WC_H_FILES)
-	$(NVCC) $(NVCCFLAGS) -c -o $@ $<
+	nvcc $(NVCCFLAGS) -c -o $@ $<
 
 ../../cuobj/%.o: ../../src/%.cu $(CUDA_H_FILES) $(H_FILES)
-	$(NVCC) $(NVCCFLAGS) -c -o $@ $<
+	nvcc $(NVCCFLAGS) -c -o $@ $<
 
 clean:
-	rm -rf obj/*.o cuobj/*.o panda_word_count 
+	rm -rf obj/*.o cuobj/*.o terasort 

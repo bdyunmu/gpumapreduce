@@ -1,13 +1,12 @@
 /*
 	
-	Copyright 2012 The Trustees of Indiana University && Ruijie Network.  All rights reserved.
+	Copyright 2012 The Trustees of Indiana University.  All rights reserved.
 	Panda: co-processing SPMD computations on GPUs and CPUs.
 	
 	File: PandaLib.cu
 	First Version:		2012-07-01 V0.1
 	Last UPdates: 		2018-04-28 v0.61	
-	Developer: Hui Li (lihui@indiana.edu)  
-			  (huili@ruijie.com.cn)
+	Developer: Hui Li (huili@ruijie.com.cn)
 
  */
 
