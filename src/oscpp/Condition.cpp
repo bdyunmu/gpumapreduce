@@ -16,7 +16,7 @@ namespace oscpp
 
   Condition::~Condition()
   {
-	  delete handle;
+	  delete[] (char *)handle;
   }
 
   void	Condition::signal()

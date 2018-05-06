@@ -47,8 +47,8 @@ namespace panda
 	this->getSendData	= false;
 	sprintf(inputDataPath,"C:\\OpenMPI_v1.6.2-x64\\Panda2\\data\\N%d\\",commRank);
 	sprintf(inputStatusPath,"C:\\OpenMPI_v1.6.2-x64\\Panda2\\data\\N%d\\",commRank);
-	ShowLog("inputDataPath:%s		len:%d",inputDataPath,strlen(inputDataPath));
-	ShowLog("inputStatusPath:%s	len:%d",inputStatusPath,strlen(inputStatusPath));
+	ShowLog("inputDataPath:%s		len:%zu",inputDataPath,strlen(inputDataPath));
+	ShowLog("inputStatusPath:%s	len:%zu",inputStatusPath,strlen(inputStatusPath));
 
 	}//void
 
@@ -294,7 +294,7 @@ namespace panda
 					char str[32];
 					sprintf(str, "\\N%d\\status.txt", i);
 					strcat(this->inputStatusPath,str);
-					ShowLog(this->inputStatusPath);
+					ShowLog("%s",this->inputStatusPath);
 					pFile = fopen(this->inputStatusPath,"w+");
 
 					if (pFile == NULL) {
@@ -339,7 +339,7 @@ namespace panda
 			char str[32];
 			sprintf(str, "\\N%d\\data.txt", data->rank);
 			strcat(this->inputDataPath,str);
-			ShowLog(this->inputDataPath);
+			ShowLog("%s",this->inputDataPath);
 			pFile = fopen(this->inputDataPath,"w+");
 
 			if (pFile == NULL)

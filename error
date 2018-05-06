@@ -1,0 +1,46 @@
+nvcc warning : The 'compute_20', 'sm_20', and 'sm_21' architectures are deprecated, and may be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+nvcc warning : The 'compute_20', 'sm_20', and 'sm_21' architectures are deprecated, and may be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+nvcc warning : The 'compute_20', 'sm_20', and 'sm_21' architectures are deprecated, and may be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+nvcc warning : The 'compute_20', 'sm_20', and 'sm_21' architectures are deprecated, and may be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+nvcc warning : The 'compute_20', 'sm_20', and 'sm_21' architectures are deprecated, and may be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+nvcc warning : The 'compute_20', 'sm_20', and 'sm_21' architectures are deprecated, and may be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+nvcc warning : The 'compute_20', 'sm_20', and 'sm_21' architectures are deprecated, and may be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+cmeans.cu(38): warning: missing return statement at end of non-void function "panda_gpu_core_compare"
+
+cmeans.cu(125): warning: variable "maxIter" was declared but never referenced
+
+cmeans.cu(130): warning: variable "num_gpu_core_groups" was declared but never referenced
+
+cmeans.cu(131): warning: variable "num_gpu_card_groups" was declared but never referenced
+
+cmeans.cu(132): warning: variable "num_cpus_groups" was declared but never referenced
+
+cmeans.cu(138): warning: variable "global_dev_id" was declared but never referenced
+
+cmeans.cu(173): warning: variable "val" was set but never used
+
+cmeans.cu(179): warning: variable "key" was set but never used
+
+cmeans.cu(189): warning: variable "start_i" was set but never used
+
+cmeans.cu(189): warning: variable "end_i" was declared but never referenced
+
+cmeans.cu(125): warning: variable "maxIter" was declared but never referenced
+
+cmeans.cu(130): warning: variable "num_gpu_core_groups" was declared but never referenced
+
+cmeans.cu(131): warning: variable "num_gpu_card_groups" was declared but never referenced
+
+cmeans.cu(132): warning: variable "num_cpus_groups" was declared but never referenced
+
+cmeans.cu(138): warning: variable "global_dev_id" was declared but never referenced
+
+cmeans.cu(173): warning: variable "val" was set but never used
+
+cmeans.cu(179): warning: variable "key" was set but never used
+
+cmeans.cu(189): warning: variable "start_i" was set but never used
+
+cmeans.cu(189): warning: variable "end_i" was declared but never referenced
+
+nvcc warning : The 'compute_20', 'sm_20', and 'sm_21' architectures are deprecated, and may be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).

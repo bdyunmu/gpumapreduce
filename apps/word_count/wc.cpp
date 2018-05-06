@@ -46,7 +46,7 @@ int main(int argc, char ** argv)
     	char fn[256];
 	char str[512];
 	char strInput[1024];
-	sprintf(fn,argv[1]);
+	sprintf(fn,"%s",argv[1]);
 	int  chunk_size = 1024;
 	ShowLog("rank:[%d], start processing txt data",rank);
 	char *chunk_data = (char *)malloc(sizeof(char)*2*(chunk_size));

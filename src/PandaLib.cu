@@ -89,7 +89,7 @@ void* ExecutePandaCPUMapThread(void * ptr)
 
 	panda_cpu_task_info_t *panda_cpu_task_info = (panda_cpu_task_info_t *)ptr;
 	panda_cpu_context  *pcc = (panda_cpu_context *) (panda_cpu_task_info->pcc);
-	panda_node_context *pnc = (panda_node_context *)(panda_cpu_task_info->pnc);
+	//panda_node_context *pnc = (panda_node_context *)(panda_cpu_task_info->pnc);
 	
 	int start_row_idx	=	panda_cpu_task_info->start_row_idx;
 	int end_row_idx		=	panda_cpu_task_info->end_row_idx;
@@ -151,8 +151,7 @@ void ExecutePandaReduceTasksOnGPU(panda_gpu_context *pgc)
 	dim3 blocks(THREAD_BLOCK_SIZE, THREAD_BLOCK_SIZE);
 	int numBlocks = (numGPUCores*16+(blocks.x*blocks.y)-1)/(blocks.x*blocks.y);
         dim3 grids(numBlocks, 1);
-	int total_gpu_threads = (grids.x*grids.y*blocks.x*blocks.y);
-
+	//int total_gpu_threads = (grids.x*grids.y*blocks.x*blocks.y);
 	pgc->intermediate_key_vals.d_intermediate_keyval_arr_arr_len = pgc->reduced_key_vals.d_reduced_keyval_arr_len;
 	
 	ShowLog("[ExecutePandaReduceTasksOnGPU] reduce len:%d intermediate len:%d output len:%d sorted keySize%d: sorted valSize:%d",
@@ -208,7 +207,7 @@ void ExecutePandaReduceTasksOnGPU(panda_gpu_context *pgc)
 		key = (char *)pgc->output_key_vals.h_KeyBuff + key_pos;
 		pgc->output_key_vals.h_reduced_keyval_arr[i].key = key;
 		pgc->output_key_vals.h_reduced_keyval_arr[i].val = val;
-		ShowLog("key:%s val:%d\n",key,*(int*)val);
+		ShowLog("key:%s val:%d\n",(char *)key,*(int*)val);
 
 		val_pos += (pgc->output_key_vals.h_reduced_keyval_arr[i].valSize+3)/4*4;
 		key_pos += (pgc->output_key_vals.h_reduced_keyval_arr[i].keySize+3)/4*4;
@@ -306,14 +305,14 @@ void *RunPandaCPUCombinerThread(void *ptr){
 
 	panda_cpu_task_info_t *panda_cpu_task_info = (panda_cpu_task_info_t *)ptr;
 	panda_cpu_context *pcc = (panda_cpu_context *)(panda_cpu_task_info->pcc); 
-	job_configuration *cpu_job_conf = (job_configuration *)(panda_cpu_task_info->cpu_job_conf); 
+	//job_configuration *cpu_job_conf = (job_configuration *)(panda_cpu_task_info->cpu_job_conf); 
 
 	//keyval_t * input_keyval_arr;
 	//keyval_arr_t *intermediate_keyval_arr_arr_p = d_g_state->intermediate_keyval_arr_arr_p;
 
-	int index = 0;
-	keyvals_t * merged_keyvals_arr = NULL;
-	int merged_key_arr_len = 0;
+	//int index = 0;
+	//keyvals_t * merged_keyvals_arr = NULL;
+	//int merged_key_arr_len = 0;
 
 	int start_idx = panda_cpu_task_info->start_row_idx;
 
@@ -321,12 +320,12 @@ void *RunPandaCPUCombinerThread(void *ptr){
 	keyval_arr_t *kv_arr_p = (keyval_arr_t *)&(pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[start_idx]);
 
 	int unmerged_shared_arr_len = *kv_arr_p->shared_arr_len;
-    	int *shared_buddy = kv_arr_p->shared_buddy;
-    	int shared_buddy_len = kv_arr_p->shared_buddy_len;
+    	//int *shared_buddy = kv_arr_p->shared_buddy;
+    	//int shared_buddy_len = kv_arr_p->shared_buddy_len;
 
         char *shared_buff = kv_arr_p->shared_buff;
         int shared_buff_len = *kv_arr_p->shared_buff_len;
-        int shared_buff_pos = *kv_arr_p->shared_buff_pos;
+        //int shared_buff_pos = *kv_arr_p->shared_buff_pos;
 
 	val_t *val_t_arr = (val_t *)malloc(sizeof(val_t)*unmerged_shared_arr_len);
 	if (val_t_arr == NULL) ShowError("there is no enough memory");
@@ -343,7 +342,7 @@ void *RunPandaCPUCombinerThread(void *ptr){
 
 		int iKeySize = first_kv_p->keySize;
 		char *iKey = shared_buff + first_kv_p->keyPos;
-		char *iVal = shared_buff + first_kv_p->valPos;
+		//char *iVal = shared_buff + first_kv_p->valPos;
 		ShowLog("%s",iKey);
 		if((first_kv_p->keyPos%4!=0)||(first_kv_p->valPos%4!=0)){
 			ShowError("keyPos or valPos is not aligned with 4 bytes, results could be wrong");
@@ -431,8 +430,8 @@ void ExecutePandaCPUCombiner(panda_cpu_context *pcc){
 	//1, prepare buffer to store intermediate results
 	//-------------------------------------------------------
 
-	keyval_arr_t *d_keyval_arr_p;
-	int *count = NULL;
+	//keyval_arr_t *d_keyval_arr_p;
+	//int *count = NULL;
 
 	ShowLog("num_input_record:%d",pcc->input_key_vals.num_input_record);
 	ShowLog("num_cpus_cores:%d",pcc->num_cpus_cores);
@@ -474,10 +473,12 @@ void ExecutePandaSortBucket(panda_node_context *pnc)
 	  keyvals_t *sorted_intermediate_keyvals_arr = pnc->sorted_key_vals.sorted_intermediate_keyvals_arr;
 	  char *key_0, *key_1;
 	  int keySize_0, keySize_1;
-	  char *val_0, val_1;
-	  int valSize_0, valSize_1;
+	  char *val_0;
+	  // char *val_1;
+	  int valSize_0;
+	  //int valSize_1;
 
-	  bool equal;
+	  //bool equal;
 	  for(int i=0; i<numBucket; i++){
 			
 		char *keyBuff = pnc->recv_buckets.savedKeysBuff[i];
@@ -545,7 +546,7 @@ void ExecutePandaSortBucket(panda_node_context *pnc)
 			kvals_p->val_arr_len = 1;
 
 			if (valPosArray[j] + valSizeArray[j] > valBuffSize){ 
-			ShowError("valPosArray[j] + valSizeArray[j] \> valBuffSize\n");
+			ShowError("valPosArray[j] + valSizeArray[j] > valBuffSize\n");
 			exit(-1);
 			}//if
 
@@ -640,8 +641,10 @@ void PandaExecuteSortBucketOnCPU(panda_node_context *pnc)
 	  keyvals_t *sorted_intermediate_keyvals_arr = pnc->sorted_key_vals.sorted_intermediate_keyvals_arr;
 	  char *key_0, *key_1;
 	  int keySize_0, keySize_1;
-	  char *val_0, val_1;
-	  int valSize_0, valSize_1;
+	  char *val_0; 	
+	  // char *val_1;
+	  int valSize_0; 
+	  // int valSize_1;
 
 	  //bool equal;
 	  for(int i=0; i<numBucket; i++){
@@ -918,7 +921,7 @@ void PandaEmitCPUMapOutput(void *key, void *val, int keySize, int valSize, panda
 	
 	kv_p->valPos = (*kv_arr_p->shared_buff_pos);
 	*kv_arr_p->shared_buff_pos += ((valSize+3)/4)*4;
-	char *val_p = (char *)(buff) + kv_p->valPos;
+	//char *val_p = (char *)(buff) + kv_p->valPos;
 	memcpy((char *)(buff) + kv_p->valPos, val, valSize);
 	kv_p->valSize = valSize;
 	(kv_arr_p->arr) = kv_p;
@@ -997,7 +1000,7 @@ __device__ void PandaGPUEmitMapOutput(void *key, void *val, int keySize, int val
 	
 	kv_p->valPos = (*kv_arr_p->shared_buff_pos);
 	*kv_arr_p->shared_buff_pos += ((valSize+3)/4)*4;
-	char *val_p = (char *)(buff) + kv_p->valPos;
+	//char *val_p = (char *)(buff) + kv_p->valPos;
 	memcpy((char *)(buff) + kv_p->valPos, val, valSize);
 	kv_p->valSize = valSize;
 	(kv_arr_p->arr) = kv_p;
@@ -1296,7 +1299,7 @@ __device__ void PandaEmitMapOutputOnGPU(void *key, void *val, int keySize, int v
 	
 	kv_p->valPos = (*kv_arr_p->shared_buff_pos);
 	*kv_arr_p->shared_buff_pos += ((valSize+3)/4)*4;
-	char *val_p = (char *)(buff) + kv_p->valPos;
+	//char *val_p = (char *)(buff) + kv_p->valPos;
 	memcpy((char *)(buff) + kv_p->valPos, val, valSize);
 	kv_p->valSize = valSize;
 	(kv_arr_p->arr) = kv_p;
@@ -1396,7 +1399,7 @@ __global__ void GPUCombiner(panda_gpu_context pgc)
 		return;
 
 	keyval_arr_t *kv_arr_p = pgc.intermediate_key_vals.d_intermediate_keyval_arr_arr_p[thread_start_idx];
-	int *buddy = kv_arr_p->shared_buddy;
+	//int *buddy = kv_arr_p->shared_buddy;
 
 	int unmerged_shared_arr_len = *kv_arr_p->shared_arr_len;
 	//GpuShowError("[GPUCombiner] unmerged_shared_arr_len:%d",unmerged_shared_arr_len);
@@ -1517,7 +1520,7 @@ void *PandaThreadLaunchCombinerOnCPU(void *ptr){
 
 	panda_cpu_task_info_t *panda_cpu_task_info = (panda_cpu_task_info_t *)ptr;
 	panda_cpu_context *pcc	= (panda_cpu_task_info->pcc); 
-	panda_node_context *pnc = (panda_cpu_task_info->pnc); 
+	//panda_node_context *pnc = (panda_cpu_task_info->pnc); 
 
 	int start_idx = panda_cpu_task_info->start_row_idx;
 	int end_idx = panda_cpu_task_info->end_row_idx;
@@ -1532,11 +1535,11 @@ void *PandaThreadLaunchCombinerOnCPU(void *ptr){
 	keyval_arr_t *kv_arr_p	= (keyval_arr_t *)&(pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[start_idx]);
 
 	int unmerged_shared_arr_len = *kv_arr_p->shared_arr_len;
-    	int *shared_buddy			= kv_arr_p->shared_buddy;
-    	int shared_buddy_len		= kv_arr_p->shared_buddy_len;
+    	//int *shared_buddy			= kv_arr_p->shared_buddy;
+    	//int shared_buddy_len		= kv_arr_p->shared_buddy_len;
     	char *shared_buff = kv_arr_p->shared_buff;
     	int shared_buff_len = *kv_arr_p->shared_buff_len;
-    	int shared_buff_pos = *kv_arr_p->shared_buff_pos;
+    	//int shared_buff_pos = *kv_arr_p->shared_buff_pos;
 
 	val_t *val_t_arr = (val_t *)malloc(sizeof(val_t)*unmerged_shared_arr_len);
 	if (val_t_arr == NULL) ShowError("there is no enough memory");
@@ -1553,7 +1556,7 @@ void *PandaThreadLaunchCombinerOnCPU(void *ptr){
 
 		int iKeySize	= first_kv_p->keySize;
 		char *iKey		= shared_buff + first_kv_p->keyPos;
-		char *iVal		= shared_buff + first_kv_p->valPos;
+		//char *iVal		= shared_buff + first_kv_p->valPos;
 
 		if((first_kv_p->keyPos%4!=0)||(first_kv_p->valPos%4!=0)){
 			ShowError("keyPos or valPos is not aligned with 4 bytes, results could be wrong");

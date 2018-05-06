@@ -204,9 +204,9 @@ pgc->intermediate_key_vals.h_intermediate_keyval_pos_arr = (keyval_pos_t *)mallo
 
 void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 
-	int index = 0;
-	int merged_key_arr_len = 0;
-	keyvals_t * merged_keyvals_arr = NULL;
+	//int index = 0;
+	//int merged_key_arr_len = 0;
+	//keyvals_t * merged_keyvals_arr = NULL;
 
 	int num_threads = pcc->num_cpus_cores > pcc->input_key_vals.num_input_record? pcc->input_key_vals.num_input_record:pcc->num_cpus_cores;
 
@@ -240,16 +240,16 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 		keyval_arr_t *kv_arr_p = (keyval_arr_t *)&(pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[start_idx]);
 
 		int shared_arr_len = *kv_arr_p->shared_arr_len;
-		int *shared_buddy = kv_arr_p->shared_buddy;
-		int shared_buddy_len = kv_arr_p->shared_buddy_len;
+		//int *shared_buddy = kv_arr_p->shared_buddy;
+		//int shared_buddy_len = kv_arr_p->shared_buddy_len;
 
 		char *shared_buff = kv_arr_p->shared_buff;
 		int shared_buff_len = *kv_arr_p->shared_buff_len;
-		int shared_buff_pos = *kv_arr_p->shared_buff_pos;
+		//int shared_buff_pos = *kv_arr_p->shared_buff_pos;
 
-		int val_pos, key_pos;
-		char *val_p,*key_p;
-		int counter = 0;
+		//int val_pos, key_pos;
+		//char *val_p,*key_p;
+		//int counter = 0;
 		//bool local_combiner = pnc->local_combiner;
 		//TODO sorting there is no need to combine the vals 
 		bool local_combiner = true;
@@ -336,9 +336,9 @@ void ExecutePandaShuffleMergeGPU(panda_node_context *pnc, panda_gpu_context *pgc
 
 	void *key_0, *key_1;
 	int keySize_0, keySize_1;
-	bool equal;
+	//bool equal;
 
-	int new_count = 0;
+	//int new_count = 0;
 	for (int i=0;i< pgc->sorted_key_vals.d_sorted_keyvals_arr_len;i++){
 		key_0 = sorted_keys_shared_buff_0 + keyval_pos_arr_0[i].keyPos;
 		keySize_0 = keyval_pos_arr_0[i].keySize;
@@ -490,10 +490,11 @@ __global__ void copyDataFromDevice2Host2(panda_gpu_context pgc)
 	if (thread_start_idx >= thread_end_idx)
 		return;
 
-	int begin, end;
-	begin=end=0;
+	int begin=0;
+	int end=0;
 	for (int i=0; i<thread_start_idx; i++) 	
 		begin = begin + pgc.intermediate_key_vals.d_intermediate_keyval_total_count[i];
+
 	end = begin + pgc.intermediate_key_vals.d_intermediate_keyval_total_count[thread_start_idx];
 
 	keyval_arr_t *kv_arr_p = pgc.intermediate_key_vals.d_intermediate_keyval_arr_arr_p[thread_start_idx];
@@ -524,8 +525,8 @@ __global__ void copyDataFromDevice2Host2(panda_gpu_context pgc)
 
 	counter++;
 	}
-	//if(counter!=end-begin)
-	//	ShowWarn("counter!=end-begin counter:%d end-begin:%d",counter,end-begin);
+	if(counter!=end-begin)
+		ShowWarn("counter!=end-begin counter:%d end-begin:%d",counter,end-begin);
 	
 	free(shared_buff);
 
@@ -542,9 +543,9 @@ void PandaExecuteSortOnGPUCard(panda_gpu_card_context *pgcc, panda_node_context 
 
 void PandaExecuteSortOnCPU(panda_cpu_context *pcc, panda_node_context *pnc){
 
-	int index = 0;
-	int merged_key_arr_len = 0;
-	keyvals_t * merged_keyvals_arr = NULL;
+	//int index = 0;
+	//int merged_key_arr_len = 0;
+	//keyvals_t * merged_keyvals_arr = NULL;
 
 	int num_threads = pcc->num_cpus_cores;
 	int num_records_per_thread = (pcc->input_key_vals.num_input_record)/(num_threads);
@@ -577,16 +578,15 @@ void PandaExecuteSortOnCPU(panda_cpu_context *pcc, panda_node_context *pnc){
 		keyval_arr_t *kv_arr_p = (keyval_arr_t *)&(pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[start_idx]);
 
 		int shared_arr_len = *kv_arr_p->shared_arr_len;
-		int *shared_buddy = kv_arr_p->shared_buddy;
-		int shared_buddy_len = kv_arr_p->shared_buddy_len;
+		//int *shared_buddy = kv_arr_p->shared_buddy;
+		//int shared_buddy_len = kv_arr_p->shared_buddy_len;
 
 		char *shared_buff = kv_arr_p->shared_buff;
 		int shared_buff_len = *kv_arr_p->shared_buff_len;
-		int shared_buff_pos = *kv_arr_p->shared_buff_pos;
-
-		int val_pos, key_pos;
-		char *val_p,*key_p;
-		int counter = 0;
+		//int shared_buff_pos = *kv_arr_p->shared_buff_pos;
+		//int val_pos, key_pos;
+		//char *val_p,*key_p;
+		//int counter = 0;
 		//bool local_combiner = pnc->local_combiner;
 		//TODO
 		bool local_combiner = true;
@@ -672,6 +672,7 @@ void PandaShuffleMergeCPU(panda_context *d_g_state_0, cpu_context *d_g_state_1){
 #endif
 
 
+#if 0
 void PandaExecuteShuffleMergeOnGPU(panda_node_context *pnc, panda_gpu_context *pgc){
 	
 	char *sorted_keys_shared_buff_0 = (char *)pgc->sorted_key_vals.h_sorted_keys_shared_buff;
@@ -755,6 +756,7 @@ void PandaExecuteShuffleMergeOnGPU(panda_node_context *pnc, panda_gpu_context *p
 	return;
 
 }//void
+#endif
 
 
 #endif 

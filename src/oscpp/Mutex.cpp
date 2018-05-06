@@ -11,7 +11,7 @@ namespace oscpp
 
   Mutex::~Mutex() 
   {
-	 delete handle;
+	 delete[]  (char *)handle;
   }//Mutex
 
   bool Mutex::tryLock()
