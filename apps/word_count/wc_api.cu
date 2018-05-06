@@ -158,11 +158,6 @@ __device__ void panda_gpu_combiner(void *KEY, val_t* VAL, int keySize, int valCo
 
 
 /*__device__ void gpu_combiner(void *KEY, val_t* VAL, int keySize, int valCount, gpu_context *d_g_state, int map_task_idx){
-		//int *count = (int *) malloc (sizeof(int));
-		int count = 0;
-		for (int i=0;i<valCount;i++){
-			 count += *((int *)(VAL[i].val));
-		}//
 		//GPUEmitCombinerOutput(KEY,&count,keySize,sizeof(int),d_g_state, map_task_idx);
 }*///reduce2
 
@@ -205,23 +200,12 @@ __device__ void panda_gpu_reduce(void *KEY, val_t* VAL, int keySize, int valCoun
 
 /*
 __device__ void gpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, gpu_context d_g_state){
-		int count = 0;
-		for (int i=0;i<valCount;i++){
-			count += *(int *)(VAL[i].val);
-		}//
-		
 		//GPUEmitReduceOuput(KEY,&count,keySize,sizeof(int),&d_g_state);
-		
 }*///reduce2
 
 
 /*void cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, cpu_context* d_g_state){
-		int count = 0;
-		for (int i=0;i<valCount;i++){
-			count += *(int *)(VAL[i].val);
-		}//
 		CPUEmitReduceOutput(KEY,&count,keySize,sizeof(int),d_g_state);
-		
 }*///reduce2
 
 void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context* pcc){
@@ -238,12 +222,6 @@ void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cp
 
 /*int cpu_compare(const void *d_a, int len_a, const void *d_b, int len_b)
 {
-	char* word1 = (char*)d_a;
-	char* word2 = (char*)d_b;
-	for (; *word1 != '\0' && *word2 != '\0' && *word1 == *word2; word1++, word2++);
-	if (*word1 > *word2) return 1;
-	if (*word1 < *word2) return -1;
-	return 0;
 }*/
 
 /*__device__ int gpu_compare(const void *d_a, int len_a, const void *d_b, int len_b)
@@ -254,7 +232,6 @@ void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cp
 	for (; *word1 != '\0' && *word2 != '\0' && *word1 == *word2; word1++, word2++);
 	if (*word1 > *word2) return 1;
 	if (*word1 < *word2) return -1;
-
 	return 0;
 }*/
 
