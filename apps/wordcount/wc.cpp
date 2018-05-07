@@ -27,16 +27,18 @@ int main(int argc, char ** argv)
         }  //if
 	if(strlen(argv[1])<2)
 	{
-	  ShowLog("txt path too short");
+	  ShowLog("file path too short!");
 	  exit(-1);
 	}
 
 	panda::MapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv, false,false,true);
+
 	int rank, size;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 
 	job->setMessage(new panda::PandaMPIMessage(true));
+
 	job->setEnableCPU(true);
 	job->setEnableGPU(true);
 
@@ -48,7 +50,7 @@ int main(int argc, char ** argv)
 	char strInput[1024];
 	sprintf(fn,"%s",argv[1]);
 	int  chunk_size = 1024;
-	ShowLog("rank:[%d], start processing txt data",rank);
+	ShowLog("start processing txt data...");
 	char *chunk_data = (char *)malloc(sizeof(char)*2*(chunk_size));
 	FILE *wcfp;
 	wcfp = fopen(fn, "r");
@@ -62,7 +64,7 @@ int main(int argc, char ** argv)
 		strcpy((chunk_data + total_len),str);
 		total_len += (int)strlen(str);
 		if(total_len>=chunk_size){
-			ShowLog("word count job->addInput");
+			ShowLog("wordcount job->addInput");
 			job->addInput(new panda::PreLoadedPandaChunk((char *)chunk_data, total_len, NUM_ELEMENTS ));
 			total_len=0;
 		}//if
