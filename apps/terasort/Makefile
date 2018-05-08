@@ -11,7 +11,7 @@ CFLAGS      = $(OPTFLAGS) $(INCFLAGS) -DBLOCK_SHARED_MEM_OPTIMIZATION=0
 NVCCFLAGS   = $(CFLAGS)
 LDFLAGS	    = -L/opt/openmpi/lib/
 LIBS        = -lmpi -lpthread
-
+CC_FLAGS    = -std=c++11
 CC          = mpicxx
 MPICC       = mpicxx
 NVCC        = nvcc
@@ -21,8 +21,8 @@ INCFLAGS   += -I/usr/include/  -I/usr/local/cuda/include
 INCFLAGS   += -I../../include  -I../../include/panda
 LDFLAGS    += -L/usr/local/cuda/lib64/
 
-APP_CMEANS_CPP_FILES:= $(wildcard ./*.cpp)
-APP_CMEANS_CU_FILES:= $(wildcard ./*.cu)
+APP_TERASORT_CPP_FILES:= $(wildcard ./*.cpp)
+APP_TERASORT_CU_FILES:= $(wildcard ./*.cu)
 
 OS_CPP_FILES 	:= $(wildcard ../../src/oscpp/*.cpp)
 PANDA_CPP_FILES := $(wildcard ../../src/panda/*.cpp)
@@ -35,8 +35,8 @@ PANDA_H_FILES 	:= $(wildcard ../../include/panda/*.h)
 CUDA_H_FILES 	:= $(wildcard ../../include/cudacpp/*.h)
 H_FILES 	:= $(wildcard ../../include/*.h)
 
-APP_CMEANS_OBJ_FILES:= $(addprefix ../../obj/,$(notdir $(APP_CMEANS_CPP_FILES:.cpp=.o)))
-APP_CMEANS_CU_OBJ_FILES:= $(addprefix ../../cuobj/,$(notdir $(APP_CMEANS_CU_FILES:.cu=.o)))
+APP_TERASORT_OBJ_FILES:= $(addprefix ../../obj/,$(notdir $(APP_TERASORT_CPP_FILES:.cpp=.o)))
+APP_TERASORT_CU_OBJ_FILES:= $(addprefix ../../cuobj/,$(notdir $(APP_TERASORT_CU_FILES:.cu=.o)))
 
 OS_OBJ_FILES 	:= $(addprefix ../../obj/,$(notdir $(OS_CPP_FILES:.cpp=.o)))
 PANDA_OBJ_FILES := $(addprefix ../../obj/,$(notdir $(PANDA_CPP_FILES:.cpp=.o)))
@@ -44,13 +44,12 @@ CUDA_OBJ_FILES 	:= $(addprefix ../../obj/,$(notdir $(CUDA_CPP_FILES:.cpp=.o)))
 CU_OBJ_FILES 	:= $(addprefix ../../cuobj/,$(notdir $(CUDA_CU_FILES:.cu=.o)))
 
 TARGET_OBJ_FILES:=
-WC_OBJ_CU_FILES	:=
 
-terasort: $(APP_CMEANS_OBJ_FILES) $(OS_OBJ_FILES) $(PANDA_OBJ_FILES) \
-		$(CUDA_OBJ_FILES) $(CU_OBJ_FILES) $(APP_CMEANS_CU_OBJ_FILES)
+terasort: $(APP_TERASORT_OBJ_FILES) $(OS_OBJ_FILES) $(PANDA_OBJ_FILES) \
+		$(CUDA_OBJ_FILES) $(CU_OBJ_FILES) $(APP_TERASORT_CU_OBJ_FILES)
 		$(NVCC) $(LIBS) $(NVCCFLAGS) $(LDFLAGS) -o ../../bin/$@ $^
 
-../../obj/%.o: ./%.cpp $(APP_CMEANS_H_FILES)
+../../obj/%.o: ./%.cpp $(APP_TERASORT_H_FILES)
 	$(MPICC) $(LIBS) $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
 
 ../../obj/%.o: ../../src/oscpp/%.cpp $(OS_H_FILES)	
