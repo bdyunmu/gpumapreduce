@@ -102,6 +102,7 @@ public:
 
       int digit = getHexDigit(s[i]);
       if ((lastDigit & hi8) != 0) {
+	throw numException();
       //  throw new NumberFormatException(s + " overflowed 16 bytes");
       }
       hi8 <<= 4;
@@ -140,6 +141,7 @@ static int getHexDigit(char ch) {
     if (ch >= 'A' && ch <= 'F') {
       return ch - 'A' + 10;
     }
+	throw numException();
     //throw new NumberFormatException(ch + " is not a valid hex digit");
   }
 
