@@ -25,6 +25,21 @@
  * An unsigned 16 byte integer class that supports addition, multiplication,
  * and left shifts.
  */
+#include <string>
+#include <exception>
+
+using namespace std;
+typedef char byte;
+
+
+class numException:public exception
+{
+public:
+	numException():exception()
+	{
+	}
+};
+
 
 class Unsigned16 {
 
@@ -43,7 +58,7 @@ public:
     lo8 = l;
   }
 
-  Unsigned16(Unsigned16 other) {
+  Unsigned16(const Unsigned16 &other) {
     hi8 = other.hi8;
     lo8 = other.lo8;
   }
@@ -59,8 +74,7 @@ public:
   }
 #endif
 
-//@Override
-  public int hashCode() {
+  int hashCode() {
     return (int) lo8;
   }
 
@@ -69,7 +83,7 @@ public:
    * @param s the hex string
    */
 
-  Unsigned16(string s)  {
+  Unsigned16(string s) {
     set(s);
   } //Unsigned
 
@@ -78,33 +92,33 @@ public:
    * @param s the number in hexadecimal
    * @throws NumberFormatException if the number is invalid
    */
-#if 0 
-  public void set(string s) {
+
+  void set(string s) {
     hi8 = 0;
     lo8 = 0;
     long lastDigit = 0xfl << 60;
 
     for (int i = 0; i < s.length(); ++i) {
 
-      int digit = getHexDigit(s.charAt(i));
+      int digit = getHexDigit(s[i]);
       if ((lastDigit & hi8) != 0) {
       //  throw new NumberFormatException(s + " overflowed 16 bytes");
       }
       hi8 <<= 4;
-      hi8 |= (lo8 & lastDigit) >>> 60;
+      unsigned long ul_lo8_lastDigit = (unsigned)(lo8 & lastDigit);
+      hi8 |= (ul_lo8_lastDigit >> 60);
       lo8 <<= 4;
       lo8 |= digit;
 
     }
 
   }
-#endif
 
   /**
    * Set the number to a given long.
    * @param l the new value, which is treated as an unsigned number
    */
-  public void set(long l) {
+  void set(long l) {
     lo8 = l;
     hi8 = 0;
   }
@@ -116,7 +130,7 @@ public:
    * @throws NumberFormatException
    */
 
-  private static int getHexDigit(char ch) throws NumberFormatException {
+static int getHexDigit(char ch) {
     if (ch >= '0' && ch <= '9') {
       return ch - '0';
     }
@@ -126,12 +140,13 @@ public:
     if (ch >= 'A' && ch <= 'F') {
       return ch - 'A' + 10;
     }
-    throw new NumberFormatException(ch + " is not a valid hex digit");
+    //throw new NumberFormatException(ch + " is not a valid hex digit");
   }
 
   /**
    * Return the number as a hex string.
    */
+#if 0
   public String toString() {
     if (hi8 == 0) {
       return Long.toHexString(lo8);
@@ -146,13 +161,14 @@ public:
       return result.toString();
     }
   }
+#endif
 
   /**
    * Get a given byte from the number.
    * @param b the byte to get with 0 meaning the most significant byte
    * @return the byte or 0 if b is outside of 0..15
    */
-  public byte getByte(int b) {
+byte getByte(int b) {
     if (b >= 0 && b < 16) {
       if (b < 8) {
         return (byte) (hi8 >> (56 - 8*b));
@@ -168,10 +184,11 @@ public:
    * @param p the digit position to get with 0 meaning the most significant
    * @return the character or '0' if p is outside of 0..31
    */
-  public char getHexDigit(int p) {
+  char getHexDigit(int p) {
     byte digit = getByte(p / 2);
     if (p % 2 == 0) {
-      digit >>>= 4;
+      unsigned int ub_digit = (unsigned)digit;
+      digit = (unsigned)(ub_digit>>4);
     }
     digit &= 0xf;
     if (digit < 10) {
@@ -184,14 +201,14 @@ public:
   /**
    * Get the high 8 bytes as a long.
    */
-  public long getHigh8() {
+  long getHigh8() {
     return hi8;
   }
 
   /**
    * Get the low 8 bytes as a long.
    */
-  public long getLow8() {
+  long getLow8() {
     return lo8;
   }
 
@@ -204,29 +221,33 @@ public:
    */
   void multiply(Unsigned16 b) {
     // divide the left into 4 32 bit chunks
-    long[] left = new long[4];
+    long* left = new long[4];
     left[0] = lo8 & 0xffffffffl;
-    left[1] = lo8 >>> 32;
+    unsigned long ul_lo8 = (unsigned)lo8;
+    left[1] = ul_lo8 >> 32;
     left[2] = hi8 & 0xffffffffl;
-    left[3] = hi8 >>> 32;
+    unsigned long ul_hi8 = (unsigned)hi8;
+    left[3] = ul_hi8 >> 32;
     // divide the right into 5 31 bit chunks
-    long[] right = new long[5];
+    long* right = new long[5];
     right[0] = b.lo8 & 0x7fffffffl;
-    right[1] = (b.lo8 >>> 31) & 0x7fffffffl;
-    right[2] = (b.lo8 >>> 62) + ((b.hi8 & 0x1fffffffl) << 2);
-    right[3] = (b.hi8 >>> 29) & 0x7fffffffl;
-    right[4] = (b.hi8 >>> 60);
+    unsigned long ul_blo8 = (unsigned)b.lo8;
+    right[1] = (ul_blo8 >> 31) & 0x7fffffffl;
+    right[2] = (ul_blo8 >> 62) + ((b.hi8 & 0x1fffffffl) << 2);
+    unsigned long ul_bhi8 = (unsigned)b.hi8;
+    right[3] = (ul_bhi8 >> 29) & 0x7fffffffl;
+    right[4] = (ul_bhi8 >> 60);
     // clear the cur value
     set(0);
-    Unsigned16 tmp = new Unsigned16();
+    Unsigned16 *tmp = new Unsigned16();
     for(int l=0; l < 4; ++l) {
       for (int r=0; r < 5; ++r) {
         long prod = left[l] * right[r];
         if (prod != 0) {
           int off = l*32 + r*31;
-          tmp.set(prod);
-          tmp.shiftLeft(off);
-          add(tmp);
+          tmp->set(prod);
+          tmp->shiftLeft(off);
+          add(*tmp);
         }
       }
     }
@@ -236,7 +257,7 @@ public:
    * Add the given number into the current number.
    * @param b the other number
    */
-  public void add(Unsigned16 b) {
+  void add(Unsigned16 b) {
     long sumHi;
     long sumLo;
     long  reshibit, hibit0, hibit1;
@@ -258,11 +279,12 @@ public:
    * order bits of the result.
    * @param bits the bit positions to shift by
    */
-  public void shiftLeft(int bits) {
+  void shiftLeft(int bits) {
     if (bits != 0) {
       if (bits < 64) {
         hi8 <<= bits;
-        hi8 |= (lo8 >>> (64 - bits));
+ 	unsigned long ul_lo8 = (unsigned)lo8;
+        hi8 |= (ul_lo8 >> (64 - bits));
         lo8 <<= bits;
       } else if (bits < 128) {
         hi8 = lo8 << (bits - 64);
@@ -273,4 +295,4 @@ public:
       }
     }
   }
-}
+};
