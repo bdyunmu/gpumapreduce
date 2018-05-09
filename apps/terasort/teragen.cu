@@ -3,7 +3,7 @@
 Copyright 2012 The Trustees of Indiana University.  All rights reserved.
 Panda: a MapReduce Framework on GPUs and CPUs
 File: main.cu 
-Time: 2017-11-11 
+Time: 2018-5- 9
 Developer: Hui Li (huili@ruijie.com.cn)
 
 */

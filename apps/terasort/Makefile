@@ -3,7 +3,7 @@
 #    							  lihui@indiana.edu */
 # * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-all: terasort 
+all: terasort teragen
 
 OPTFLAGS    = -O2
 INCFLAGS    = -I/opt/openmpi/include
@@ -21,15 +21,15 @@ INCFLAGS   += -I/usr/include/  -I/usr/local/cuda/include
 INCFLAGS   += -I../../include  -I../../include/panda
 LDFLAGS    += -L/usr/local/cuda/lib64/
 
-APP_TERASORT_CPP_FILES:= $(wildcard ./*.cpp)
-APP_TERASORT_CU_FILES:= $(wildcard ./*.cu)
+APP_TERASORT_CPP_FILES:= terasort.cpp 
+APP_TERASORT_CU_FILES:= terasort.cu
 
 OS_CPP_FILES 	:= $(wildcard ../../src/oscpp/*.cpp)
 PANDA_CPP_FILES := $(wildcard ../../src/panda/*.cpp)
 CUDA_CPP_FILES 	:= $(wildcard ../../src/cudacpp/*.cpp)
 CUDA_CU_FILES 	:= $(wildcard ../../src/*.cu)
 
-APP_CEMANS_H_FILES:= $(wildcard ./terasort*.h)
+APP_H_FILES	:= $(wildcard ./*.h)
 OS_H_FILES 	:= $(wildcard ../../include/oscpp/*.h)
 PANDA_H_FILES 	:= $(wildcard ../../include/panda/*.h)
 CUDA_H_FILES 	:= $(wildcard ../../include/cudacpp/*.h)
@@ -43,7 +43,15 @@ PANDA_OBJ_FILES := $(addprefix ../../obj/,$(notdir $(PANDA_CPP_FILES:.cpp=.o)))
 CUDA_OBJ_FILES 	:= $(addprefix ../../obj/,$(notdir $(CUDA_CPP_FILES:.cpp=.o)))
 CU_OBJ_FILES 	:= $(addprefix ../../cuobj/,$(notdir $(CUDA_CU_FILES:.cu=.o)))
 
-TARGET_OBJ_FILES:=
+TERAGEN_FILES	:= teragen.cpp
+TERAGEN_CU_FILES:= teragen.cu
+
+TERAGEN_OBJ_FILES:= $(addprefix ../../obj/,$(notdir $(TERAGEN_FILES:.cpp=.o)))
+TERAGEN_CU_OBJ_FILES:= $(addprefix ../../cuobj/,$(notdir $(TERAGEN_CU_FILES:.cu=.o)))
+
+teragen: $(TERAGEN_OBJ_FILES) $(OS_OBJ_FILES) $(PANDA_OBJ_FILES) \
+		$(CUDA_OBJ_FILES) $(CU_OBJ_FILES) $(TERAGEN_CU_OBJ_FILES)
+		$(NVCC) $(LIBS) $(NVCCFLAGS) $(LDFLAGS) -o ../../bin/$@ $^
 
 terasort: $(APP_TERASORT_OBJ_FILES) $(OS_OBJ_FILES) $(PANDA_OBJ_FILES) \
 		$(CUDA_OBJ_FILES) $(CU_OBJ_FILES) $(APP_TERASORT_CU_OBJ_FILES)
@@ -71,4 +79,4 @@ terasort: $(APP_TERASORT_OBJ_FILES) $(OS_OBJ_FILES) $(PANDA_OBJ_FILES) \
 	nvcc $(NVCCFLAGS) -c -o $@ $<
 
 clean:
-	rm -rf obj/*.o cuobj/*.o terasort 
+	rm -rf ../../obj/*.o ../../cuobj/*.o ../../bin/terasort  ../../bin/teragen
