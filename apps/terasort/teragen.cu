@@ -50,17 +50,4 @@ void panda_cpu_map(void *KEY, void*VAL, int keySize, int valSize, panda_cpu_cont
 }
 
 void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context* pcc){
-
 }
-
-int main(int argc, char** argv) 
-{		
-		if (argc != 2)
-		{
-			ShowLog("terasort");
-			ShowLog("usage: %s [num of lines] ", argv[0]);
-			exit(-1);//[Dimensions] [numClusters]
-		}//if
-
-		return 0;
-}//	
