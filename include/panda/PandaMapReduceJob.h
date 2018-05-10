@@ -106,7 +106,7 @@ namespace panda
 	  virtual int  StartPandaGPUMapTasks();
 	  virtual int  StartPandaCPUMapTasks();
 	  virtual void PandaPartitionCheckSends(const bool sync);
-	  virtual void StartPandaPartitionSubSendData();
+	  virtual void StartPandaPartitionSendData();
 	  virtual void StartPandaCopyRecvedBucketToGPU(int,int);
 	  virtual void StartPandaExitMessager();
 	  virtual void InitPandaCPUMapReduce();

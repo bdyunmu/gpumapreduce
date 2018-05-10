@@ -36,13 +36,13 @@ namespace panda
 
   bool PandaMessageIORequest::query()
   {
-	ShowLog("query:%d",(int)*flag);
+    ShowLog("query:%d",(int)*flag);
     return *flag;
   }//bool
 
   void PandaMessageIORequest::sync()
   {
-	ShowLog("sync cond.lock");
+    ShowLog("sync cond.lock");
     cond.lockMutex();
     if (*flag)
     {
@@ -50,7 +50,7 @@ namespace panda
       return;
     }
     *waiting = true;
-	ShowLog("sync cond.wait");
+    ShowLog("sync cond.wait");
     cond.wait();
     *waiting = false;
     cond.unlockMutex();

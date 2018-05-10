@@ -19,7 +19,6 @@ namespace panda
 
 	PandaMPIMessage::PandaMPIMessage() : PandaMessage(false)
 	{
-	
 	}//void
 
 	PandaMPIMessage::PandaMPIMessage(const bool pCopySendData) : PandaMessage(pCopySendData)
@@ -53,7 +52,7 @@ namespace panda
 	
 	oscpp::AsyncIORequest * PandaMPIMessage::MsgFinish()
 	{
-		return sendTo(commRank, NULL, NULL, NULL, -1, -1, -1);
+		//return sendTo(commRank, NULL, NULL, NULL, -1, -1, -1);
 	}//oscpp
 
 	void PandaMPIMessage::run()
@@ -64,8 +63,8 @@ namespace panda
 
 		bool  * workerDone				= new bool[commSize];
 		bool  * recvingCount				= new bool[commSize];
-		int   * counts						= new int [commSize * 3];	
-		int   * zeroCounts					= new int [commSize * 3];	//[3];
+		int   * counts						= new int [commSize*3];
+		int   * zeroCounts					= new int [commSize*3];
 		int  ** keyRecv						= new int*[commSize];
 		int  ** valRecv						= new int*[commSize];
 		int  ** keyPosKeySizeValPosValSize	= new int*[commSize];
@@ -97,74 +96,76 @@ namespace panda
 		
 		int flag;
 		innerLoopDone 	= false;
-
-		bool *zeroRecv = new bool[commSize];//false;
+		bool *zeroRecv  = new bool[commSize];//false;
 		bool *countRecv = new bool[commSize];//true;
-		bool *dataRecv = new bool[commSize];//false;
+		bool *dataRecv  = new bool[commSize];//false;
 
 		for(int i=0;i<commSize;i++){
-			zeroRecv[i] = false;
+			zeroRecv[i]  = false;
 			countRecv[i] = true;
-			dataRecv[i] = false;
-		}
+			dataRecv[i]  = false;
+		}//for
 
 		while (!innerLoopDone || finishedWorkers < commSize)
 		{
 
 			const int MAX_SENDS_PER_LOOP = 10;
 			int index = 0;	
-			while (++index < MAX_SENDS_PER_LOOP && pollUnsent())
+			while (index<MAX_SENDS_PER_LOOP && pollUnsent())
 			{
 				//sleep(100);
-				ShowLog("loop to send unsent data and sleep 100ms");
+				index++;
 			}//while
 
-			//ShowLog("lihui before pollPending");
 			pollPending();	
-			//ShowLog("lihui after pollPending");
 
 			for (int i = 0; i < commSize; ++i)
 			{
+				//null chunk
+				//maxlen = -1;
+				//keysize = -1;
+				//valsize = -1;
+				//00000000000
 	
 				if (workerDone[i])
 					continue;
-			//ShowLog("lihui workerDone[%d]:%d",i,workerDone[i]); 	
-				if (i != commRank){
-			//ShowLog("lihui MPI_Wait i:%d commRank:%d",i,commRank);
-			//	MPI_Wait(&(countReqs[i]), &(stat[0]));
-			      MPI_Wait((MPI_Request *)&(countReqs[i]),NULL);
-			//ShowLog("lihui MPI_Wait i:%d commRank:%d",i,commRank);
-				ShowLog(" -> recv countReqs from %d, counts[0]:%d counts[1]:%d counts[2]:%d",
-						i, counts[i * 3 + 0], counts[i * 3 + 1], counts[i * 3 + 2]);
-				
-				keyPosKeySizeValPosValSize[i] = new int[4*counts[i * 3 + 0]];
-				keyRecv[i] = new int[(counts[i * 3 + 1] + sizeof(int) - 1) / sizeof(int)];
-				valRecv[i] = new int[(counts[i * 3 + 2] + sizeof(int) - 1) / sizeof(int)];
 
-	MPI_Irecv((char*)(keyRecv[i]), counts[i * 3 + 1], MPI_CHAR, i, 1, MPI_COMM_WORLD, recvReqs + i * 3 + 1);
-	MPI_Irecv((char*)(valRecv[i]), counts[i * 3 + 2], MPI_CHAR, i, 2, MPI_COMM_WORLD, recvReqs + i * 3 + 2);
-	MPI_Irecv(keyPosKeySizeValPosValSize[i], 4*counts[i * 3 + 0], MPI_INT, i, 3, MPI_COMM_WORLD, recvReqs + i * 3 + 0);
+				//MPI_Wait(&(countReqs[i]), &(stat[0]));
+			      	MPI_Wait(&(countReqs[i]),NULL);
+				ShowLog("->recved countReqs from %d, maxlen:%d keysize:%d valsize:%d",
+							i, counts[i*3+0], counts[i*3+1], counts[i*3+2]);
+				//received null chunk
+				if(counts[i*3+0] == -1 && counts[i*3+1] == -1 && count[i*3+2] == -1){
+					workerDone[i] = true;
+					finishedWorkers++;
+					continue;
+				}//if
+					
+				keyPosKeySizeValPosValSize[i] = new int[4*counts[i*3+0]];
+				keyRecv[i] = new int[(counts[i*3+1] + sizeof(int)-1)/sizeof(int)];
+				valRecv[i] = new int[(counts[i*3+2] + sizeof(int)-1)/sizeof(int)];
+
+				MPI_Irecv((char*)(keyRecv[i]),counts[i*3+1],MPI_CHAR,i,1,MPI_COMM_WORLD,recvReqs+i*3+1);
+				MPI_Irecv((char*)(valRecv[i]),counts[i*3+2],MPI_CHAR,i,2,MPI_COMM_WORLD,recvReqs+i*3+2);
+				MPI_Irecv(keyPosKeySizeValPosValSize[i],4*counts[i*3+0],MPI_INT,i,3,MPI_COMM_WORLD,recvReqs+i*3+0);
 
 				MPI_Wait(recvReqs + i * 3 + 1, &stat[1]);
 				MPI_Wait(recvReqs + i * 3 + 2, &stat[2]);
 				MPI_Wait(recvReqs + i * 3 + 0, &stat[0]);
 
-				if ((counts[0]==1)&&(counts[1]==1)&&(counts[2]==1))
-					ShowLog("received zero msg from %d",i);
-				else
-					PandaAddRecvedBucket((char *)keyRecv[i], (char *)valRecv[i], keyPosKeySizeValPosValSize[i], counts[i * 3 + 1], counts[i * 3 + 2], counts[i * 3 + 0]);
-				}//if
+				if ((counts[0]>0)&&(counts[1]>0)&&(counts[2]>0))
+				PandaAddRecvedBucket((char *)keyRecv[i],(char *)valRecv[i],keyPosKeySizeValPosValSize[i], 
+					counts[i*3+1],counts[i*3+2], counts[i*3+0]);
 
-				ShowLog("lihui finishedWorkers:%d",finishedWorkers);	
-				++finishedWorkers;
 				workerDone[i] = true;
-				MPI_Irecv(zeroCounts + i * 3, 3, MPI_INT, i, 4, MPI_COMM_WORLD, zeroReqs + i );
-
+				finishedWorkers++;
+				//MPI_Irecv(zeroCounts + i * 3, 3, MPI_INT, i, 4, MPI_COMM_WORLD, zeroReqs + i );
 			}
-			ShowLog("lihui after check for(int i = 0; i<commSize; i++)");
+			//ShowLog("lihui after check for(int i = 0; i<commSize; i++)");
 		}//while
-		MPI_Waitall(commSize, zeroReqs, MPI_STATUSES_IGNORE);
-		ShowLog("MPI_Waitall done finishedWorkers:%d  commSize:%d", finishedWorkers, commSize);
+
+		//MPI_Waitall(commSize, zeroReqs, MPI_STATUSES_IGNORE);
+		//ShowLog("MPI_Waitall done finishedWorkers:%d  commSize:%d", finishedWorkers, commSize);
 		/*
 		delete [] workerDone;
 		delete [] recvingCount;
@@ -185,7 +186,7 @@ namespace panda
 		int * const keyPosKeySizeValPosValSize,
 		const int keySize,
 		const int valSize,
-		const int maxlen)
+		const int maxlen) //curlen
 	{
 		PandaMessagePackage * data  = new PandaMessagePackage;
 		data->counts = new int[4];
@@ -194,7 +195,7 @@ namespace panda
 		data->waiting	= new volatile bool;
 		*data->flag	= false;
 		*data->waiting	= false;
-		data->reqs = (MPI_Request *)malloc(sizeof(MPI_Request)*4);	
+		data->reqs 	= new MPI_Request[4];	
 
 		//write to disk for fault tolerance
 		if (copySendData)
@@ -239,21 +240,26 @@ namespace panda
 		data->valBuffSize	= valSize;
 		data->rank		= rank;
 
-		if (rank == commRank)
+		/*if (rank == commRank)
 		{
 			data->counts[0] = maxlen;
 			data->counts[1] = keySize;
 			data->counts[2] = valSize;
-			//data->done[0]   = data->done[1] = data->done[2] = data->done[3] = false;
-		} 	//if
-		else
-		{
+			data->done[0]   = false; 
+			data->done[1]   = false;
+			data->done[2]   = false;
+			data->done[3]   = false;
+		}*/
+ 
 			data->counts[0] = maxlen;
 			data->counts[1] = keySize;
 			data->counts[2] = valSize;
-			data->done[0]   = data->done[1] = data->done[2] = data->done[3] = false;
-		} 	//else
-		PandaMessageIORequest * req = new PandaMessageIORequest(data->flag, data->waiting, 
+			data->done[0]   = false;
+			data->done[1]   = false;
+			data->done[2]   = false;
+			data->done[3]   = false;
+
+		PandaMessageIORequest * req = new PandaMessageIORequest(data->flag, data->waiting,
 			4*data->counts[0]*sizeof(int) + data->counts[1] + data->counts[2]);
 		data->cond = &req->condition();
 		addDataLock.lock();

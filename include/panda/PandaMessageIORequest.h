@@ -11,22 +11,17 @@ namespace panda
   class PandaMessageIORequest : public oscpp::AsyncIORequest
   {
 
-	protected:
-
+    protected:
       volatile bool * flag;
       volatile bool * waiting;
-
       int byteCount;
       oscpp::Condition cond;
-
       PandaMessageIORequest(const PandaMessageIORequest & rhs);
       PandaMessageIORequest & operator = (const PandaMessageIORequest & rhs);
 
     public:
-
       PandaMessageIORequest(volatile bool * const pFlag, volatile bool * const pWaiting, const int pByteCount);
       virtual ~PandaMessageIORequest();
-
       virtual bool query();
       virtual void sync();
       virtual bool hasError();

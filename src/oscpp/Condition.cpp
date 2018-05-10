@@ -6,10 +6,8 @@ namespace oscpp
 
   Condition::Condition()
   {
-	  // oscpp::Mutex mutex;
 	  pthread_mutex_init((pthread_mutex_t*)mutex.getHandle(),NULL);
-      handle= new pthread_cond_t;
-	  
+      	  handle= new pthread_cond_t;
 	  pthread_cond_init((pthread_cond_t*)handle,NULL);
 	  //pthread_cond_wait((pthread_cond_t*)handle, (pthread_mutex_t *)(mutex.getHandle()));
   }
@@ -44,12 +42,12 @@ namespace oscpp
 	
   void	Condition::lockMutex()
   {
-		pthread_mutex_lock((pthread_mutex_t*)mutex.getHandle());
+	pthread_mutex_lock((pthread_mutex_t*)mutex.getHandle());
   }
 
   void	Condition::unlockMutex()
   {
-	  pthread_mutex_unlock((pthread_mutex_t*)mutex.getHandle());
+	pthread_mutex_unlock((pthread_mutex_t*)mutex.getHandle());
   }
     
 }

@@ -661,7 +661,7 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 			this->pNodeContext->buckets.savedKeysBuff[bucketId] = newKeyBuff;
 			this->pNodeContext->buckets.keyBuffSize[bucketId]   = keyBuffSize;
 			//TODO remove keyBuff in std::vector
-			//delete [] keyBuff
+			delete [] keyBuff;
 	  }else{
 			memcpy(keyBuff + keyBufflen, key, keySize);
 			counts[2] = keyBufflen+keySize;
@@ -672,14 +672,14 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 		    while(valBufflen + valSize >= valBuffSize)
 				valBuffSize *= 2;
 
-		    char *newValBuff = (char*)malloc(valBuffSize);
+		        char *newValBuff = (char*)malloc(valBuffSize);
 			memcpy(newValBuff, valBuff, valBufflen);
 			memcpy(newValBuff + valBufflen, val, valSize);
 			counts[3] = valBufflen+valSize;
 			this->pNodeContext->buckets.savedValsBuff[bucketId] = newValBuff;
-			this->pNodeContext->buckets.valBuffSize[bucketId]	= valBuffSize;
+			this->pNodeContext->buckets.valBuffSize[bucketId]   = valBuffSize;
 			//TODO remove valBuff in std::vector
-			//delete [] valBuff;
+			delete [] valBuff;
 	  }else{
 			memcpy(valBuff + valBufflen, val, valSize);	//
 			counts[3] = valBufflen+valSize;				//
@@ -708,34 +708,41 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 		 this->pNodeContext->buckets.valPos[bucketId]  = newValPosArray;
 		 this->pNodeContext->buckets.keySize[bucketId] = newKeySizeArray;
 		 this->pNodeContext->buckets.valSize[bucketId] = newValSizeArray;
-
+		 delete [] keyPosArray;
+		 delete [] valPosArray;
+	   	 delete [] keySizeArray;
+ 		 delete [] valSizeArray;
 	  }//if
   }//void
 
   void PandaMapReduceJob::PandaPartitionCheckSends(const bool sync)
   {
+#if 0
     std::vector<oscpp::AsyncIORequest * > newReqs;
-
     for (unsigned int j = 0; j < sendReqs.size(); ++j)
     {
-      if (sync) {
+        if (sync) {
 	ShowLog("sync ....");
 	sendReqs[j]->sync();
 	}
-      if (sendReqs[j]->query()) {
-	ShowLog("delete sendReqs :%d",j);	
+        if (sendReqs[j]->query()) {
+	ShowLog("delete sendReqs:[%d]",j);	
 	delete sendReqs[j];
 	}
-      else {   
+        else {   
 	ShowLog("newReqs.push_back");
 	newReqs.push_back(sendReqs[j]);
 	}
     }//for
     sendReqs = newReqs;
+#endif
   }//void
 
+  // send data to local bucket
   void PandaMapReduceJob::StartPandaDoPartitionOnCPU(){
 
+	  //Init Buckets there are commSize buckets across cluster
+	  //it is fixed, but can be extended in case there is not enough DRAM space
 	  //TODO need to be configured in the future.
 	  int keyBuffSize = 1024;
 	  int valBuffSize = 1024;
@@ -770,6 +777,7 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 		  this->pNodeContext->buckets.counts.push_back(counts_i);
 
 	  }//for
+
 	  keyvals_t *sorted_intermediate_keyvals_arr1 = this->pNodeContext->sorted_key_vals.sorted_intermediate_keyvals_arr;
 	  ShowLog("this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len:%d", this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len);
 
@@ -780,27 +788,29 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 		val_t *vals  = sorted_intermediate_keyvals_arr1[i].vals;
 		int len = sorted_intermediate_keyvals_arr1[i].val_arr_len;
 		for (int j=0;j<len;j++){
-			ShowLog("key:%s keySize:%d  valSize:%d Dump to buckeId:%d",key, keySize, vals[j].valSize, bucketId);
+			ShowLog("key:%s keySize:%d  valSize:%d dump to buckeId:[%d]",key, keySize, vals[j].valSize, bucketId);
 			PandaAddKeyValue2Bucket(bucketId, (char *)key, keySize,(char *)(vals[j].val),vals[j].valSize);
 		}//for
 	  }//for
-	  ShowLog("PandaAddKeyValue2Bucket Done\n");
+	  ShowLog("Panda adding Key/Values to bucket is done on local host.\n");
   }//void
 
   void PandaMapReduceJob::StartPandaCPUReduceTasks(){
 	  ExecutePandaCPUReduceTasks(this->pCPUContext);
   }//void
 
-  void PandaMapReduceJob::StartPandaPartitionSubSendData()
+  void PandaMapReduceJob::StartPandaPartitionSendData()
   {
-    for (int index = 0; index < commSize; ++index)
+    for (int index = 0; index < commSize; index++)
     {
 	  int curlen	= this->pNodeContext->buckets.counts[index][0];
 	  int maxlen	= this->pNodeContext->buckets.counts[index][1];
 	  int keySize	= this->pNodeContext->buckets.counts[index][2];
 	  int valSize	= this->pNodeContext->buckets.counts[index][3];
 
-	  ShowLog("index:%d curlen:%d maxlen:%d keySize:%d valSize:%d curlen:%d",index,curlen,maxlen,keySize,valSize,curlen);
+	  ShowLog("bucket index:%d curlen:%d maxlen:%d keySize:%d valSize:%d ",index,curlen,maxlen,keySize,valSize);
+
+	  if(curlen == 0)continue;
 
 	  char *keyBuff = this->pNodeContext->buckets.savedKeysBuff[index];
 	  char *valBuff = this->pNodeContext->buckets.savedValsBuff[index];
@@ -810,7 +820,7 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	  int *keyPosArray  = this->pNodeContext->buckets.keyPos[index];
 	  int *valPosArray  = this->pNodeContext->buckets.valPos[index];
 	  
-	  int *keyPosKeySizeValPosValSize = (int *)malloc(sizeof(int)*curlen*4);
+	  int *keyPosKeySizeValPosValSize = new int[curlen*4];
 	  
 	  if(keyPosArray==NULL)  ShowLog("Error");
 	  if(valSizeArray==NULL) ShowLog("Error");
@@ -830,35 +840,34 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 		keyPosKeySizeValPosValSize[i] = valSizeArray[i-3*curlen];
 	  }//for
 
-      int i = (index + commRank + commSize - 1) % commSize;
-      if (keySize+valSize > 0) // it can happen that we send nothing.
-      {
-        oscpp::AsyncIORequest * ioReq = messager->sendTo(i,
+          //int dest = (index + commRank + commSize - 1) % commSize;
+	  int dest = index;
+          if (keySize+valSize > 0) // it can happen that we send nothing.
+          {
+          oscpp::AsyncIORequest * ioReq = messager->sendTo(dest,
                                                        	keyBuff,
                                                        	valBuff,
 							keyPosKeySizeValPosValSize,
                                                        	keySize,
                                                      	valSize,
 							curlen);
-        sendReqs.push_back(ioReq);
-      }//if
-    }
+          sendReqs.push_back(ioReq);
+          }//if
+    }//for
   }//void
 
   void PandaMapReduceJob::StartPandaGlobalPartition()
   {
-	  PandaPartitionCheckSends(false);
 	  StartPandaDoPartitionOnCPU();
-	  StartPandaPartitionSubSendData();
-
-      if (syncPartSends) PandaPartitionCheckSends(true);
-	/*
+	  StartPandaPartitionSendData();
+          //if (syncPartSends) PandaPartitionCheckSends(true);
+	  /*
 	  this->pNodeContext->buckets.savedKeysBuff.clear();
 	  this->pNodeContext->buckets.savedValsBuff.clear();
 	  this->pNodeContext->buckets.keyPos.clear();
 	  this->pNodeContext->buckets.valPos.clear();
 	  this->pNodeContext->buckets.counts.clear();
-	*/
+	  */
   }//void
 
   void PandaMapReduceJob::execute()
@@ -901,8 +910,8 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	ShowLog("(Shuffle Stage Start)");
 
 	StartPandaGlobalPartition();
-	StartPandaExitMessager();
-	MPI_Barrier(MPI_COMM_WORLD);
+	//StartPandaExitMessager();
+	//MPI_Barrier(MPI_COMM_WORLD);
 	
 	//Copy recved bucket data into sorted array
 	StartPandaSortBucket();
