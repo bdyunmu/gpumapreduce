@@ -466,9 +466,7 @@ void ExecutePandaCPUCombiner(panda_cpu_context *pcc){
 void ExecutePandaSortBucket(panda_node_context *pnc)
 {
 
-
 	  int numBucket = pnc->recv_buckets.savedKeysBuff.size();
-
 	  keyvals_t *sorted_intermediate_keyvals_arr = pnc->sorted_key_vals.sorted_intermediate_keyvals_arr;
 	  char *key_0, *key_1;
 	  int keySize_0, keySize_1;
@@ -729,19 +727,22 @@ void AddReduceTaskOnCPU(panda_cpu_context* pcc, panda_node_context *pnc, int sta
 		
     if (end_task_id <= start_task_id)
 	{
-		ShowError("error! end_task_id<=start_task_id");
+		ShowError("end_task_id:%d<=start_task_id:%d Warning!",end_task_id,start_task_id);
+		pcc->sorted_key_vals.sorted_keyvals_arr_len = 0;
 		return;
 	}//if
 
 	int len = pnc->sorted_key_vals.sorted_keyvals_arr_len;
 	if (len < (end_task_id - start_task_id) )
 	{
-		ShowError("error! len < end_task_id - start_task_id");
+		ShowError("error! pnc->sorted_key_vals.sorted_keyvals_arr_len < pcc->sorted_key_vals.sorted_keyvals_arr_len");
+		pcc->sorted_key_vals.sorted_keyvals_arr_len = 0;
 		return;
 	}
 
 	if (len == 0) {
-		ShowError("error! len < 0");
+		ShowError("error! pnc->sorted_key_vals.sorted_keyvals_arr_len = 0");
+		pcc->sorted_key_vals.sorted_keyvals_arr_len = 0;
 		return;
 	}
 
@@ -1468,14 +1469,6 @@ __global__ void GPUCombiner(panda_gpu_context pgc)
 
 }//GPU
 
-
-
-#if 0
-void PandaExecuteCombinerOnGPU(panda_gpu_context * pgc)
-{
-}
-#endif
-
 void PandaExecuteCombinerOnCPU(panda_cpu_context *pcc){
 	
 	if (pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p == NULL)	{ ShowError("intermediate_keyval_arr_arr_p == NULL"); exit(-1); }
@@ -1719,13 +1712,6 @@ void PandaEmitCombinerOutputOnCPU(void *key, void *val, int keySize, int valSize
 
 }//void
 
-#if 0
-void PandaExecuteReduceTasksOnGPU(panda_gpu_context *pgc)
-{
-}//void
-#endif
-
-	
 void* PandaThreadExecuteMapOnCPU(void * ptr)
 {
 

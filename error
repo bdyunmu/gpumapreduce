@@ -1,1 +1,8 @@
 nvcc warning : The 'compute_20', 'sm_20', and 'sm_21' architectures are deprecated, and may be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+../../obj/PandaMapReduceJob.o:(.rodata._ZTVN5panda17PandaMapReduceJobE[_ZTVN5panda17PandaMapReduceJobE]+0x60): undefined reference to `panda::PandaMapReduceJob::partitionSub(void*, void*, void*, int, int, int)'
+../../obj/PandaMapReduceJob.o:(.rodata._ZTVN5panda17PandaMapReduceJobE[_ZTVN5panda17PandaMapReduceJobE]+0x68): undefined reference to `panda::PandaMapReduceJob::partitionChunk(unsigned int)'
+../../obj/PandaMapReduceJob.o:(.rodata._ZTVN5panda17PandaMapReduceJobE[_ZTVN5panda17PandaMapReduceJobE]+0xc0): undefined reference to `panda::PandaMapReduceJob::StartPandaGPUReduceTasks()'
+../../obj/PandaMapReduceJob.o:(.rodata._ZTVN5panda17PandaMapReduceJobE[_ZTVN5panda17PandaMapReduceJobE]+0x100): undefined reference to `panda::PandaMapReduceJob::addMapTasks(panda::Chunk*)'
+collect2: error: ld returned 1 exit status
+make[1]: *** [wordcount] Error 1
+make: *** [wordcount] Error 2

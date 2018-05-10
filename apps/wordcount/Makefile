@@ -72,4 +72,4 @@ wordcount: $(APP_WC_OBJ_FILES) $(OS_OBJ_FILES) $(PANDA_OBJ_FILES) \
 	$(NVCC) $(NVCCFLAGS) -c -o $@ $<
 
 clean:
-	rm -rf obj/*.o cuobj/*.o wordcount 
+	rm -rf ../../obj/*.o ../../cuobj/*.o ../../bin/wordcount 

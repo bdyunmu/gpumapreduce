@@ -42,9 +42,6 @@ int main(int argc, char ** argv)
 	job->setEnableCPU(true);
 	job->setEnableGPU(true);
 
-	//if (rank == 0)
-	{
-
     	char fn[256];
 	char str[512];
 	char strInput[1024];
@@ -70,7 +67,6 @@ int main(int argc, char ** argv)
 		}//if
 	}//while
 	ShowLog("rank:[%d] finishing processing txt data",rank);
-	}//if
 
 	job->execute();
 	//delete job;

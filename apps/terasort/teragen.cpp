@@ -14,6 +14,8 @@
 #include <cstdlib>
 #include <cstdio>
 #include <ctype.h>
+#include <climits>
+#include <assert.h>
 
 using namespace std;
 
@@ -81,6 +83,7 @@ int main(int argc, char ** argv)
            exit(-1);//
         }  //if
 	long outputSizeInBytes = sizeStrToBytes(argv[1]);
+	char *sizeStr = sizeToSizeStr(outputSizeInBytes);
 
 	panda::MapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv, false,false,true);
 
@@ -93,37 +96,33 @@ int main(int argc, char ** argv)
 	
 	job->setMessage(new panda::PandaMPIMessage(true));
 
-	job->setEnableCPU(false);
+	job->setEnableCPU(true);
 	job->setEnableGPU(true);
 
 	if (rank == 0)
 	{
 
-    	char fn[256];
-	char str[512];
-	char strInput[1024];
-	sprintf(fn,"%s",argv[1]);
-	int  chunk_size = 1024;
-	ShowLog("start processing txt data...");
-	char *chunk_data = (char *)malloc(sizeof(char)*2*(chunk_size));
-	FILE *wcfp;
-	wcfp = fopen(fn, "r");
-	const int NUM_ELEMENTS = 1;
-	int total_len = 0;
+	ShowLog("========================================================");
+	ShowLog("========================================================");
+	ShowLog("Input Size:%s",sizeStr);
+	ShowLog("Total number of records:%ld",numRecords);
+	ShowLog("Number of output partitions:%d",size);
+	ShowLog("Number of records/output parititon:%d",numRecords/size);
+	ShowLog("=========================================================");
+	ShowLog("=========================================================");	
 
-	while(fgets(str,sizeof(str),wcfp) != NULL)
+	assert(recordsPerPartition < INT_MAX);
+
+	const int NUM_ELEMENTS = 1;
+	int i = 0;
+	while(i<size)
 	{
-		for (int i = 0; i < strlen(str); i++)
-		str[i] = toupper(str[i]);
-		strcpy((chunk_data + total_len),str);
-		total_len += (int)strlen(str);
-		if(total_len>=chunk_size){
-			ShowLog("wordcount job->addInput");
-			job->addInput(new panda::PreLoadedPandaChunk((char *)chunk_data, total_len, NUM_ELEMENTS ));
-			total_len=0;
-		}//if
+		int *v = new int[1];
+		*v = i;
+		job->addInput(new panda::PreLoadedPandaChunk((char *)v, sizeof(int), NUM_ELEMENTS ));
+		ShowLog("rank:[%d] adding input:%d",rank,i);
+		i++;	
 	}//while
-	ShowLog("rank:[%d] finishing processing txt data",rank);
 
 	}//if
 

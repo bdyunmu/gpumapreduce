@@ -118,16 +118,22 @@ namespace panda
 				//sleep(100);
 				ShowLog("loop to send unsent data and sleep 100ms");
 			}//while
+
+			//ShowLog("lihui before pollPending");
 			pollPending();	
+			//ShowLog("lihui after pollPending");
 
 			for (int i = 0; i < commSize; ++i)
-			{	
+			{
+	
 				if (workerDone[i])
 					continue;
-				
+			//ShowLog("lihui workerDone[%d]:%d",i,workerDone[i]); 	
 				if (i != commRank){
-				
-				MPI_Wait(&countReqs[i], &stat[0]);
+			//ShowLog("lihui MPI_Wait i:%d commRank:%d",i,commRank);
+			//	MPI_Wait(&(countReqs[i]), &(stat[0]));
+			      MPI_Wait((MPI_Request *)&(countReqs[i]),NULL);
+			//ShowLog("lihui MPI_Wait i:%d commRank:%d",i,commRank);
 				ShowLog(" -> recv countReqs from %d, counts[0]:%d counts[1]:%d counts[2]:%d",
 						i, counts[i * 3 + 0], counts[i * 3 + 1], counts[i * 3 + 2]);
 				
@@ -149,11 +155,13 @@ namespace panda
 					PandaAddRecvedBucket((char *)keyRecv[i], (char *)valRecv[i], keyPosKeySizeValPosValSize[i], counts[i * 3 + 1], counts[i * 3 + 2], counts[i * 3 + 0]);
 				}//if
 
+				ShowLog("lihui finishedWorkers:%d",finishedWorkers);	
 				++finishedWorkers;
 				workerDone[i] = true;
 				MPI_Irecv(zeroCounts + i * 3, 3, MPI_INT, i, 4, MPI_COMM_WORLD, zeroReqs + i );
 
 			}
+			ShowLog("lihui after check for(int i = 0; i<commSize; i++)");
 		}//while
 		MPI_Waitall(commSize, zeroReqs, MPI_STATUSES_IGNORE);
 		ShowLog("MPI_Waitall done finishedWorkers:%d  commSize:%d", finishedWorkers, commSize);
