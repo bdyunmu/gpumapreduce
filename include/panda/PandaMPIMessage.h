@@ -31,17 +31,9 @@ namespace panda
 
           bool pollUnsent();
           void pollPending();
-          void pollSends();
-
+//        void pollSends();
 #if 0
-	  void poll(int & finishedWorkers,
-                bool * const workerDone,
-                bool * const recvingCount,
-                int * const counts,
-                int ** keyRecv,
-                int ** valRecv,
-		int ** keyPosKeySizeValPosValSize,
-                MPI_Request * recvReqs);
+void poll(int & finishedWorkers,
 #endif
 
 	  virtual oscpp::AsyncIORequest * sendTo(const int rank,

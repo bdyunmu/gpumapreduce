@@ -80,7 +80,7 @@ __global__ void ExecutePandaGPUMapPartitioner(panda_gpu_context pgc)
 
 void StartPandaGPUMapPartitioner(panda_gpu_context pgc, dim3 grids, dim3 blocks)
 {
-   ExecutePandaGPUMapPartitioner<<<grids,blocks>>>(pgc);
+   	ExecutePandaGPUMapPartitioner<<<grids,blocks>>>(pgc);
 }
 
 void* ExecutePandaCPUMapThread(void * ptr)
@@ -206,7 +206,7 @@ void ExecutePandaReduceTasksOnGPU(panda_gpu_context *pgc)
 		key = (char *)pgc->output_key_vals.h_KeyBuff + key_pos;
 		pgc->output_key_vals.h_reduced_keyval_arr[i].key = key;
 		pgc->output_key_vals.h_reduced_keyval_arr[i].val = val;
-		ShowLog("key:%s val:%d\n",(char *)key,*(int*)val);
+		ShowLog("key:%s val:%d",(char *)key,*(int*)val);
 
 		val_pos += (pgc->output_key_vals.h_reduced_keyval_arr[i].valSize+3)/4*4;
 		key_pos += (pgc->output_key_vals.h_reduced_keyval_arr[i].keySize+3)/4*4;
@@ -264,7 +264,6 @@ __global__ void PandaReducePartitioner(panda_gpu_context pgc)
 	}//for
 }
 
-
 __global__ void PandaRunGPUMapTasks(panda_gpu_context pgc, int curIter, int totalIter)
 {
 
@@ -314,7 +313,6 @@ void *RunPandaCPUCombinerThread(void *ptr){
 	//int merged_key_arr_len = 0;
 
 	int start_idx = panda_cpu_task_info->start_row_idx;
-
 
 	keyval_arr_t *kv_arr_p = (keyval_arr_t *)&(pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[start_idx]);
 
@@ -406,7 +404,6 @@ __global__ void GPUCombiner(panda_gpu_context pgc);
 
 void ExecutePandaGPUCombiner(panda_gpu_context * pgc){
 
-	//double t1 = PandaTimer();
 	cudaMemset(pgc->intermediate_key_vals.d_intermediate_keyval_total_count,0,pgc->input_key_vals.num_input_record*sizeof(int));
 	ShowLog("pgc->input_key_vals.num_input_record:%d",pgc->input_key_vals.num_input_record);
 	int numGPUCores = getGPUCoresNum();
@@ -550,7 +547,7 @@ void ExecutePandaSortBucket(panda_node_context *pnc)
 			kvalsp->vals[k].val = (char *)malloc(sizeof(char)*valSize_0);
 			memcpy(kvalsp->vals[k].val, val_0, valSize_0);
 
-			//ShowLog("+[key:%s val:%d]",kvals_p->key,*(int*)kvalsp->vals[k].val);
+			//ShowLog("[key:%s val:%d]",kvals_p->key,*(int*)kvalsp->vals[k].val);
 			}//k
 		}//j
 	  }//i
@@ -749,10 +746,10 @@ void AddReduceTaskOnCPU(panda_cpu_context* pcc, panda_node_context *pnc, int sta
 	pcc->sorted_key_vals.totalValSize = pnc->sorted_key_vals.totalValSize;
 	
 	for (int i = 0; i< end_task_id - start_task_id; i++){
-		pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[i].keySize		= pnc->sorted_key_vals.sorted_intermediate_keyvals_arr[start_task_id+i].keySize;
-		pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[i].key			= pnc->sorted_key_vals.sorted_intermediate_keyvals_arr[start_task_id+i].key;
-		pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[i].vals		= pnc->sorted_key_vals.sorted_intermediate_keyvals_arr[start_task_id+i].vals;
-		pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[i].val_arr_len = pnc->sorted_key_vals.sorted_intermediate_keyvals_arr[start_task_id+i].val_arr_len;
+	pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[i].keySize		= pnc->sorted_key_vals.sorted_intermediate_keyvals_arr[start_task_id+i].keySize;
+	pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[i].key		= pnc->sorted_key_vals.sorted_intermediate_keyvals_arr[start_task_id+i].key;
+	pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[i].vals		= pnc->sorted_key_vals.sorted_intermediate_keyvals_arr[start_task_id+i].vals;
+	pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[i].val_arr_len = pnc->sorted_key_vals.sorted_intermediate_keyvals_arr[start_task_id+i].val_arr_len;
 	}//for
 	pcc->sorted_key_vals.sorted_keyvals_arr_len = end_task_id - start_task_id;
 
@@ -859,7 +856,6 @@ __global__ void copyDataFromDevice2Host4Reduce(panda_gpu_context pgc)
                 val_pos += (pgc.reduced_key_vals.d_reduced_keyval_arr[i].valSize+3)/4*4;
                 key_pos += (pgc.reduced_key_vals.d_reduced_keyval_arr[i].keySize+3)/4*4;
         }//for
-	//printf("hello world TID:%d thread_start_idx:%d thread_end_idx:%d val_pos:%d key_pos:%d\n",TID,thread_start_idx,thread_end_idx,val_pos,key_pos);
 	
         for (int i = thread_start_idx; i < thread_end_idx;i++){
                 memcpy( (char *)(pgc.output_key_vals.d_KeyBuff) + key_pos,
@@ -867,8 +863,8 @@ __global__ void copyDataFromDevice2Host4Reduce(panda_gpu_context pgc)
                 //key_pos += pgc.reduced_key_vals.d_reduced_keyval_arr[i].keySize;
                 memcpy( (char *)(pgc.output_key_vals.d_ValBuff) + val_pos,
                         (char *)(pgc.reduced_key_vals.d_reduced_keyval_arr[i].val), pgc.reduced_key_vals.d_reduced_keyval_arr[i].valSize);
-       printf("[copyDataFromDevice2Host4Reduce] key:[%s] val:[%d]\n",(char *)pgc.output_key_vals.d_KeyBuff+key_pos,
-		*(int *)pgc.output_key_vals.d_ValBuff+val_pos);
+       		printf("[copyDataFromDevice2Host4Reduce] key:[%s] val:[%d]\n",(char *)pgc.output_key_vals.d_KeyBuff+key_pos,
+					*(int *)pgc.output_key_vals.d_ValBuff+val_pos);
         
 		key_pos += pgc.reduced_key_vals.d_reduced_keyval_arr[i].keySize;
 		val_pos += pgc.reduced_key_vals.d_reduced_keyval_arr[i].valSize;
@@ -940,7 +936,7 @@ void PandaCPUEmitReduceOutput (	void*		key,
 			p->val = malloc(valSize);
 			memcpy(p->val,val,valSize);
 	*/
-			ShowLog("[panda_reduce_output]: key:%s  val:%d\n",(char*)key,*(int *)val);
+			ShowLog("[panda_reduce_output]:key:%s  val:%d",(char*)key,*(int *)val);
 
 }
 
@@ -1083,7 +1079,7 @@ __device__ void PandaGPUEmitReduceOutput(
 			p->valSize = valSize;
 			p->val = malloc(valSize);
 			memcpy(p->val,val,valSize);
-	//printf("[PandaGPUEmitRedueOutput] key:[%s] val:[%d]\n",(char *)p->key,*(int *)p->val);
+	//printf("[PandaGPUEmitRedueOutput] key:[%s] val:[%d]",(char *)p->key,*(int *)p->val);
 
 }//__device__ 
 
@@ -1178,7 +1174,7 @@ void PandaEmitReduceOutputOnCPU (void*	key,
 			p->valSize = valSize;
 			p->val = malloc(valSize);
 			memcpy(p->val,val,valSize);*/
-			ShowLog("[panda_cpu_output]: key:%s  val:%d\n",(char*)key,*(int *)val);
+			ShowLog("[panda_cpu_output]:key:%s  val:%d",(char*)key,*(int *)val);
 
 }
 
@@ -1753,7 +1749,6 @@ void* PandaThreadExecuteMapOnCPU(void * ptr)
 
 	}//for
 	
-	//ShowLog("CPU_GROUP_ID:[%d] Done :%d tasks",d_g_state->cpu_group_id, panda_cpu_task_info->end_row_idx - panda_cpu_task_info->start_row_idx);
 	return NULL;
 }//int 
 
