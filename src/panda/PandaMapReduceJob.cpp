@@ -151,11 +151,10 @@ namespace panda
 	ExecutePandaCPUSort(this->pCPUContext, this->pNodeContext);
   }//int
 
- int PandaMapReduceJob::StartPandaReduceTasksOnGPU()
-	{
-		ExecutePandaReduceTasksOnGPU(this->pGPUContext);
-		return 0;
-	}// int PandaMapReduceJob
+  int PandaMapReduceJob::StartPandaReduceTasksOnGPU()
+  {
+	ExecutePandaReduceTasksOnGPU(this->pGPUContext);
+  }// int PandaMapReduceJob
 
 
 	int PandaMapReduceJob::StartPandaCPUMapTasks()
@@ -500,7 +499,7 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
   }
 
 
-  void PandaMapReduceJob::StartPandaExitMessager()
+  void PandaMapReduceJob::WaitPandaMessagerExit()
   {
     if (messager!=NULL) messager->MsgFinish();
 
@@ -810,7 +809,21 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 
 	  ShowLog("bucket index:%d curlen:%d maxlen:%d keySize:%d valSize:%d ",index,curlen,maxlen,keySize,valSize);
 
-	  if(curlen == 0)continue;
+	  if(curlen == 0){
+	  int dest = index;
+	  keySize = -1;
+	  valSize = -1;
+          curlen  = -1;
+	  oscpp::AsyncIORequest * ioReq = messager->sendTo(dest,
+                                             		NULL,
+                                             		NULL,
+      							NULL,
+							keySize,
+							valSize,
+							curlen);
+	  //sendReqs.push_back(ioReq);
+	  continue;
+  	  }//if
 
 	  char *keyBuff = this->pNodeContext->buckets.savedKeysBuff[index];
 	  char *valBuff = this->pNodeContext->buckets.savedValsBuff[index];
@@ -851,7 +864,7 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
                                                        	keySize,
                                                      	valSize,
 							curlen);
-          sendReqs.push_back(ioReq);
+          //sendReqs.push_back(ioReq);
           }//if
     }//for
   }//void
@@ -910,16 +923,26 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	ShowLog("(Shuffle Stage Start)");
 
 	StartPandaGlobalPartition();
-	//StartPandaExitMessager();
+	WaitPandaMessagerExit();
 	//MPI_Barrier(MPI_COMM_WORLD);
+
+	if(this->getEnableGPU()){
+		this->pGPUContext->sorted_key_vals.d_sorted_keyvals_arr_len = 0;
+	}
+	if(this->getEnableCPU()){
+		this->pCPUContext->sorted_key_vals.sorted_keyvals_arr_len = 0;
+	}
+	this->pNodeContext->sorted_key_vals.sorted_intermediate_keyvals_arr = NULL;
+	this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len = 0;
 	
 	//Copy recved bucket data into sorted array
 	StartPandaSortBucket();
 	//TODO schedule
+
 	int start_task_id = 0;
 	int end_task_id = this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len;
 
-	ShowLog("(shuffle to local bucket) start_tid:0 end_tid:%d",end_task_id);
+	if(end_task_id>0){
 
 	if(this->getEnableGPU()&&this->getEnableCPU()){
 	StartPandaCopyRecvedBucketToGPU(start_task_id, end_task_id/2);
@@ -935,18 +958,17 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	StartPandaCopyRecvedBucketToCPU(start_task_id, end_task_id);
 	}
 
+	}
 	/////////////////////////////////
 	//	Shuffle Stage Done
 	/////////////////////////////////
 	ShowLog("(Shuffle Stage Done)");
-
 	//StartPandaAssignReduceTaskToGPU(start_task_id, end_task_id);
-	
 	if(this->getEnableGPU())
 		StartPandaReduceTasksOnGPU();
 	if(this->getEnableCPU())
 		StartPandaCPUReduceTasks();
-
-    	MPI_Barrier(MPI_COMM_WORLD);
+    	//MPI_Barrier(MPI_COMM_WORLD);
+	
   }
 }

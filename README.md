@@ -1,4 +1,4 @@
-panda, a framework co-processing spmd computation on gpus and cpus
+Panda, a framework co-processing SPMD computation on GPUs and CPUs
 =================================================================
 		huili@ruijie.com.cn
 		ruijie network co.ltd
@@ -13,5 +13,6 @@ Support apps:
 -----------------------------------------------------------------
 steps to run sample:<br>
         1)cd gpumapreduce<br>
-	2)make<br>
-	3)mpirun -host node1,node2 -np 2 ./panda_word_count input.txt<br>
+	2)make wordcount<br>
+	3)cd bin<br>
+	4)mpirun -host node1,node2 -np 2 ./wordcount input.txt<br>

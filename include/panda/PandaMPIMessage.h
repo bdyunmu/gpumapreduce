@@ -27,11 +27,13 @@ namespace panda
           bool innerLoopDone;
           bool copySendData;
           bool getSendData;
+	  int  numSentBuckets;
 
           bool pollUnsent();
           void pollPending();
           void pollSends();
 
+#if 0
 	  void poll(int & finishedWorkers,
                 bool * const workerDone,
                 bool * const recvingCount,
@@ -40,6 +42,7 @@ namespace panda
                 int ** valRecv,
 		int ** keyPosKeySizeValPosValSize,
                 MPI_Request * recvReqs);
+#endif
 
 	  virtual oscpp::AsyncIORequest * sendTo(const int rank,
                                              void * const keys,

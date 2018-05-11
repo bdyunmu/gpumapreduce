@@ -132,7 +132,7 @@ void* ExecutePandaCPUMapThread(void * ptr)
 void ExecutePandaReduceTasksOnGPU(panda_gpu_context *pgc)
 {
 	if (pgc->sorted_key_vals.d_sorted_keyvals_arr_len <= 0)
-		return;
+	return;
 
 	cudaThreadSynchronize(); 
 	pgc->reduced_key_vals.d_reduced_keyval_arr_len = pgc->sorted_key_vals.d_sorted_keyvals_arr_len;
@@ -466,18 +466,20 @@ void ExecutePandaCPUCombiner(panda_cpu_context *pcc){
 void ExecutePandaSortBucket(panda_node_context *pnc)
 {
 
-	  int numBucket = pnc->recv_buckets.savedKeysBuff.size();
-	  keyvals_t *sorted_intermediate_keyvals_arr = pnc->sorted_key_vals.sorted_intermediate_keyvals_arr;
+	  int numRecvedBuckets = pnc->recv_buckets.counts.size();
+	  ShowLog("numRecvedBuckets:%d",numRecvedBuckets);
+
+	  keyvals_t *sorted_intermediate_keyvals_arr = NULL; 
+          pnc->sorted_key_vals.sorted_intermediate_keyvals_arr = NULL;
+          pnc->sorted_key_vals.sorted_keyvals_arr_len = 0;
+
 	  char *key_0, *key_1;
 	  int keySize_0, keySize_1;
 	  char *val_0;
 	  // char *val_1;
 	  int valSize_0;
 	  //int valSize_1;
-
-	  //bool equal;
-	  for(int i=0; i<numBucket; i++){
-			
+	  for(int i=0; i<numRecvedBuckets; i++){
 		char *keyBuff = pnc->recv_buckets.savedKeysBuff[i];
 		char *valBuff = pnc->recv_buckets.savedValsBuff[i];
 		int *counts = pnc->recv_buckets.counts[i];
@@ -494,19 +496,19 @@ void ExecutePandaSortBucket(panda_node_context *pnc)
 		for (int j=0; j<maxlen; j++){
 			
 			if( keyPosArray[j] + keySizeArray[j] > keyBuffSize ) 
-				ShowError("keyPosArray[j]:%d + keySizeArray[j]:%d > keyBuffSize:%d", keyPosArray[j], keySizeArray[j] , keyBuffSize);
+				ShowError("(keyPosArray[j]:%d + keySizeArray[j]:%d > keyBuffSize:%d)", keyPosArray[j], keySizeArray[j] , keyBuffSize);
 
 			key_0		= keyBuff + keyPosArray[j];
 			keySize_0	= keySizeArray[j];
 
 			int k = 0;
-			for ( ; k < pnc->sorted_key_vals.sorted_keyvals_arr_len; k++){
+			for ( ;k<pnc->sorted_key_vals.sorted_keyvals_arr_len;k++){
 
 				key_1		= (char *)(sorted_intermediate_keyvals_arr[k].key);
 				keySize_1	= sorted_intermediate_keyvals_arr[k].keySize;
 				if(panda_cpu_compare(key_0,keySize_0,key_1,keySize_1)!=0)
-					continue;
-			//ShowLog("ExecutePandaSortBucket j:[%d] k:[%d]   key_0:[%s] key_1:[%s]",j,k,key_0,key_1);
+				continue;
+				//ShowLog("ExecutePandaSortBucket j:[%d] k:[%d]   key_0:[%s] key_1:[%s]",j,k,key_0,key_1);
 				val_t *vals = sorted_intermediate_keyvals_arr[k].vals;
 				int index   = sorted_intermediate_keyvals_arr[k].val_arr_len;
 				
@@ -521,39 +523,34 @@ void ExecutePandaSortBucket(panda_node_context *pnc)
 				memcpy(sorted_intermediate_keyvals_arr[k].vals[index].val, val_0, valSize_0);
 				break;
 			}//for k
-
-		//ShowLog("ExecutePandaSortBucket j:[%d] k:[%d] sort_len:[%d]   key_0:[%s] key_1:[%s]",j,k,
-		//	pnc->sorted_key_vals.sorted_keyvals_arr_len, key_0,key_1);
-
 			if (k == pnc->sorted_key_vals.sorted_keyvals_arr_len){
 
 			if (pnc->sorted_key_vals.sorted_keyvals_arr_len == 0) sorted_intermediate_keyvals_arr = NULL;
 
 			int index = pnc->sorted_key_vals.sorted_keyvals_arr_len;
 			pnc->sorted_key_vals.sorted_keyvals_arr_len++;
-			sorted_intermediate_keyvals_arr = (keyvals_t *)realloc(sorted_intermediate_keyvals_arr, sizeof(keyvals_t)*(pnc->sorted_key_vals.sorted_keyvals_arr_len));
-			
-			keyvals_t* kvals_p = (keyvals_t *)&(sorted_intermediate_keyvals_arr[index]);
+			sorted_intermediate_keyvals_arr = (keyvals_t *)realloc(sorted_intermediate_keyvals_arr, 
+				sizeof(keyvals_t)*(pnc->sorted_key_vals.sorted_keyvals_arr_len));
+			keyvals_t* kvalsp = (keyvals_t *)&(sorted_intermediate_keyvals_arr[index]);
 
-			kvals_p->keySize = keySize_0;
-			kvals_p->key = malloc(sizeof(char)*keySize_0);
-			memcpy(kvals_p->key, key_0, keySize_0);
+			kvalsp->keySize = keySize_0;
+			kvalsp->key = malloc(sizeof(char)*keySize_0);
+			memcpy(kvalsp->key, key_0, keySize_0);
 
-			kvals_p->vals = (val_t *)malloc(sizeof(val_t)*1);
-			kvals_p->val_arr_len = 1;
+			kvalsp->vals = (val_t *)malloc(sizeof(val_t)*1);
+			kvalsp->val_arr_len = 1;
 
-			if (valPosArray[j] + valSizeArray[j] > valBuffSize){ 
-			ShowError("valPosArray[j] + valSizeArray[j] > valBuffSize\n");
-			exit(-1);
-			}//if
+			if (valPosArray[j] + valSizeArray[j] > valBuffSize)
+				ShowError("(valPosArray[j] + valSizeArray[j] > valBuffSize)");
 
 			val_0   = valBuff + valPosArray[j];
 			valSize_0 = valSizeArray[j];
 
-			kvals_p->vals[k].valSize = valSize_0;
-			kvals_p->vals[k].val = (char *)malloc(sizeof(char)*valSize_0);
-			memcpy(kvals_p->vals[k].val, val_0, valSize_0);
-			//ShowLog("+[key:%s val:%d]",kvals_p->key,*(int*)kvals_p->vals[k].val);
+			kvalsp->vals[k].valSize = valSize_0;
+			kvalsp->vals[k].val = (char *)malloc(sizeof(char)*valSize_0);
+			memcpy(kvalsp->vals[k].val, val_0, valSize_0);
+
+			//ShowLog("+[key:%s val:%d]",kvals_p->key,*(int*)kvalsp->vals[k].val);
 			}//k
 		}//j
 	  }//i
@@ -616,17 +613,18 @@ panda_cpu_context *CreatePandaCPUContext(){
 }//gpu_context
 
 void ExecutePandaCPUReduceTasks(panda_cpu_context *pcc){
-		
-		//panda_cpu_context *pcc = this->pCPUContext;
-		//ShowLog("sorted_keyvals_arr_len:%d",pcc->sorted_key_vals.sorted_keyvals_arr_len);
-		if (pcc->sorted_key_vals.sorted_keyvals_arr_len <= 0) return;
-		for (int map_idx = 0; map_idx < pcc->sorted_key_vals.sorted_keyvals_arr_len; map_idx++){
-			keyvals_t *kv_p = (keyvals_t *)(&(pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[map_idx]));
-			if (kv_p->val_arr_len <=0) 
-				ShowError("kv_p->val_arr_len <=0");
-			else	
-				panda_cpu_reduce(kv_p->key, kv_p->vals, kv_p->keySize, kv_p->val_arr_len, pcc);
-		}//for
+
+	//panda_cpu_context *pcc = this->pCPUContext;
+	//ShowLog("sorted_keyvals_arr_len:%d",pcc->sorted_key_vals.sorted_keyvals_arr_len);
+	if (pcc->sorted_key_vals.sorted_keyvals_arr_len <= 0) return;
+	
+	for (int map_idx = 0; map_idx < pcc->sorted_key_vals.sorted_keyvals_arr_len; map_idx++){
+		keyvals_t *kv_p = (keyvals_t *)(&(pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[map_idx]));
+		if (kv_p->val_arr_len <=0) 
+			ShowError("kv_p->val_arr_len <=0");
+		else	
+			panda_cpu_reduce(kv_p->key, kv_p->vals, kv_p->keySize, kv_p->val_arr_len, pcc);
+	}//for
 		
 }//void
 

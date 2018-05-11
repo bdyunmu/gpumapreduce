@@ -72,7 +72,7 @@ namespace panda
       bool syncPartSends;
       std::vector<void * > savedKeys, savedVals;
       std::vector<int> keyAndValCount;
-      std::vector<oscpp::AsyncIORequest * > sendReqs;
+      //std::vector<oscpp::AsyncIORequest * > sendReqs;
 
       //reduce variables
       std::vector<PandaGPUConfig> configs;
@@ -108,12 +108,11 @@ namespace panda
 	  virtual void PandaPartitionCheckSends(const bool sync);
 	  virtual void StartPandaPartitionSendData();
 	  virtual void StartPandaCopyRecvedBucketToGPU(int,int);
-	  virtual void StartPandaExitMessager();
+	  virtual void WaitPandaMessagerExit();
 	  virtual void InitPandaCPUMapReduce();
 
 	  virtual int  GetHash(const char* Key, int KeySize, int commRank );
 	  virtual void PandaAddKeyValue2Bucket(int bucketId, const char*key, int keySize, const char*val, int valSize);
-
 
     public:
       PandaMapReduceJob(int argc,
