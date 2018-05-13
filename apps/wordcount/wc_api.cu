@@ -209,14 +209,12 @@ __device__ void gpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, gpu
 }*///reduce2
 
 void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context* pcc){
-
-		int count = 0;
+		int *count = new int[1];
+		count[0] = 0;
 		for (int i=0;i<valCount;i++){
-			count += *(int *)(VAL[i].val);
+			count[0] += *(int *)(VAL[i].val);
 		}//
-		
-		PandaCPUEmitReduceOutput(KEY,&count,keySize,sizeof(int),pcc);
-		
+		PandaCPUEmitReduceOutput(KEY,(void *)count,keySize,sizeof(int),pcc);
 }//reduce2
 
 

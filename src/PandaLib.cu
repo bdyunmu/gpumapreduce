@@ -518,6 +518,7 @@ void ExecutePandaSortBucket(panda_node_context *pnc)
 				sorted_intermediate_keyvals_arr[k].vals[index].val = (char *)malloc(sizeof(char)*valSize_0);
 				sorted_intermediate_keyvals_arr[k].vals[index].valSize = valSize_0;
 				memcpy(sorted_intermediate_keyvals_arr[k].vals[index].val, val_0, valSize_0);
+			
 				break;
 			}//for k
 			if (k == pnc->sorted_key_vals.sorted_keyvals_arr_len){
@@ -543,11 +544,10 @@ void ExecutePandaSortBucket(panda_node_context *pnc)
 			val_0   = valBuff + valPosArray[j];
 			valSize_0 = valSizeArray[j];
 
-			kvalsp->vals[k].valSize = valSize_0;
-			kvalsp->vals[k].val = (char *)malloc(sizeof(char)*valSize_0);
-			memcpy(kvalsp->vals[k].val, val_0, valSize_0);
+			kvalsp->vals[0].valSize = valSize_0;
+			kvalsp->vals[0].val = (char *)malloc(sizeof(char)*valSize_0);
+			memcpy(kvalsp->vals[0].val, val_0, valSize_0);
 
-			//ShowLog("[key:%s val:%d]",kvals_p->key,*(int*)kvalsp->vals[k].val);
 			}//k
 		}//j
 	  }//i
@@ -612,11 +612,13 @@ panda_cpu_context *CreatePandaCPUContext(){
 void ExecutePandaCPUReduceTasks(panda_cpu_context *pcc){
 
 	//panda_cpu_context *pcc = this->pCPUContext;
-	//ShowLog("sorted_keyvals_arr_len:%d",pcc->sorted_key_vals.sorted_keyvals_arr_len);
+	
 	if (pcc->sorted_key_vals.sorted_keyvals_arr_len <= 0) return;
 	
 	for (int map_idx = 0; map_idx < pcc->sorted_key_vals.sorted_keyvals_arr_len; map_idx++){
+	
 		keyvals_t *kv_p = (keyvals_t *)(&(pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[map_idx]));
+
 		if (kv_p->val_arr_len <=0) 
 			ShowError("kv_p->val_arr_len <=0");
 		else	

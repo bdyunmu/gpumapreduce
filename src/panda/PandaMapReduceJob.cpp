@@ -33,7 +33,8 @@ int gCommRank = 0;
 namespace panda
 {
 
-  void PandaMapReduceJob::AddReduceTask4GPU(panda_gpu_context* pgc, panda_node_context *pnc, int start_task_id, int end_task_id){
+  void PandaMapReduceJob::AddReduceTask4GPU(panda_gpu_context* pgc, panda_node_context *pnc, int start_task_id, int end_task_id)
+  {
 	
 	if(end_task_id <= start_task_id)
 		return;
@@ -99,10 +100,10 @@ namespace panda
 	cudaMemcpy(pgc->sorted_key_vals.d_pos_arr_4_sorted_keyval_pos_arr,pos_arr_4_pos_arr,sizeof(int)*sorted_key_arr_len,cudaMemcpyHostToDevice);
 	cudaMemcpy(pgc->sorted_key_vals.d_sorted_keys_shared_buff, sorted_keys_shared_buff, sizeof(char)*totalKeySize,cudaMemcpyHostToDevice);
 	cudaMemcpy(pgc->sorted_key_vals.d_sorted_vals_shared_buff, sorted_vals_shared_buff, sizeof(char)*totalValSize,cudaMemcpyHostToDevice);
-}
+  }
 
-  void PandaMapReduceJob::AddReduceTask4CPU(panda_cpu_context* pcc, panda_node_context *pnc, int start_task_id, int end_task_id){
-
+  void PandaMapReduceJob::AddReduceTask4CPU(panda_cpu_context* pcc, panda_node_context *pnc, int start_task_id, int end_task_id)
+  {
 	if (end_task_id <= start_task_id)
 	{
 		ShowError("end_task_id<=start_task_id Warning!");
@@ -129,12 +130,15 @@ namespace panda
 	
 	for (int i = 0; i< end_task_id - start_task_id; i++){
 	pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[i].keySize		= pnc->sorted_key_vals.sorted_intermediate_keyvals_arr[start_task_id+i].keySize;
-	pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[i].key			= pnc->sorted_key_vals.sorted_intermediate_keyvals_arr[start_task_id+i].key;
+	pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[i].key		= pnc->sorted_key_vals.sorted_intermediate_keyvals_arr[start_task_id+i].key;
 	pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[i].vals		= pnc->sorted_key_vals.sorted_intermediate_keyvals_arr[start_task_id+i].vals;
 	pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[i].val_arr_len = pnc->sorted_key_vals.sorted_intermediate_keyvals_arr[start_task_id+i].val_arr_len;
+	//ShowLog("cpu_key:%s val_len:%d",
+	//	pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[i].key,pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[i].val_arr_len);
+
 	}//for
 	pcc->sorted_key_vals.sorted_keyvals_arr_len = end_task_id - start_task_id;
-	}
+  }//void
 
   void PandaMapReduceJob::StartPandaLocalMergeGPUOutput()
   {
@@ -886,11 +890,7 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
   void PandaMapReduceJob::execute()
   {
 
-	ShowLog("PandaMapReduceJob execute()");
-	//////////////////////////
 	InitPandaRuntime();
-	//////////////////////////
-	ShowLog("gpuMapTasks:%lu  cpuMapTasks:%lu",gpuMapTasks.size(), cpuMapTasks.size());
 
 	if(this->getEnableGPU())
 		InitPandaGPUMapReduce();
@@ -916,12 +916,6 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 		StartPandaSortCPUResults();
 	}//if
 
-	/////////////////////////////////
-	//	Shuffle Stage Start  
-	////////////////////////////////
-	//MPI_Barrier(MPI_COMM_WORLD);
-	ShowLog("(Shuffle Stage Start)");
-
 	StartPandaGlobalPartition();
 	WaitPandaMessagerExit();
 	//MPI_Barrier(MPI_COMM_WORLD);
@@ -935,9 +929,7 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	this->pNodeContext->sorted_key_vals.sorted_intermediate_keyvals_arr = NULL;
 	this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len = 0;
 	
-	//Copy recved bucket data into sorted array
 	StartPandaSortBucket();
-	//TODO schedule
 
 	int start_task_id = 0;
 	int end_task_id = this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len;
@@ -959,11 +951,7 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	}
 
 	}
-	/////////////////////////////////
-	//	Shuffle Stage Done
-	/////////////////////////////////
-	ShowLog("(Shuffle Stage Done)");
-	//StartPandaAssignReduceTaskToGPU(start_task_id, end_task_id);
+
 	if(this->getEnableGPU())
 		StartPandaReduceTasksOnGPU();
 	if(this->getEnableCPU())

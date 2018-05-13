@@ -66,9 +66,8 @@ int main(int argc, char ** argv)
 		}//if
 	}//while
 	ShowLog("rank:[%d] finishing processing txt data",rank);
-
 	job->execute();
-	//delete job;
+	MPI_Barrier(MPI_COMM_WORLD);
 	MPI_Finalize();
 	return 0;
 }//int main
