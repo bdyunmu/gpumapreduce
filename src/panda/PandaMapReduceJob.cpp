@@ -791,7 +791,7 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 		val_t *vals  = sorted_intermediate_keyvals_arr1[i].vals;
 		int len = sorted_intermediate_keyvals_arr1[i].val_arr_len;
 		for (int j=0;j<len;j++){
-			ShowLog("key:%s keySize:%d  valSize:%d dump to buckeId:[%d]",key, keySize, vals[j].valSize, bucketId);
+			ShowLog("key:%s keySize:%d val:%d dump to buckeId:[%d]",key, keySize, *(int *)vals[j].val, bucketId);
 			PandaAddKeyValue2Bucket(bucketId, (char *)key, keySize,(char *)(vals[j].val),vals[j].valSize);
 		}//for
 	  }//for
@@ -904,9 +904,8 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 
 	if(this->getEnableGPU())
 		StartPandaGPUCombiner();
-	if(this->getEnableCPU()){
+	if(this->getEnableCPU())
 		StartPandaCPUCombiner();
-	}
 
 	if(this->getEnableGPU()){
 		StartPandaSortGPUResults();		
@@ -937,8 +936,8 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	if(end_task_id>0){
 
 	if(this->getEnableGPU()&&this->getEnableCPU()){
-	StartPandaCopyRecvedBucketToGPU(start_task_id, end_task_id/2);
-	StartPandaCopyRecvedBucketToCPU(end_task_id/2+1, end_task_id);
+	StartPandaCopyRecvedBucketToCPU(start_task_id, end_task_id);
+	//StartPandaCopyRecvedBucketToCPU(end_task_id/2+1, end_task_id);
 	}//if
 	if(this->getEnableGPU()&&(!this->getEnableCPU())){
 	StartPandaCopyRecvedBucketToGPU(start_task_id, end_task_id);

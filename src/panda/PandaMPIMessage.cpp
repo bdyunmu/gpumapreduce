@@ -74,7 +74,7 @@ namespace panda
 
 		MPI_Request * dataReqs  = new MPI_Request[commSize*3];
 		MPI_Request * countReqs = new MPI_Request[commSize];
-		MPI_Status stat[3];
+		MPI_Status reqStats[3];
 
 		for (int i = 0; i < commSize; ++i)
 		{
@@ -95,7 +95,6 @@ namespace panda
 				index++;
 			}//while
 			pollPending();	
-
 			for (int i=0; i<commSize; i++)
 			{
 				//null chunk
@@ -125,9 +124,9 @@ namespace panda
 				MPI_Irecv((char*)(valRecv[i]),counts[i*3+2],MPI_CHAR,i,2,MPI_COMM_WORLD,dataReqs+i*3+2);
 				MPI_Irecv(keyPosKeySizeValPosValSize[i],4*counts[i*3+0],MPI_INT,i,3,MPI_COMM_WORLD,dataReqs+i*3+0);
 
-				MPI_Wait(dataReqs+i*3+1, &stat[1]);
-				MPI_Wait(dataReqs+i*3+2, &stat[2]);
-				MPI_Wait(dataReqs+i*3+0, &stat[0]);
+				MPI_Wait(dataReqs+i*3+1, &reqStats[1]);
+				MPI_Wait(dataReqs+i*3+2, &reqStats[2]);
+				MPI_Wait(dataReqs+i*3+0, &reqStats[0]);
 
 				if ((counts[0]>0)&&(counts[1]>0)&&(counts[2]>0))
 				PandaAddRecvedBucket((char *)keyRecv[i],(char *)valRecv[i],keyPosKeySizeValPosValSize[i], 
@@ -167,7 +166,7 @@ namespace panda
 		*data->flag	= false;
 		*data->waiting	= false;
 		data->reqs 	= new MPI_Request[4];	
-
+		data->stats 	= new MPI_Status[4];
 		//write to disk for fault tolerance
 		if (copySendData)
 		{
@@ -284,7 +283,6 @@ namespace panda
                	MPI_Isend(data->valsBuff,    data->valBuffSize, MPI_CHAR, data->rank, 2, MPI_COMM_WORLD, &data->reqs[2]);
 	       	MPI_Isend(data->keyPosKeySizeValPosValSize, data->counts[0]*4, MPI_INT, data->rank, 3, MPI_COMM_WORLD, &data->reqs[3]);
 		}
-
 		pendingIO.push_back(data);
 		return true;
 	}
@@ -298,10 +296,11 @@ namespace panda
 		{
 			PandaMessagePackage *data = *it;
 			int flag = 0;
-			if(data->counts[0]>0&&data->counts[1]>0&&data->counts[2]>0)
-				MPI_Testall(4, data->reqs, &flag, data->stat);
+			if(data->counts[0]>0&&data->counts[1]>0&&data->counts[2]>0){
+				MPI_Testall(4, data->reqs, &flag, data->stats);
+			}
 			if(data->counts[0]==-1&&data->counts[1]==-1&&data->counts[2]==-1)
-				MPI_Testall(1, data->reqs, &flag, data->stat);
+				MPI_Testall(1, data->reqs, &flag, data->stats);
 			if (flag)
 			{
 				data->cond->lockMutex();

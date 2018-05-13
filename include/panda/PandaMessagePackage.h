@@ -19,7 +19,7 @@ public:
 	int *keyPosKeySizeValPosValSize;
 	int *counts;
 	int rank;
-	MPI_Status *stat;
+	MPI_Status *stats;
 	MPI_Request *reqs;
 	volatile bool *flag;
 	volatile bool *waiting;

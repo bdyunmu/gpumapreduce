@@ -1,0 +1,213 @@
+[0][MapReduceJob]	CommSize:1
+[0][main]	start processing txt data...
+[0][main]	wordcount job->addInput
+[0][addInput]	addCPUMapTasks
+[0][main]	wordcount job->addInput
+[0][addInput]	addGPUMapTasks
+[0][main]	wordcount job->addInput
+[0][addInput]	addCPUMapTasks
+[0][main]	wordcount job->addInput
+[0][addInput]	addGPUMapTasks
+[0][main]	wordcount job->addInput
+[0][addInput]	addCPUMapTasks
+[0][main]	rank:[0] finishing processing txt data
+[0][InitPandaRuntime]	commRank:0, commSize:1
+[0][run]	start PandaMPIMessage thread. run() thread [0/1]
+[0][getGPUCoresNum]	Configure Device ID:0: Device Name:Tesla M2070 MultProcessorCount:14 sm_per_multiproc:32
+[0][StartPandaGPUMapTasks]	GridDim.X:28 GridDim.Y:1 BlockDim.X:16 BlockDim.Y:16 TotalGPUThreads:7168
+[0][StartPandaCPUMapTasks]	num_input_record:3, totalKeySize:0.011719 KB totalValSize:3.111328 KB num_cpus:40
+[0][ExecutePandaGPUCombiner]	pgc->input_key_vals.num_input_record:2
+[0][getGPUCoresNum]	Configure Device ID:0: Device Name:Tesla M2070 MultProcessorCount:14 sm_per_multiproc:32
+[0][ExecutePandaCPUCombiner]	num_input_record:3
+[0][ExecutePandaCPUCombiner]	num_cpus_cores:40
+[0][RunPandaCPUCombinerThread]	PRELOADEDPANDACHUNK
+[0][RunPandaCPUCombinerThread]	ADDINPUT
+[0][RunPandaCPUCombinerThread]	ADDINPUT
+[0][RunPandaCPUCombinerThread]	SHOWLOG
+[0][RunPandaCPUCombinerThread]	STRLEN
+[0][RunPandaCPUCombinerThread]	STRCPY
+[0][RunPandaCPUCombinerThread]	TOUPPER
+[0][RunPandaCPUCombinerThread]	STRLEN
+[0][RunPandaCPUCombinerThread]	SIZEOF
+[0][RunPandaCPUCombinerThread]	ELEMENTS
+[0][RunPandaCPUCombinerThread]	SIZEOF
+[0][RunPandaCPUCombinerThread]	MALLOC
+[0][RunPandaCPUCombinerThread]	PROCESSING
+[0][RunPandaCPUCombinerThread]	SPRINTF
+[0][RunPandaCPUCombinerThread]	STRINPUT
+[0][RunPandaCPUCombinerThread]	SETENABLEGPU
+[0][RunPandaCPUCombinerThread]	SETENABLECPU
+[0][RunPandaCPUCombinerThread]	PANDAMPIMESSAGE
+[0][RunPandaCPUCombinerThread]	SETMESSAGE
+[0][RunPandaCPUCombinerThread]	RETURN
+[0][RunPandaCPUCombinerThread]	FINALIZE
+[0][RunPandaCPUCombinerThread]	DELETE
+[0][RunPandaCPUCombinerThread]	EXECUTE
+[0][RunPandaCPUCombinerThread]	PROCESSING
+[0][RunPandaCPUCombinerThread]	FINISHING
+[0][RunPandaCPUCombinerThread]	SHOWLOG
+[0][RunPandaCPUCombinerThread]	ELEMENTS
+[0][RunPandaCPUCombinerThread]	PRELOADEDPANDACHUNK
+[0][RunPandaCPUCombinerThread]	ADDINPUT
+[0][RunPandaCPUCombinerThread]	ADDINPUT
+[0][RunPandaCPUCombinerThread]	SHOWLOG
+[0][RunPandaCPUCombinerThread]	STRLEN
+[0][RunPandaCPUCombinerThread]	STRCPY
+[0][RunPandaCPUCombinerThread]	TOUPPER
+[0][RunPandaCPUCombinerThread]	STRLEN
+[0][RunPandaCPUCombinerThread]	SIZEOF
+[0][RunPandaCPUCombinerThread]	ELEMENTS
+[0][RunPandaCPUCombinerThread]	SIZEOF
+[0][RunPandaCPUCombinerThread]	MALLOC
+[0][RunPandaCPUCombinerThread]	PROCESSING
+[0][RunPandaCPUCombinerThread]	SPRINTF
+[0][RunPandaCPUCombinerThread]	STRINPUT
+[0][RunPandaCPUCombinerThread]	SETENABLEGPU
+[0][RunPandaCPUCombinerThread]	SETENABLECPU
+[0][RunPandaCPUCombinerThread]	PANDAMPIMESSAGE
+[0][RunPandaCPUCombinerThread]	SETMESSAGE
+[0][RunPandaCPUCombinerThread]	RETURN
+[0][RunPandaCPUCombinerThread]	FINALIZE
+[0][RunPandaCPUCombinerThread]	DELETE
+[0][RunPandaCPUCombinerThread]	EXECUTE
+[0][RunPandaCPUCombinerThread]	PROCESSING
+[0][RunPandaCPUCombinerThread]	FINISHING
+[0][RunPandaCPUCombinerThread]	SHOWLOG
+[0][RunPandaCPUCombinerThread]	PRELOADEDPANDACHUNK
+[0][RunPandaCPUCombinerThread]	ADDINPUT
+[0][RunPandaCPUCombinerThread]	ADDINPUT
+[0][RunPandaCPUCombinerThread]	SHOWLOG
+[0][RunPandaCPUCombinerThread]	STRLEN
+[0][RunPandaCPUCombinerThread]	STRCPY
+[0][RunPandaCPUCombinerThread]	TOUPPER
+[0][RunPandaCPUCombinerThread]	STRLEN
+[0][RunPandaCPUCombinerThread]	SIZEOF
+[0][RunPandaCPUCombinerThread]	ELEMENTS
+[0][RunPandaCPUCombinerThread]	SIZEOF
+[0][RunPandaCPUCombinerThread]	MALLOC
+[0][RunPandaCPUCombinerThread]	PROCESSING
+[0][RunPandaCPUCombinerThread]	SPRINTF
+[0][RunPandaCPUCombinerThread]	STRINPUT
+[0][RunPandaCPUCombinerThread]	SETENABLEGPU
+[0][RunPandaCPUCombinerThread]	SETENABLECPU
+[0][RunPandaCPUCombinerThread]	PANDAMPIMESSAGE
+[0][RunPandaCPUCombinerThread]	SETMESSAGE
+[0][RunPandaCPUCombinerThread]	RETURN
+[0][RunPandaCPUCombinerThread]	FINALIZE
+[0][RunPandaCPUCombinerThread]	DELETE
+[0][RunPandaCPUCombinerThread]	EXECUTE
+[0][RunPandaCPUCombinerThread]	PROCESSING
+[0][RunPandaCPUCombinerThread]	FINISHING
+[0][RunPandaCPUCombinerThread]	SHOWLOG
+[0][ExecutePandaGPUSort]	GPU Total Count of Intermediate Records:52 num_input_record:2
+[0][getGPUCoresNum]	Configure Device ID:0: Device Name:Tesla M2070 MultProcessorCount:14 sm_per_multiproc:32
+[copyDataFromDevice2Host1]  pgc.input_key_vals.num_input_record:2 gx:1,bx:16,by:1
+[copyDataFromDevice2Host1]  pgc.input_key_vals.num_input_record:2 gx:1,bx:16,by:1
+[copyDataFromDevice2Host1]  pgc.input_key_vals.num_input_record:2 gx:1,bx:16,by:1
+[copyDataFromDevice2Host1]  pgc.input_key_vals.num_input_record:2 gx:1,bx:16,by:1
+[copyDataFromDevice2Host1]  pgc.input_key_vals.num_input_record:2 gx:1,bx:16,by:1
+[copyDataFromDevice2Host1]  pgc.input_key_vals.num_input_record:2 gx:1,bx:16,by:1
+[copyDataFromDevice2Host1]  pgc.input_key_vals.num_input_record:2 gx:1,bx:16,by:1
+[copyDataFromDevice2Host1]  pgc.input_key_vals.num_input_record:2 gx:1,bx:16,by:1
+[copyDataFromDevice2Host1]  pgc.input_key_vals.num_input_record:2 gx:1,bx:16,by:1
+[copyDataFromDevice2Host1]  pgc.input_key_vals.num_input_record:2 gx:1,bx:16,by:1
+[copyDataFromDevice2Host1]  pgc.input_key_vals.num_input_record:2 gx:1,bx:16,by:1
+[copyDataFromDevice2Host1]  pgc.input_key_vals.num_input_record:2 gx:1,bx:16,by:1
+[copyDataFromDevice2Host1]  pgc.input_key_vals.num_input_record:2 gx:1,bx:16,by:1
+[copyDataFromDevice2Host1]  pgc.input_key_vals.num_input_record:2 gx:1,bx:16,by:1
+[copyDataFromDevice2Host1]  pgc.input_key_vals.num_input_record:2 gx:1,bx:16,by:1
+[copyDataFromDevice2Host1]  pgc.input_key_vals.num_input_record:2 gx:1,bx:16,by:1
+thread_start_idx:0  thread_end_idx:1
+thread_start_idx:1  thread_end_idx:2
+begin:0 end:26
+begin:26 end:52
+[0][ExecutePandaGPUSort]	cudaMalloc totalKeySize:0.546875 KB totalValSize:0.203125 KB, number of intermediate records:52
+[ExecutePandaShuffleMergeGPU][0][StartPandaDoPartitionOnCPU]	this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len:21
+[0][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:ADDINPUT keySize:9  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:ADDINPUT keySize:9  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:ADDINPUT keySize:9  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:ADDINPUT keySize:9  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:ADDINPUT keySize:9  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:ADDINPUT keySize:9  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:PRELOADEDPANDACHUNK keySize:20  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:PRELOADEDPANDACHUNK keySize:20  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:PRELOADEDPANDACHUNK keySize:20  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:STRCPY keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:STRCPY keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:STRCPY keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:TOUPPER keySize:8  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:TOUPPER keySize:8  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:TOUPPER keySize:8  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:ELEMENTS keySize:9  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:ELEMENTS keySize:9  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:ELEMENTS keySize:9  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:ELEMENTS keySize:9  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:MALLOC keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:MALLOC keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:MALLOC keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SPRINTF keySize:8  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SPRINTF keySize:8  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SPRINTF keySize:8  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:STRINPUT keySize:9  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:STRINPUT keySize:9  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:STRINPUT keySize:9  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SETENABLEGPU keySize:13  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SETENABLEGPU keySize:13  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SETENABLEGPU keySize:13  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SETENABLECPU keySize:13  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SETENABLECPU keySize:13  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SETENABLECPU keySize:13  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:PANDAMPIMESSAGE keySize:16  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:PANDAMPIMESSAGE keySize:16  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:PANDAMPIMESSAGE keySize:16  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SETMESSAGE keySize:11  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SETMESSAGE keySize:11  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:SETMESSAGE keySize:11  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:RETURN keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:RETURN keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:RETURN keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:FINALIZE keySize:9  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:FINALIZE keySize:9  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:FINALIZE keySize:9  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:DELETE keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:DELETE keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:DELETE keySize:7  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:EXECUTE keySize:8  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:EXECUTE keySize:8  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:EXECUTE keySize:8  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:FINISHING keySize:10  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:FINISHING keySize:10  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:FINISHING keySize:10  valSize:4 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	Panda adding Key/Values to bucket is done on local host.
+
+[0][StartPandaPartitionSendData]	bucket index:0 curlen:79 maxlen:80 keySize:747 valSize:316 
+[0][pollUnsent]	start to send out a data from 0 to 0 . data: curlen:79  keySize:747  valSize:316
+[0][run]	->recved countReqs from 0, maxlen:79 keysize:747 valsize:316
+-------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+-------------------------------------------------------

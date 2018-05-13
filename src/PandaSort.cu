@@ -486,7 +486,7 @@ __global__ void copyDataFromDevice2Host2(panda_gpu_context pgc)
 		+ ((threadIdx.y*blockDim.x + threadIdx.x)/STRIDE)*num_records_per_thread*STRIDE
 		+ ((threadIdx.y*blockDim.x + threadIdx.x)%STRIDE);
 
-	int thread_end_idx = thread_start_idx+num_records_per_thread*STRIDE;
+	int thread_end_idx = thread_start_idx+num_records_per_thread;
 
 	if(thread_end_idx>pgc.input_key_vals.num_input_record)
 		thread_end_idx = pgc.input_key_vals.num_input_record;
@@ -508,7 +508,7 @@ __global__ void copyDataFromDevice2Host2(panda_gpu_context pgc)
 
 	int val_pos, key_pos;
 	char *val_p,*key_p;
-	int counter = 0;
+	//int counter = 0;
 	//bool local_combiner = d_g_state.local_combiner;
 	bool local_combiner = false;
 
@@ -527,10 +527,11 @@ __global__ void copyDataFromDevice2Host2(panda_gpu_context pgc)
 	memcpy(key_p, shared_buff + p2->keyPos, p2->keySize);
 	memcpy(val_p, shared_buff + p2->valPos, p2->valSize);
 
-	counter++;
+	//counter++;
 	}
-	if(counter!=end-begin)
-		ShowWarn("counter!=end-begin counter:%d end-begin:%d",counter,end-begin);
+
+	//if(counter!=end-begin)
+	//	ShowWarn("counter!=end-begin counter:%d end-begin:%d begin:%d end:%d shared_arr_len:%d",counter,end-begin,begin,end,shared_arr_len);
 	
 	free(shared_buff);
 

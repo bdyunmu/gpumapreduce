@@ -1,11 +1,11 @@
 /*
+
 Copyright 2013 The Trustees of Indiana University.  All rights reserved.
-MapReduce Framework on GPUs and CPUs
-Code Name: Panda 0.43
+Panda: a MapReduce Framework on GPUs and CPUs
 File: PandaMessage.cpp
 Time: 2013-07-11
-Developer: Hui Li (lihui@indiana.edu)
-This is the source code for Panda, a MapReduce runtime on GPUs and CPUs.
+Developer: Hui Li (huili@ruijie.com.cn)
+
 */
 
 #include <mpi.h>
@@ -71,7 +71,7 @@ namespace panda
 			PandaMessagePackage * data = *it;
 			int flag;
 
-			MPI_Testall(3, data->reqs, &flag, data->stat);
+			MPI_Testall(3, data->reqs, &flag, data->stats);
 			if (flag)
 			{
 				data->cond->lockMutex();
@@ -342,21 +342,5 @@ namespace panda
 		return sendTo(commRank, NULL, NULL, -1, -1);
 	}//oscpp
 
-	void PandaMessage::getFinalDataSize(int & keySize, int & valSize) const
-	{
-		keySize = finalKeySize;
-		valSize = finalValSize;
-	}//void
 
-	void PandaMessage::getFinalDataSize(int & keySize, int & valSize, int & numKeys, int & numVals) const
-	{ // not used
-	}//void
-	void PandaMessage::getFinalData(void * keyStorage, void * valStorage) const
-	{
-		memcpy(keyStorage, finalKeys, finalKeySize);
-		memcpy(valStorage, finalVals, finalValSize);
-	}//void
-	void PandaMessage::getFinalData(void * keyStorage, void * valStorage, int * keySizes, int * valSizes) const
-	{ // not used
-	}//void
 }

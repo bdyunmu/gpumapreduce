@@ -45,10 +45,6 @@ namespace panda
       	virtual void MsgFinalize() = 0;
       	virtual void run() = 0;
       	virtual oscpp::AsyncIORequest * MsgFinish() = 0;
-      	virtual void getFinalDataSize(int & keySize, int & valSize) const = 0;
-      	virtual void getFinalDataSize(int & keySize, int & valSize, int & numKeys, int & numVals) const = 0;
-      	virtual void getFinalData(void * keyStorage, void * valStorage) const = 0;
-      	virtual void getFinalData(void * keyStorage, void * valStorage, int * keySizes, int * valSizes) const = 0;
 
   };
 }

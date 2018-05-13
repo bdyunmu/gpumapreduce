@@ -62,8 +62,6 @@ int main(int argc, char ** argv)
 		strcpy((chunk_data + total_len),str);
 		total_len += (int)strlen(str);
 		if(total_len>=chunk_size){
-			ShowLog("word count job->addInput");
-			job->addInput(new panda::PreLoadedPandaChunk((char *)chunk_data, total_len, NUM_ELEMENTS ));
 			total_len=0;
 		}//if
 	}//while
@@ -71,9 +69,7 @@ int main(int argc, char ** argv)
 	}//if
 
 	job->execute();
-	//delete job;
 	MPI_Finalize();
-	return 0;
 }//int main
 
 #include <mpi.h>
@@ -139,7 +135,6 @@ int main(int argc, char ** argv)
 		strcpy((chunk_data + total_len),str);
 		total_len += (int)strlen(str);
 		if(total_len>=chunk_size){
-			ShowLog("word count job->addInput");
 			job->addInput(new panda::PreLoadedPandaChunk((char *)chunk_data, total_len, NUM_ELEMENTS ));
 			total_len=0;
 		}//if
