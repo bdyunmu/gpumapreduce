@@ -29,7 +29,6 @@ __device__ int panda_gpu_core_compare(const void *key_a, int len_a, const void *
 	}
 	return 0;
 }
-
 __device__ void panda_gpu_core_combiner(void *KEY, val_t* VAL, int keySize, int valCount, panda_gpu_context *pgc, int map_task_idx){
 }//reduce2
 
@@ -96,9 +95,11 @@ void panda_cpu_combiner(void *KEY, val_t* VAL, int keySize, int valCount, panda_
 		PandaCPUEmitCombinerOutput(KEY,count,keySize,sizeof(int),pcc, map_task_idx);
 }//reduce2
 
+#if 0
 __device__ void panda_gpu_combiner(void *KEY, val_t* VAL, int keySize, int valCount, panda_gpu_context *pgc, int map_task_idx){
 		//PandaGPUEmitCombinerOutput(KEY,&count,keySize,sizeof(int),pgc, map_task_idx);
 }//reduce2
+#endif
 
 int panda_cpu_compare(const void *key_a, int len_a, const void *key_b, int len_b)
 {

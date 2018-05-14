@@ -204,17 +204,13 @@ pgc->intermediate_key_vals.h_intermediate_keyval_pos_arr = (keyval_pos_t *)mallo
 
 }
 
-
-//lihui there is a buf of addInput 2
 void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 
-	//int index = 0;
-	//int merged_key_arr_len = 0;
 	//keyvals_t * merged_keyvals_arr = NULL;
 	int num_threads = pcc->num_cpus_cores > pcc->input_key_vals.num_input_record ? pcc->input_key_vals.num_input_record:pcc->num_cpus_cores;
 	int num_records_per_thread = (pcc->input_key_vals.num_input_record)/(num_threads);
 
-	ShowLog("lihui num cores:%d num input records:%d threads:%d num_reocords_per_thread:%d",
+	ShowLog("num cores:%d num input records:%d threads:%d num_reocords_per_thread:%d",
 			pcc->num_cpus_cores, pcc->input_key_vals.num_input_record, num_threads,num_records_per_thread);
 
 	int start_idx = 0;
@@ -225,14 +221,10 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 		total_count += pcc->intermediate_key_vals.intermediate_keyval_total_count[i];
 	}//for
 
-	ShowLog("lihui pcc total_count:%d",total_count);	
-
 	int keyvals_arr_max_len = pnc->sorted_key_vals.sorted_keyval_arr_max_len;
 	//pnc->sorted_key_vals.sorted_intermediate_keyvals_arr = (keyvals_t *)malloc(sizeof(keyvals_t)*keyvals_arr_len);
 	keyvals_t * sorted_intermediate_keyvals_arr = pnc->sorted_key_vals.sorted_intermediate_keyvals_arr;
 			
-	ShowLog("lihui pnc keyvals_arr_max_len:%d",keyvals_arr_max_len);
-	
 	int sorted_key_arr_len = 0;
 
 	for (int tid = 0;tid<num_threads;tid++){

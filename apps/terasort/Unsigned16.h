@@ -14,9 +14,10 @@ class numException:public exception{
 };
 
 class Unsigned16{
-public:
+private:
 	long hi8;
 	long lo8;
+public:
 	Unsigned16();
 	Unsigned16(long l);
 	Unsigned16(const Unsigned16 &other);

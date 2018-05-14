@@ -6,9 +6,6 @@
 #include <panda/PandaMPIMessage.h>
 #include <panda/PandaMapReduceJob.h>
 
-#include <cudacpp/Event.h>
-#include <cudacpp/Stream.h>
-#include <oscpp/Timer.h>
 #include <string.h>
 #include <vector>
 #include <cstdlib>
@@ -16,6 +13,8 @@
 #include <ctype.h>
 #include <climits>
 #include <assert.h>
+
+#include "TeraInputFormat.h"
 
 using namespace std;
 
@@ -75,11 +74,10 @@ int main(int argc, char ** argv)
 
  	if (argc != 3)
         {
-           ShowLog("terasort");
+           ShowLog("teragen");
 	   ShowLog("usage: %s [file size][file path]",argv[0]);
 	   ShowLog("Example:"); 
-	   ShowLog("%s",argv[0]);
-	   ShowLog("%s 100G file:///tmp/terasort_in",argv[0]);
+	   ShowLog("mpirun -host node1,node2 -np 2 ./%s 100G file:///tmp/terasort_in",argv[0]);
            exit(-1);//
         }  //if
 	long outputSizeInBytes = sizeStrToBytes(argv[1]);
@@ -93,15 +91,15 @@ int main(int argc, char ** argv)
 
 	long recordsPerPartition = outputSizeInBytes/100/(long)size;
 	long numRecords = recordsPerPartition * size;
+	assert(recordsPerPartition < INT_MAX);
 	
 	job->setMessage(new panda::PandaMPIMessage(true));
 
 	job->setEnableCPU(true);
-	job->setEnableGPU(true);
+	job->setEnableGPU(false);
 
 	if (rank == 0)
 	{
-
 	ShowLog("========================================================");
 	ShowLog("========================================================");
 	ShowLog("Input Size:%s",sizeStr);
@@ -110,24 +108,18 @@ int main(int argc, char ** argv)
 	ShowLog("Number of records/output parititon:%d",numRecords/size);
 	ShowLog("=========================================================");
 	ShowLog("=========================================================");	
+	}
 
-	assert(recordsPerPartition < INT_MAX);
-
+	TeraInputFormat::recordsPerPartition = recordsPerPartition;
+	TeraInputFormat::inputpath = argv[2];
+	
 	const int NUM_ELEMENTS = 1;
-	int i = 0;
-	while(i<size)
-	{
-		int *v = new int[1];
-		*v = i;
-		job->addInput(new panda::PreLoadedPandaChunk((char *)v, sizeof(int), NUM_ELEMENTS ));
-		ShowLog("rank:[%d] adding input:%d",rank,i);
-		i++;	
-	}//while
-
-	}//if
+	int *index = new int[1];
+	*index = rank;
+	job->addInput(new panda::PreLoadedPandaChunk((char *)index,sizeof(int),NUM_ELEMENTS));
+	ShowLog("teragen job->addInput index:[%d]",*index);
 
 	job->execute();
-	//delete job;
 	MPI_Finalize();
 	return 0;
 }//int main

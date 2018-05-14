@@ -1,12 +1,10 @@
 #include <mpi.h>
+
 #include <panda/PreLoadedPandaChunk.h>
 #include <panda/PandaMessage.h>
 #include <panda/PandaMPIMessage.h>
 #include <panda/PandaMapReduceJob.h>
 
-#include <cudacpp/Event.h>
-#include <cudacpp/Stream.h>
-#include <oscpp/Timer.h>
 #include <vector>
 #include <cstdlib>
 #include <cstdio>
@@ -54,7 +52,7 @@ int main(int argc, char ** argv)
 		total_len += (int)strlen(str);
 		if(total_len>=chunk_size){
 			ShowLog("wordcount job->addInput");
-			job->addInput(new panda::PreLoadedPandaChunk((char *)chunk_data, total_len, NUM_ELEMENTS ));
+			job->addInput(new panda::PreLoadedPandaChunk((char *)chunk_data, total_len, NUM_ELEMENTS));
 			total_len=0;
 		}//if
 	}//while

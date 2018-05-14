@@ -1,6 +1,6 @@
 # * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-#    Panda Code V0.61 						 04/29/2018 */
-#    							  lihui@indiana.edu */
+#    Panda Code V0.42 						 04/29/2018 */
+#    							huili@ruijie.com.cn */
 # * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 all: wordcount
@@ -29,7 +29,7 @@ PANDA_CPP_FILES := $(wildcard ../../src/panda/*.cpp)
 CUDA_CPP_FILES 	:= $(wildcard ../../src/cudacpp/*.cpp)
 CUDA_CU_FILES 	:= $(wildcard ../../src/*.cu)
 
-APP_WC_H_FILES	:= $(wildcard ./word_count*.h)
+APP_WC_H_FILES	:= $(wildcard ./*.h)
 OS_H_FILES 	:= $(wildcard ../../include/oscpp/*.h)
 PANDA_H_FILES 	:= $(wildcard ../../include/panda/*.h)
 CUDA_H_FILES 	:= $(wildcard ../../include/cudacpp/*.h)

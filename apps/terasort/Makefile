@@ -43,8 +43,8 @@ PANDA_OBJ_FILES := $(addprefix ../../obj/,$(notdir $(PANDA_CPP_FILES:.cpp=.o)))
 CUDA_OBJ_FILES 	:= $(addprefix ../../obj/,$(notdir $(CUDA_CPP_FILES:.cpp=.o)))
 CU_OBJ_FILES 	:= $(addprefix ../../cuobj/,$(notdir $(CUDA_CU_FILES:.cu=.o)))
 
-TERAGEN_FILES	:= teragen.cpp Unsigned16.cpp Random16.cpp
-TERAGEN_CU_FILES:= teragen.cu
+TERAGEN_FILES	:= teragen_main.cpp TeraInputFormat.cpp Unsigned16.cpp Random16.cpp
+TERAGEN_CU_FILES:= teragen_api.cu
 
 TERAGEN_OBJ_FILES:= $(addprefix ../../obj/,$(notdir $(TERAGEN_FILES:.cpp=.o)))
 TERAGEN_CU_OBJ_FILES:= $(addprefix ../../cuobj/,$(notdir $(TERAGEN_CU_FILES:.cu=.o)))

@@ -8,24 +8,22 @@ Developer: Hui Li (huili@ruijie.com.cn)
 
 */
 
-#include <mpi.h>
-#include <panda/PreLoadedPandaChunk.h>
-#include <panda/PandaMessage.h>
-#include <panda/PandaMapReduceJob.h>
-#include <panda/IntIntSorter.h>
-#include <cudacpp/Event.h>
-#include <cudacpp/Runtime.h>
-#include <cudacpp/Stream.h>
-#include <oscpp/Timer.h>
 #include <vector>
 #include <cstdlib>
 #include <cstdio>
 #include <ctype.h>
-#include "PandaAPI.h"
+#include <dirent.h>
 
+#include "PandaAPI.h"
 #include "Unsigned16.h"
 #include "Random16.h"
+#include "TeraInputFormat.h"
 
+void copyByte(byte *input, byte *output, int start, int end){
+	int i=0;
+	for(i=start; i<end; i++)
+		output[i-start] = input[start];
+}
 
 void generateRecord(byte *recBuf,Unsigned16 rand,Unsigned16 recordNumber){
 	int i = 0;
@@ -82,10 +80,46 @@ return 0;
 }
 
 void panda_cpu_combiner(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context *pcc, int map_task_idx){
-                //PandaCPUEmitCombinerOutput(KEY,&count,keySize,sizeof(int),pcc, map_task_idx);
 }//reduce2
 
 void panda_cpu_map(void *KEY, void*VAL, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx){
+
+	int rpp = TeraInputFormat::recordsPerPartition;
+	Unsigned16 *one = new Unsigned16(1);		
+	Unsigned16 *firstRecordNumber = new Unsigned16(*(int *)VAL*rpp);
+	Unsigned16 *recordsToGenerate = new Unsigned16(rpp);
+	Unsigned16 *recordNumber = new Unsigned16(*firstRecordNumber);
+	Unsigned16 *lastRecordNumber = new Unsigned16(*firstRecordNumber);
+
+	lastRecordNumber->add(*recordsToGenerate);
+	Unsigned16 rand = Random16::skipAhead(*firstRecordNumber);
+	byte* rowBytes = new byte[TeraInputFormat::RECORD_LEN];
+	byte* key = new byte[TeraInputFormat::KEY_LEN];
+	byte* value = new byte[TeraInputFormat::VALUE_LEN];
+
+	DIR *dp = NULL;
+	char *path = TeraInputFormat::inputpath;
+	if((dp = opendir(path))==NULL)
+	{
+	printf("not open %s\n",path);
+	exit(0);
+	}else{
+	closedir(dp);
+	}
+	char strfp[128];
+	sprintf(strfp,"%s/INPUT%d",path,*(int *)VAL);
+	FILE *fp = fopen(strfp,"w");
+	for(int i = 0;i<TeraInputFormat::recordsPerPartition;i++)
+	{
+	Random16::nextRand(rand);
+	generateRecord(rowBytes,rand,*recordNumber);
+	recordNumber->add(*one);
+	copyByte(rowBytes,key,0,TeraInputFormat::KEY_LEN);
+	copyByte(rowBytes,value,TeraInputFormat::KEY_LEN,TeraInputFormat::RECORD_LEN);
+	fwrite(rowBytes,TeraInputFormat::RECORD_LEN,1,fp);	
+	}
+	fclose(fp);
+
 }
 
 void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context* pcc){
