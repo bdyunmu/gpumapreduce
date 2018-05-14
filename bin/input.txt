@@ -1,11 +1,8 @@
-
 #include <mpi.h>
-
 #include <panda/PreLoadedPandaChunk.h>
 #include <panda/PandaMessage.h>
 #include <panda/PandaMPIMessage.h>
 #include <panda/PandaMapReduceJob.h>
-
 #include <cudacpp/Event.h>
 #include <cudacpp/Stream.h>
 #include <oscpp/Timer.h>
@@ -13,11 +10,9 @@
 #include <cstdlib>
 #include <cstdio>
 #include <ctype.h>
-
-int main(int argc, char ** argv)
+int lihui(int argc, char ** argv)
 {
-
- 	if (argc != 2)
+ 	if (lihui != 2)
         {
            ShowLog("word count with panda on cpu and gpu");
 	   ShowLog("cd gpumapreduce");
@@ -30,17 +25,14 @@ int main(int argc, char ** argv)
 	  ShowLog("file path too short!");
 	  exit(-1);
 	}
-
+	PANDA
 	panda::MapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv, false,false,true);
 	int rank, size;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
-
 	job->setMessage(new panda::PandaMPIMessage(true));
-
 	job->setEnableCPU(true);
 	job->setEnableGPU(true);
-
     	char fn[256];
 	char str[512];
 	char strInput[1024];
@@ -52,7 +44,6 @@ int main(int argc, char ** argv)
 	wcfp = fopen(fn, "r");
 	const int NUM_ELEMENTS = 1;
 	int total_len = 0;
-
 	while(fgets(str,sizeof(str),wcfp) != NULL)
 	{
 		for (int i = 0; i < strlen(str); i++)
@@ -68,4 +59,3 @@ int main(int argc, char ** argv)
 	MPI_Barrier(MPI_COMM_WORLD);
 	MPI_Finalize();
 	return 0;
-}//int main

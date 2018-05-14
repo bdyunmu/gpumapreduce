@@ -36,7 +36,7 @@ int main(int argc, char ** argv)
 	job->setEnableCPU(true);
 	job->setEnableGPU(false);
 
-    	char fn[256];
+    	char fn[128];
 	char str[512];
 	sprintf(fn,"%s",argv[1]);
 	int  chunk_size = 1024;
@@ -58,7 +58,6 @@ int main(int argc, char ** argv)
 			total_len=0;
 		}//if
 	}//while
-	ShowLog("rank:[%d] finishing processing txt data",rank);
 	job->execute();
 	MPI_Finalize();
 	return 0;
