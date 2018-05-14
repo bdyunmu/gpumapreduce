@@ -155,32 +155,29 @@ extern "C"
 void ExecutePandaShuffleMergeGPU(panda_node_context *d_g_state_1, panda_gpu_context *d_g_state_0);
 extern "C"
 void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc);
-extern "C"
-void ExecutePandaGPUCardSort(panda_gpu_card_context *pgcc, panda_node_context *pnc);
+//extern "C"
+//void ExecutePandaGPUCardSort(panda_gpu_card_context *pgcc, panda_node_context *pnc);
 extern "C"
 void ExecutePandaReduceTasksOnGPU(panda_gpu_context *pgc);
-extern "C"
-void ExecutePandaReduceTasksOnGPUCard(panda_gpu_card_context *pgcc);
+//extern "C"
+//void ExecutePandaReduceTasksOnGPUCard(panda_gpu_card_context *pgcc);
 extern "C"
 void* ExecutePandaCPUMapThread(void* thread_info);
-extern "C"
-void RunMapTasksOnGPUCardHost(panda_gpu_card_context pgcc);
+//extern "C"
+//void RunMapTasksOnGPUCardHost(panda_gpu_card_context pgcc);
 extern "C"
 void StartPandaGPUMapPartitioner(panda_gpu_context pgc, dim3 grids, dim3 blocks);
 extern "C"
 void RunGPUMapTasksHost(panda_gpu_context pgc, int curIter, int totalIter, dim3 grids, dim3 blocks);
-extern "C"
-void ExecutePandaGPUCardCombiner(panda_gpu_card_context *pgcc);
+//extern "C"
+//void ExecutePandaGPUCardCombiner(panda_gpu_card_context *pgcc);
 extern "C"
 void ExecutePandaSortBucket(panda_node_context *pnc);
 extern "C"
 void ExecutePandaCPUCombiner(panda_cpu_context *pcc);
 //extern "C" struct dim3;
-//extern "C"
 //void __checkCudaErrors(cudaError err, const char *file, const int line );
 
-
-struct panda_gpu_context;
 
 int cudaMemGetInfo(void *, size_t *);
 int cudaMemset(void *,int,int);
@@ -255,10 +252,6 @@ struct keyvals_t
    int val_arr_len;
    val_t * vals;
 };// keyvals_t;
-
-//typedef 
-struct panda_cpu_context;
-struct panda_node_context;
 
 struct panda_cpu_task_info_t {	
 	
@@ -481,17 +474,13 @@ struct panda_runtime_context
 };
 
 
-#define GPU_CORE_ACC		0x01
-#define GPU_CARD_ACC		0x05
+#define GPU_CORE_ACC			0x01
+#define GPU_CARD_ACC			0x05
 #define CPU_ACC				0x02
 #define CELL_ACC			0x03
 #define FPGA_ACC			0x04
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	 
-void PandaEmitMapOutputOnGPUCard(void *key, void *val, int keySize, int valSize, panda_gpu_card_context *pgcc, int map_task_idx);
+//void PandaEmitMapOutputOnGPUCard(void *key, void *val, int keySize, int valSize, panda_gpu_card_context *pgcc, int map_task_idx);
 void PandaEmitMapOutputOnCPU(void *key,void *val,int keySize,int valSize,panda_cpu_context *pcc,int map_task_idx);
 void PandaEmitCombinerOutputOnCPU(void *key, void *val, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx);
 void PandaEmitReduceOutputOnCPU(void*	key, void*	val, int	keySize, int	valSize, panda_cpu_context *pcc);
@@ -503,7 +492,6 @@ extern "C"
 void PandaCPUEmitCombinerOutput(void *key, void *val, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx); 
 extern "C"
 void PandaCPUEmitReduceOutput (void* key, void * val, int keySize, int valSize, panda_cpu_context *pcc);
-
 
 __device__ void PandaGPUEmitMapOutput(void *key, void *val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx);
 __device__ void PandaGPUEmitCombinerOutput(void* key, void * val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx);
@@ -545,7 +533,7 @@ int getGPUCoresNum();
 
 panda_gpu_context		*CreatePandaGPUContext();
 panda_cpu_context		*CreatePandaCPUContext();
-panda_gpu_card_context	*CreatePandaGPUCardContext();
+panda_gpu_card_context		*CreatePandaGPUCardContext();
 
 //#define DEFAULT_DIMBLOCK	256
 //#define DEFAULT_NUMTASK		1

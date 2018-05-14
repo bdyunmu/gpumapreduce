@@ -303,26 +303,13 @@ void *RunPandaCPUCombinerThread(void *ptr){
 
 	panda_cpu_task_info_t *panda_cpu_task_info = (panda_cpu_task_info_t *)ptr;
 	panda_cpu_context *pcc = (panda_cpu_context *)(panda_cpu_task_info->pcc); 
-	//job_configuration *cpu_job_conf = (job_configuration *)(panda_cpu_task_info->cpu_job_conf); 
-
-	//keyval_t * input_keyval_arr;
-	//keyval_arr_t *intermediate_keyval_arr_arr_p = d_g_state->intermediate_keyval_arr_arr_p;
-
-	//int index = 0;
-	//keyvals_t * merged_keyvals_arr = NULL;
-	//int merged_key_arr_len = 0;
+	bool local_combiner = false;
 
 	int start_idx = panda_cpu_task_info->start_row_idx;
-
 	keyval_arr_t *kv_arr_p = (keyval_arr_t *)&(pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[start_idx]);
-
 	int unmerged_shared_arr_len = *kv_arr_p->shared_arr_len;
-    	//int *shared_buddy = kv_arr_p->shared_buddy;
-    	//int shared_buddy_len = kv_arr_p->shared_buddy_len;
-
         char *shared_buff = kv_arr_p->shared_buff;
         int shared_buff_len = *kv_arr_p->shared_buff_len;
-        //int shared_buff_pos = *kv_arr_p->shared_buff_pos;
 
 	val_t *val_t_arr = (val_t *)malloc(sizeof(val_t)*unmerged_shared_arr_len);
 	if (val_t_arr == NULL) ShowError("there is no enough memory");
@@ -340,24 +327,22 @@ void *RunPandaCPUCombinerThread(void *ptr){
 		int iKeySize = first_kv_p->keySize;
 		char *iKey = shared_buff + first_kv_p->keyPos;
 		//char *iVal = shared_buff + first_kv_p->valPos;
-		ShowLog("%s",iKey);
 		if((first_kv_p->keyPos%4!=0)||(first_kv_p->valPos%4!=0)){
 			ShowError("keyPos or valPos is not aligned with 4 bytes, results could be wrong");
-		}//
+		}
 	
 		int index = 0;
-		first_kv_p = head_kv_p;
-
 		(val_t_arr[index]).valSize = first_kv_p->valSize;
 		(val_t_arr[index]).val = (char*)shared_buff + first_kv_p->valPos;
 
+		ShowLog("key:%s val:%d",iKey,*(int *)(val_t_arr[index]).val);
 		for (int j=i+1;j<unmerged_shared_arr_len;j++){
 
 			keyval_pos_t *next_kv_p = (keyval_pos_t *)((char *)shared_buff + shared_buff_len - sizeof(keyval_pos_t)*(unmerged_shared_arr_len-j));
 			char *jKey = (char *)shared_buff+next_kv_p->keyPos;
 			int jKeySize = next_kv_p->keySize;
 		
-			if (panda_cpu_compare(iKey,iKeySize,jKey,jKeySize)!=0){
+			if (!local_combiner||panda_cpu_compare(iKey,iKeySize,jKey,jKeySize)!=0){
 				continue;
 			}
 			index++;
@@ -378,9 +363,7 @@ void *RunPandaCPUCombinerThread(void *ptr){
 		}
 		num_keyval_pairs_after_combiner++;
 	}//for
-	//ShowLog("cpu combiner thread is done.");
 	free(val_t_arr);
-
 	pcc->intermediate_key_vals.intermediate_keyval_total_count[start_idx] = num_keyval_pairs_after_combiner;
 	/*
 	ShowLog("CPU_GROUP_ID:[%d] Map_Idx:%d  Done:%d Combiner: %d => %d Compress Ratio:%f",
@@ -427,14 +410,11 @@ void ExecutePandaCPUCombiner(panda_cpu_context *pcc){
 	//-------------------------------------------------------
 
 	//keyval_arr_t *d_keyval_arr_p;
-	//int *count = NULL;
 
 	ShowLog("num_input_record:%d",pcc->input_key_vals.num_input_record);
-	ShowLog("num_cpus_cores:%d",pcc->num_cpus_cores);
 
 	int num_threads = pcc->num_cpus_cores > pcc->input_key_vals.num_input_record ? pcc->input_key_vals.num_input_record : pcc->num_cpus_cores;
-	
-	int num_records_per_thread = (pcc->input_key_vals.num_input_record + num_threads - 1)/(num_threads);
+	int num_records_per_thread = (pcc->input_key_vals.num_input_record)/(num_threads);
 	int start_task_idx = 0;
 	int end_task_idx = 0;
 

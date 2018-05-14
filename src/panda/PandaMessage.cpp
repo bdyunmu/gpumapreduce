@@ -36,7 +36,7 @@ namespace panda
 		{
 			if (data->keySize != -1)
 			{
-				privateAdd(data->keys, data->vals, data->keySize, data->valSize);
+				//privateAdd(data->keys, data->vals, data->keySize, data->valSize);
 			}//if
 			else
 			{
@@ -146,7 +146,7 @@ namespace panda
 				MPI_Testall(2, recvReqs + i * 2, &flag, stat);
 				if (flag)
 				{
-					privateAdd(keyRecv[i], valRecv[i], counts[i * 2 + 0], counts[i * 2 + 1]);
+					//privateAdd(keyRecv[i], valRecv[i], counts[i * 2 + 0], counts[i * 2 + 1]);
 					recvingCount[i] = true;
 					MPI_Irecv(counts + i * 2, 2, MPI_INT, i, 0, MPI_COMM_WORLD, recvReqs + i * 2);
 					delete [] keyRecv[i];
@@ -155,7 +155,7 @@ namespace panda
 			}//else
 		}
 	}
-
+#if 0
 	void PandaMessage::grow(const int size, const int finalSize, int & finalSpace, char *& finals)
 	{
 		if (size + finalSize > finalSpace)
@@ -181,6 +181,7 @@ namespace panda
 		finalValSize += valSize;
 
 	}//void
+#endif
 	PandaMessage::PandaMessage(const bool pCopySendData){
 		singleKeySize = 0;
 		singleValSize = 0;

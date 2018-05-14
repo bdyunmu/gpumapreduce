@@ -43,8 +43,8 @@ namespace panda
                 int ** keyRecv,
                 int ** valRecv,
                 MPI_Request * recvReqs);
-      	void privateAdd(const void * const keys, const void * const vals, const int keySize, const int valSize);
-      	void grow(const int size, const int finalSize, int & finalSpace, char *& finals);
+      	//void privateAdd(const void * const keys, const void * const vals, const int keySize, const int valSize);
+      	//void grow(const int size, const int finalSize, int & finalSpace, char *& finals);
 
     public:
       	PandaMessage(const int pSingleKeySize, const int pSingleValSize, const bool pCopySendData = false);

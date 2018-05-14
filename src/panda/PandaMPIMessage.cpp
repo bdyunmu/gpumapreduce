@@ -88,21 +88,16 @@ namespace panda
 		while (numSentBuckets < commSize || finishedWorkers < commSize)
 		{
 
-			const int MAX_SENDS_PER_LOOP = 10;
-			int index = 0;	
+			//ShowLog("I am looping numSentBuckets:%d finishedWorkers:%d commSize:%d",numSentBuckets,finishedWorkers,commSize);
+			const int MAX_SENDS_PER_LOOP = 30;
+			int index = 0;
 			while (index<MAX_SENDS_PER_LOOP && pollUnsent())
 			{
 				index++;
 			}//while
-			pollPending();	
+			//pollPending();
 			for (int i=0; i<commSize; i++)
 			{
-				//null chunk
-				//maxlen  = -1;
-				//keysize = -1;
-				//valsize = -1;
-				//00000000000
-	
 				if (workerDone[i])
 					continue;
 
@@ -134,10 +129,10 @@ namespace panda
 
 				workerDone[i] = true;
 				finishedWorkers++;
-				//MPI_Irecv(zeroCounts + i * 3, 3, MPI_INT, i, 4, MPI_COMM_WORLD, zeroReqs + i );
 			}
+			pollPending();
 		}//while
-
+		ShowLog("Message Looping Done (numSentBuckets:%d finishedWorkers:%d commSize:%d)",numSentBuckets,finishedWorkers,commSize);
 		//MPI_Waitall(commSize, zeroReqs, MPI_STATUSES_IGNORE);
 		/*
 		delete [] workerDone;
@@ -160,14 +155,12 @@ namespace panda
 	{
 		PandaMessagePackage * data  = new PandaMessagePackage;
 		data->counts = new int[3];
-
 		data->flag	= new volatile bool;
 		data->waiting	= new volatile bool;
 		*data->flag	= false;
 		*data->waiting	= false;
-		data->reqs 	= new MPI_Request[4];	
+		data->reqs 	= new MPI_Request[4];
 		data->stats 	= new MPI_Status[4];
-		//write to disk for fault tolerance
 		if (copySendData)
 		{
 			if (keySize > 0 && keys != NULL)
@@ -279,8 +272,8 @@ namespace panda
 		}
 		if(data->counts[0]>0 && data->counts[1]>0 && data->counts[2]>0){
 		MPI_Isend(data->counts,3,MPI_INT,data->rank,0,MPI_COMM_WORLD,&data->reqs[0]);
-		MPI_Isend(data->keysBuff,    data->keyBuffSize, MPI_CHAR, data->rank, 1, MPI_COMM_WORLD, &data->reqs[1]);
-               	MPI_Isend(data->valsBuff,    data->valBuffSize, MPI_CHAR, data->rank, 2, MPI_COMM_WORLD, &data->reqs[2]);
+		MPI_Isend(data->keysBuff,data->keyBuffSize, MPI_CHAR, data->rank, 1, MPI_COMM_WORLD, &data->reqs[1]);
+               	MPI_Isend(data->valsBuff,data->valBuffSize, MPI_CHAR, data->rank, 2, MPI_COMM_WORLD, &data->reqs[2]);
 	       	MPI_Isend(data->keyPosKeySizeValPosValSize, data->counts[0]*4, MPI_INT, data->rank, 3, MPI_COMM_WORLD, &data->reqs[3]);
 		}
 		pendingIO.push_back(data);
@@ -326,10 +319,6 @@ namespace panda
 		pendingIO = newPending;
 	}//void
 
-#if 0
-void PandaMPIMessage::pollSends()
-#endif
-
 	void PandaMPIMessage::PandaAddRecvedBucket(char *keyRecv, char *valRecv, int *keyPosKeySizeValPosValSize, int keyBuffSize, int valBuffSize, int maxlen)
 	{
 
@@ -368,9 +357,5 @@ void PandaMPIMessage::pollSends()
 		}//int
 
 	}
-
-#if 0
-void PandaMPIMessage::poll(int & finishedWorkers,
-#endif
 
 }

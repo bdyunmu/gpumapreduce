@@ -1,6 +1,4 @@
-
 #include <mpi.h>
-
 #include <panda/PreLoadedPandaChunk.h>
 #include <panda/PandaMessage.h>
 #include <panda/PandaMPIMessage.h>
@@ -19,9 +17,6 @@ int main(int argc, char ** argv)
 
  	if (argc != 2)
         {
-           ShowLog("word count with panda on cpu and gpu");
-	   ShowLog("cd gpumapreduce");
-	   ShowLog("make");
 	   ShowLog("mpirun -host node1,node2 -np 2 ./%s input.txt",argv[0]);
            exit(-1);//
         }  //if
@@ -38,15 +33,13 @@ int main(int argc, char ** argv)
 
 	job->setMessage(new panda::PandaMPIMessage(true));
 
-	job->setEnableCPU(false);
-	job->setEnableGPU(true);
+	job->setEnableCPU(true);
+	job->setEnableGPU(false);
 
     	char fn[256];
 	char str[512];
-	char strInput[1024];
 	sprintf(fn,"%s",argv[1]);
 	int  chunk_size = 1024;
-	ShowLog("start processing txt data...");
 	char *chunk_data = (char *)malloc(sizeof(char)*2*(chunk_size));
 	FILE *wcfp;
 	wcfp = fopen(fn, "r");
@@ -67,7 +60,6 @@ int main(int argc, char ** argv)
 	}//while
 	ShowLog("rank:[%d] finishing processing txt data",rank);
 	job->execute();
-	MPI_Barrier(MPI_COMM_WORLD);
 	MPI_Finalize();
 	return 0;
 }//int main

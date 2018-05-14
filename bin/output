@@ -1,0 +1,1222 @@
+[0][MapReduceJob]	CommSize:10
+[1][MapReduceJob]	CommSize:10
+[2][MapReduceJob]	CommSize:10
+[3][MapReduceJob]	CommSize:10
+[7][MapReduceJob]	CommSize:10
+[8][MapReduceJob]	CommSize:10
+[9][MapReduceJob]	CommSize:10
+[4][MapReduceJob]	CommSize:10
+[5][MapReduceJob]	CommSize:10
+[6][MapReduceJob]	CommSize:10
+[0][main]	wordcount job->addInput
+[0][addInput]	addCPUMapTasks
+[0][main]	rank:[0] finishing processing txt data
+[0][InitPandaRuntime]	commRank:0, commSize:10
+[1][main]	wordcount job->addInput
+[1][addInput]	addCPUMapTasks
+[1][main]	rank:[1] finishing processing txt data
+[2][main]	wordcount job->addInput
+[2][addInput]	addCPUMapTasks
+[2][main]	rank:[2] finishing processing txt data
+[2][run]	start PandaMPIMessage thread. run() thread [2/10]
+[9][main]	wordcount job->addInput
+[9][addInput]	addCPUMapTasks
+[9][main]	rank:[9] finishing processing txt data
+[4][main]	wordcount job->addInput
+[4][addInput]	addCPUMapTasks
+[4][main]	rank:[4] finishing processing txt data
+[5][main]	wordcount job->addInput
+[5][addInput]	addCPUMapTasks
+[5][main]	rank:[5] finishing processing txt data
+[3][main]	wordcount job->addInput
+[3][addInput]	addCPUMapTasks
+[3][main]	rank:[3] finishing processing txt data
+[7][main]	wordcount job->addInput
+[7][addInput]	addCPUMapTasks
+[7][main]	rank:[7] finishing processing txt data
+[8][main]	wordcount job->addInput
+[8][addInput]	addCPUMapTasks
+[8][main]	rank:[8] finishing processing txt data
+[6][main]	wordcount job->addInput
+[6][addInput]	addCPUMapTasks
+[6][main]	rank:[6] finishing processing txt data
+[7][run]	start PandaMPIMessage thread. run() thread [7/10]
+[9][run]	start PandaMPIMessage thread. run() thread [9/10]
+[8][StartPandaCPUMapTasks]	num_input_record:1, totalKeySize:0.003906 KB totalValSize:1.005859 KB num_cpus:40
+[0][StartPandaCPUMapTasks]	num_input_record:1, totalKeySize:0.003906 KB totalValSize:1.005859 KB num_cpus:40
+[1][StartPandaCPUMapTasks]	num_input_record:1, totalKeySize:0.003906 KB totalValSize:1.005859 KB num_cpus:40
+[2][StartPandaCPUMapTasks]	num_input_record:1, totalKeySize:0.003906 KB totalValSize:1.005859 KB num_cpus:40
+[7][StartPandaCPUMapTasks]	num_input_record:1, totalKeySize:0.003906 KB totalValSize:1.005859 KB num_cpus:40
+[4][StartPandaCPUMapTasks]	num_input_record:1, totalKeySize:0.003906 KB totalValSize:1.005859 KB num_cpus:40
+[5][StartPandaCPUMapTasks]	num_input_record:1, totalKeySize:0.003906 KB totalValSize:1.005859 KB num_cpus:40
+[3][StartPandaCPUMapTasks]	num_input_record:1, totalKeySize:0.003906 KB totalValSize:1.005859 KB num_cpus:40
+[6][StartPandaCPUMapTasks]	num_input_record:1, totalKeySize:0.003906 KB totalValSize:1.005859 KB num_cpus:40
+[9][StartPandaCPUMapTasks]	num_input_record:1, totalKeySize:0.003906 KB totalValSize:1.005859 KB num_cpus:40
+[1][run]	start PandaMPIMessage thread. run() thread [1/10]
+[5][run]	start PandaMPIMessage thread. run() thread [5/10]
+[3][run]	start PandaMPIMessage thread. run() thread [3/10]
+[0][run]	start PandaMPIMessage thread. run() thread [0/10]
+[4][run]	start PandaMPIMessage thread. run() thread [4/10]
+[8][run]	start PandaMPIMessage thread. run() thread [8/10]
+[6][run]	start PandaMPIMessage thread. run() thread [6/10]
+[3][ExecutePandaCPUCombiner]	num_input_record:1
+[3][RunPandaCPUCombinerThread]	key:STRINPUT val:1
+[3][RunPandaCPUCombinerThread]	key:SETENABLEGPU val:1
+[3][RunPandaCPUCombinerThread]	key:SETENABLECPU val:1
+[3][RunPandaCPUCombinerThread]	key:PANDAMPIMESSAGE val:1
+[3][RunPandaCPUCombinerThread]	key:SETMESSAGE val:1
+[3][RunPandaCPUCombinerThread]	key:PANDAMAPREDUCEJOB val:1
+[3][RunPandaCPUCombinerThread]	key:MAPREDUCEJOB val:1
+[3][RunPandaCPUCombinerThread]	key:RETURN val:1
+[3][RunPandaCPUCombinerThread]	key:FINALIZE val:1
+[3][RunPandaCPUCombinerThread]	key:BARRIER val:1
+[3][RunPandaCPUCombinerThread]	key:EXECUTE val:1
+[3][RunPandaCPUCombinerThread]	key:PROCESSING val:1
+[3][RunPandaCPUCombinerThread]	key:FINISHING val:1
+[3][RunPandaCPUCombinerThread]	key:SHOWLOG val:1
+[3][RunPandaCPUCombinerThread]	key:STRLEN val:1
+[3][RunPandaCPUCombinerThread]	key:STRCPY val:1
+[3][RunPandaCPUCombinerThread]	key:TOUPPER val:1
+[3][RunPandaCPUCombinerThread]	key:STRLEN val:1
+[3][RunPandaCPUCombinerThread]	key:SIZEOF val:1
+[3][RunPandaCPUCombinerThread]	key:ELEMENTS val:1
+[3][RunPandaCPUCombinerThread]	key:SIZEOF val:1
+[3][RunPandaCPUCombinerThread]	key:MALLOC val:1
+[3][RunPandaCPUCombinerThread]	key:PROCESSING val:1
+[3][RunPandaCPUCombinerThread]	key:SHOWLOG val:1
+[3][RunPandaCPUCombinerThread]	key:SPRINTF val:1
+[3][ExecutePandaCPUSort]	lihui num cores:40 num input records:1 threads:1 num_reocords_per_thread:1
+[3][ExecutePandaCPUSort]	lihui pcc total_count:25
+[3][ExecutePandaCPUSort]	lihui pnc keyvals_arr_max_len:100
+[3][ExecutePandaCPUSort]	cihui key:STRINPUT val:1
+[3][ExecutePandaCPUSort]	cihui key:SETENABLEGPU val:1
+[3][ExecutePandaCPUSort]	cihui key:SETENABLECPU val:1
+[3][ExecutePandaCPUSort]	cihui key:PANDAMPIMESSAGE val:1
+[3][ExecutePandaCPUSort]	cihui key:SETMESSAGE val:1
+[3][ExecutePandaCPUSort]	cihui key:PANDAMAPREDUCEJOB val:1
+[3][ExecutePandaCPUSort]	cihui key:MAPREDUCEJOB val:1
+[3][ExecutePandaCPUSort]	cihui key:RETURN val:1
+[3][ExecutePandaCPUSort]	cihui key:FINALIZE val:1
+[3][ExecutePandaCPUSort]	cihui key:BARRIER val:1
+[3][ExecutePandaCPUSort]	cihui key:EXECUTE val:1
+[3][ExecutePandaCPUSort]	cihui key:PROCESSING val:1
+[3][ExecutePandaCPUSort]	cihui key:FINISHING val:1
+[3][ExecutePandaCPUSort]	cihui key:SHOWLOG val:1
+[3][ExecutePandaCPUSort]	cihui key:STRLEN val:1
+[3][ExecutePandaCPUSort]	cihui key:STRCPY val:1
+[3][ExecutePandaCPUSort]	cihui key:TOUPPER val:1
+[3][ExecutePandaCPUSort]	cihui key:STRLEN val:1
+[3][ExecutePandaCPUSort]	cihui key:SIZEOF val:1
+[3][ExecutePandaCPUSort]	cihui key:ELEMENTS val:1
+[3][ExecutePandaCPUSort]	cihui key:SIZEOF val:1
+[3][ExecutePandaCPUSort]	cihui key:MALLOC val:1
+[3][ExecutePandaCPUSort]	cihui key:PROCESSING val:1
+[3][ExecutePandaCPUSort]	cihui key:SHOWLOG val:1
+[3][ExecutePandaCPUSort]	cihui key:SPRINTF val:1
+[3][StartPandaDoPartitionOnCPU]	this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len:21
+[3][StartPandaDoPartitionOnCPU]	key:STRINPUT keySize:9 val:1 dump to buckeId:[8]
+[3][StartPandaDoPartitionOnCPU]	key:SETENABLEGPU keySize:13 val:1 dump to buckeId:[6]
+[3][StartPandaDoPartitionOnCPU]	key:SETENABLECPU keySize:13 val:1 dump to buckeId:[2]
+[3][StartPandaDoPartitionOnCPU]	key:PANDAMPIMESSAGE keySize:16 val:1 dump to buckeId:[4]
+[3][StartPandaDoPartitionOnCPU]	key:SETMESSAGE keySize:11 val:1 dump to buckeId:[4]
+[3][StartPandaDoPartitionOnCPU]	key:PANDAMAPREDUCEJOB keySize:18 val:1 dump to buckeId:[4]
+[3][StartPandaDoPartitionOnCPU]	key:MAPREDUCEJOB keySize:13 val:1 dump to buckeId:[4]
+[3][StartPandaDoPartitionOnCPU]	key:RETURN keySize:7 val:1 dump to buckeId:[2]
+[3][StartPandaDoPartitionOnCPU]	key:FINALIZE keySize:9 val:1 dump to buckeId:[8]
+[3][StartPandaDoPartitionOnCPU]	key:BARRIER keySize:8 val:1 dump to buckeId:[0]
+[3][StartPandaDoPartitionOnCPU]	key:EXECUTE keySize:8 val:1 dump to buckeId:[6]
+[3][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11 val:1 dump to buckeId:[2]
+[3][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11 val:1 dump to buckeId:[2]
+[3][StartPandaDoPartitionOnCPU]	key:FINISHING keySize:10 val:1 dump to buckeId:[4]
+[3][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8 val:1 dump to buckeId:[6]
+[3][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8 val:1 dump to buckeId:[6]
+[3][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7 val:1 dump to buckeId:[4]
+[3][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7 val:1 dump to buckeId:[4]
+[3][StartPandaDoPartitionOnCPU]	key:STRCPY keySize:7 val:1 dump to buckeId:[8]
+[3][StartPandaDoPartitionOnCPU]	key:TOUPPER keySize:8 val:1 dump to buckeId:[4]
+[3][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7 val:1 dump to buckeId:[6]
+[3][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7 val:1 dump to buckeId:[6]
+[3][StartPandaDoPartitionOnCPU]	key:ELEMENTS keySize:9 val:1 dump to buckeId:[4]
+[3][StartPandaDoPartitionOnCPU]	key:MALLOC keySize:7 val:1 dump to buckeId:[8]
+[3][StartPandaDoPartitionOnCPU]	key:SPRINTF keySize:8 val:1 dump to buckeId:[0]
+[3][StartPandaDoPartitionOnCPU]	Panda adding Key/Values to bucket is done on local host.
+
+[3][StartPandaPartitionSendData]	bucket index:0 curlen:2 maxlen:20 keySize:16 valSize:8 
+[3][StartPandaPartitionSendData]	bucket index:1 curlen:0 maxlen:20 keySize:0 valSize:0 
+[3][StartPandaPartitionSendData]	bucket index:2 curlen:4 maxlen:20 keySize:42 valSize:16 [3][pollUnsent]	start to send out a data from 3 to 0 . data: curlen:2  keySize:16  valSize:8
+
+[3][StartPandaPartitionSendData]	bucket index:3 curlen:0 maxlen:20 keySize:0 valSize:0 
+[3][StartPandaPartitionSendData]	bucket index:4 curlen:9 maxlen:20 keySize:99 valSize:36 
+[3][StartPandaPartitionSendData]	bucket index:5 curlen:0 maxlen:20 keySize:0 valSize:0 
+[3][StartPandaPartitionSendData]	bucket index:6 curlen:6 maxlen:20 keySize:51 valSize:24 
+[3][StartPandaPartitionSendData]	bucket index:7 curlen:0 maxlen:20 keySize:0 valSize:0 
+[3][StartPandaPartitionSendData]	bucket index:8 curlen:4 maxlen:20 keySize:32 valSize:16 
+[3][StartPandaPartitionSendData]	bucket index:9 curlen:0 maxlen:20 keySize:0 valSize:0 [3][pollUnsent]	start to send out a data from 3 to 1 . data: curlen:-1  keySize:-1  valSize:-1
+
+[3][pollUnsent]	start to send out a data from 3 to 2 . data: curlen:4  keySize:42  valSize:16
+[3][pollUnsent]	start to send out a data from 3 to 3 . data: curlen:-1  keySize:-1  valSize:-1
+[3][pollUnsent]	start to send out a data from 3 to 4 . data: curlen:9  keySize:99  valSize:36
+[3][pollUnsent]	start to send out a data from 3 to 5 . data: curlen:-1  keySize:-1  valSize:-1
+[3][pollUnsent]	start to send out a data from 3 to 6 . data: curlen:6  keySize:51  valSize:24
+[3][pollUnsent]	start to send out a data from 3 to 7 . data: curlen:-1  keySize:-1  valSize:-1
+[3][pollUnsent]	start to send out a data from 3 to 8 . data: curlen:4  keySize:32  valSize:16
+[3][pollUnsent]	start to send out a data from 3 to 9 . data: curlen:-1  keySize:-1  valSize:-1
+[7][ExecutePandaCPUCombiner]	num_input_record:1
+[7][RunPandaCPUCombinerThread]	key:STRINPUT val:1
+[7][RunPandaCPUCombinerThread]	key:SETENABLEGPU val:1
+[7][RunPandaCPUCombinerThread]	key:SETENABLECPU val:1
+[7][RunPandaCPUCombinerThread]	key:PANDAMPIMESSAGE val:1
+[7][RunPandaCPUCombinerThread]	key:SETMESSAGE val:1
+[7][RunPandaCPUCombinerThread]	key:PANDAMAPREDUCEJOB val:1
+[7][RunPandaCPUCombinerThread]	key:MAPREDUCEJOB val:1
+[1][ExecutePandaCPUCombiner]	num_input_record:1
+[7][RunPandaCPUCombinerThread]	key:RETURN val:1
+[7][RunPandaCPUCombinerThread]	key:FINALIZE val:1
+[7][RunPandaCPUCombinerThread]	key:BARRIER val:1
+[7][RunPandaCPUCombinerThread]	key:EXECUTE val:1
+[7][RunPandaCPUCombinerThread]	key:PROCESSING val:1
+[7][RunPandaCPUCombinerThread]	key:FINISHING val:1
+[7][RunPandaCPUCombinerThread]	key:SHOWLOG val:1
+[7][RunPandaCPUCombinerThread]	key:STRLEN val:1
+[7][RunPandaCPUCombinerThread]	key:STRCPY val:1
+[7][RunPandaCPUCombinerThread]	key:TOUPPER val:1
+[7][RunPandaCPUCombinerThread]	key:STRLEN val:1
+[7][RunPandaCPUCombinerThread]	key:SIZEOF val:1
+[7][RunPandaCPUCombinerThread]	key:ELEMENTS val:1
+[7][RunPandaCPUCombinerThread]	key:SIZEOF val:1
+[1][RunPandaCPUCombinerThread]	key:STRINPUT val:1
+[1][RunPandaCPUCombinerThread]	key:SETENABLEGPU val:1
+[1][RunPandaCPUCombinerThread]	[7][RunPandaCPUCombinerThread]	key:MALLOC val:1
+[7][RunPandaCPUCombinerThread]	key:PROCESSING val:1
+[7][RunPandaCPUCombinerThread]	key:SHOWLOG val:1
+[7][RunPandaCPUCombinerThread]	key:SPRINTF val:1
+key:SETENABLECPU val:1
+[7][ExecutePandaCPUSort]	lihui num cores:40 num input records:1 threads:1 num_reocords_per_thread:1
+[7][ExecutePandaCPUSort]	lihui pcc total_count:25
+[1][RunPandaCPUCombinerThread]	key:PANDAMPIMESSAGE val:1
+[1][RunPandaCPUCombinerThread]	key:SETMESSAGE val:1
+[1][RunPandaCPUCombinerThread]	key:PANDAMAPREDUCEJOB val:1
+[7][ExecutePandaCPUSort]	lihui pnc keyvals_arr_max_len:100
+[7][ExecutePandaCPUSort]	cihui key:STRINPUT val:1
+[7][ExecutePandaCPUSort]	cihui key:SETENABLEGPU val:1
+[1][RunPandaCPUCombinerThread]	key:MAPREDUCEJOB val:1
+[1][RunPandaCPUCombinerThread]	key:RETURN val:1
+[1][RunPandaCPUCombinerThread]	key:FINALIZE val:1
+[7][ExecutePandaCPUSort]	cihui key:SETENABLECPU val:1
+[7][ExecutePandaCPUSort]	cihui key:PANDAMPIMESSAGE val:1
+[7][ExecutePandaCPUSort]	cihui key:SETMESSAGE val:1
+[7][ExecutePandaCPUSort]	cihui key:PANDAMAPREDUCEJOB val:1
+[1][RunPandaCPUCombinerThread]	key:BARRIER val:1
+[1][RunPandaCPUCombinerThread]	key:EXECUTE val:1
+[1][RunPandaCPUCombinerThread]	key:PROCESSING val:1
+[1][RunPandaCPUCombinerThread]	key:FINISHING val:1
+[1][RunPandaCPUCombinerThread]	key:SHOWLOG val:1
+[7][ExecutePandaCPUSort]	cihui key:MAPREDUCEJOB val:1
+[1][RunPandaCPUCombinerThread]	key:STRLEN val:1
+[1][RunPandaCPUCombinerThread]	key:STRCPY val:1
+[7][ExecutePandaCPUSort]	cihui key:RETURN val:1
+[7][ExecutePandaCPUSort]	cihui key:FINALIZE val:1
+[7][ExecutePandaCPUSort]	cihui key:BARRIER val:1
+[7][ExecutePandaCPUSort]	cihui key:EXECUTE val:1
+[7][ExecutePandaCPUSort]	cihui key:PROCESSING val:1
+[1][RunPandaCPUCombinerThread]	key:TOUPPER val:1
+[1][RunPandaCPUCombinerThread]	key:STRLEN val:1
+[1][RunPandaCPUCombinerThread]	key:SIZEOF val:1
+[1][RunPandaCPUCombinerThread]	key:ELEMENTS val:1
+[1][RunPandaCPUCombinerThread]	key:SIZEOF val:1
+[7][ExecutePandaCPUSort]	cihui key:FINISHING val:1
+[7][ExecutePandaCPUSort]	cihui key:SHOWLOG val:1
+[1][RunPandaCPUCombinerThread]	key:MALLOC val:1
+[7][ExecutePandaCPUSort]	cihui key:STRLEN val:1
+[7][ExecutePandaCPUSort]	cihui key:STRCPY val:1
+[7][ExecutePandaCPUSort]	cihui key:TOUPPER val:1
+[1][RunPandaCPUCombinerThread]	key:PROCESSING val:1
+[1][RunPandaCPUCombinerThread]	key:SHOWLOG val:1
+[1][RunPandaCPUCombinerThread]	key:SPRINTF val:1
+[7][ExecutePandaCPUSort]	cihui key:STRLEN val:1
+[1][ExecutePandaCPUSort]	lihui num cores:40 num input records:1 threads:1 num_reocords_per_thread:1
+[7][ExecutePandaCPUSort]	cihui key:SIZEOF val:1
+[7][ExecutePandaCPUSort]	cihui key:ELEMENTS val:1
+[1][ExecutePandaCPUSort]	lihui pcc total_count:25
+[1][ExecutePandaCPUSort]	lihui pnc keyvals_arr_max_len:100
+[7][ExecutePandaCPUSort]	cihui key:SIZEOF val:1
+[7][ExecutePandaCPUSort]	cihui key:MALLOC val:1
+[1][ExecutePandaCPUSort]	cihui key:STRINPUT val:1
+[1][ExecutePandaCPUSort]	cihui key:SETENABLEGPU val:1
+[7][ExecutePandaCPUSort]	cihui key:PROCESSING val:1
+[7][ExecutePandaCPUSort]	cihui key:SHOWLOG val:1
+[7][ExecutePandaCPUSort]	cihui key:SPRINTF val:1
+[1][ExecutePandaCPUSort]	cihui key:SETENABLECPU val:1
+[1][ExecutePandaCPUSort]	cihui key:PANDAMPIMESSAGE val:1
+[1][ExecutePandaCPUSort]	cihui key:SETMESSAGE val:1
+[1][ExecutePandaCPUSort]	cihui key:PANDAMAPREDUCEJOB val:1
+[1][ExecutePandaCPUSort]	cihui key:MAPREDUCEJOB val:1
+[1][ExecutePandaCPUSort]	[7][StartPandaDoPartitionOnCPU]	this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len:21
+[7][StartPandaDoPartitionOnCPU]	key:STRINPUT keySize:9 val:1 dump to buckeId:[8]
+[7][StartPandaDoPartitionOnCPU]	key:SETENABLEGPU keySize:13 val:1 dump to buckeId:[6]
+[7][StartPandaDoPartitionOnCPU]	key:SETENABLECPU keySize:13 val:1 dump to buckeId:[2]
+[7][StartPandaDoPartitionOnCPU]	key:PANDAMPIMESSAGE keySize:16 val:1 dump to buckeId:[4]
+[7][StartPandaDoPartitionOnCPU]	key:SETMESSAGE keySize:11 val:1 dump to buckeId:[4]
+cihui key:RETURN val:1
+[1][ExecutePandaCPUSort]	cihui key:FINALIZE val:1
+[1][ExecutePandaCPUSort]	cihui key:BARRIER val:1
+[1][ExecutePandaCPUSort]	cihui key:EXECUTE val:1
+[7][StartPandaDoPartitionOnCPU]	key:PANDAMAPREDUCEJOB keySize:18 val:1 dump to buckeId:[4]
+[7][StartPandaDoPartitionOnCPU]	key:MAPREDUCEJOB keySize:13 val:1 dump to buckeId:[4]
+[7][StartPandaDoPartitionOnCPU]	key:RETURN keySize:7 val:1 dump to buckeId:[2]
+[1][ExecutePandaCPUSort]	cihui key:PROCESSING val:1
+[1][ExecutePandaCPUSort]	cihui key:FINISHING val:1
+[7][StartPandaDoPartitionOnCPU]	key:FINALIZE keySize:9 val:1 dump to buckeId:[8]
+[7][StartPandaDoPartitionOnCPU]	key:BARRIER keySize:8 val:1 dump to buckeId:[0]
+[7][StartPandaDoPartitionOnCPU]	key:EXECUTE keySize:8 val:1 dump to buckeId:[6]
+[7][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11 val:1 dump to buckeId:[2]
+[7][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11 val:1 dump to buckeId:[2]
+[1][ExecutePandaCPUSort]	cihui key:SHOWLOG val:1
+[1][ExecutePandaCPUSort]	cihui key:STRLEN val:1
+[7][StartPandaDoPartitionOnCPU]	key:FINISHING keySize:10 val:1 dump to buckeId:[4]
+[7][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8 val:1 dump to buckeId:[6]
+[7][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8 val:1 dump to buckeId:[6]
+[7][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7 val:1 dump to buckeId:[4]
+[7][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7 val:1 dump to buckeId:[4]
+[1][ExecutePandaCPUSort]	cihui key:STRCPY val:1
+[1][ExecutePandaCPUSort]	cihui key:TOUPPER val:1
+[1][ExecutePandaCPUSort]	cihui key:STRLEN val:1
+[7][StartPandaDoPartitionOnCPU]	key:STRCPY keySize:7 val:1 dump to buckeId:[8]
+[7][StartPandaDoPartitionOnCPU]	key:TOUPPER keySize:8 val:1 dump to buckeId:[4]
+[1][ExecutePandaCPUSort]	cihui key:SIZEOF val:1
+[1][ExecutePandaCPUSort]	cihui key:ELEMENTS val:1
+[1][ExecutePandaCPUSort]	cihui key:SIZEOF val:1
+[1][ExecutePandaCPUSort]	cihui key:MALLOC val:1
+[7][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7 val:1 dump to buckeId:[6]
+[7][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7 val:1 dump to buckeId:[6]
+[7][StartPandaDoPartitionOnCPU]	key:ELEMENTS keySize:9 val:1 dump to buckeId:[4]
+[7][StartPandaDoPartitionOnCPU]	key:MALLOC keySize:7 val:1 dump to buckeId:[8]
+[7][StartPandaDoPartitionOnCPU]	key:SPRINTF keySize:8 val:1 dump to buckeId:[0]
+[7][StartPandaDoPartitionOnCPU]	Panda adding Key/Values to bucket is done on local host.
+
+[1][ExecutePandaCPUSort]	cihui key:PROCESSING val:1
+[1][ExecutePandaCPUSort]	cihui key:SHOWLOG val:1
+[7][StartPandaPartitionSendData]	bucket index:0 curlen:2 maxlen:20 keySize:16 valSize:8 
+[1][ExecutePandaCPUSort]	cihui key:SPRINTF val:1
+[7][StartPandaPartitionSendData]	bucket index:1 curlen:0 maxlen:20 keySize:0 valSize:0 
+[7][pollUnsent]	start to send out a data from 7 to 0 . data: curlen:2  keySize:16  valSize:8
+[1][StartPandaDoPartitionOnCPU]	this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len:21
+[7][StartPandaPartitionSendData]	bucket index:2 curlen:4 maxlen:20 keySize:42 valSize:16 
+[1][StartPandaDoPartitionOnCPU]	key:STRINPUT keySize:9 val:1 dump to buckeId:[8]
+[1][StartPandaDoPartitionOnCPU]	key:SETENABLEGPU keySize:13 val:1 dump to buckeId:[6]
+[1][StartPandaDoPartitionOnCPU]	key:SETENABLECPU keySize:13 val:1 dump to buckeId:[2]
+[7][StartPandaPartitionSendData]	bucket index:3 curlen:0 maxlen:20 keySize:0 valSize:0 
+[7][StartPandaPartitionSendData]	bucket index:4 curlen:9 maxlen:20 keySize:99 valSize:36 
+[7][StartPandaPartitionSendData]	bucket index:5 curlen:0 maxlen:20 keySize:0 valSize:0 
+[1][StartPandaDoPartitionOnCPU]	key:PANDAMPIMESSAGE keySize:16 val:1 dump to buckeId:[4]
+[1][StartPandaDoPartitionOnCPU]	key:SETMESSAGE keySize:11 val:1 dump to buckeId:[4]
+[7][StartPandaPartitionSendData]	[7][pollUnsent]	start to send out a data from 7 to 1 . data: curlen:-1  keySize:-1  valSize:-1bucket index:6 curlen:6 maxlen:20 keySize:51 valSize:24 
+[1][StartPandaDoPartitionOnCPU]	key:PANDAMAPREDUCEJOB keySize:18 val:1 dump to buckeId:[4]
+[1][StartPandaDoPartitionOnCPU]	key:MAPREDUCEJOB keySize:13 val:1 dump to buckeId:[4]
+[1][StartPandaDoPartitionOnCPU]	key:RETURN keySize:7 val:1 dump to buckeId:[2]
+[1][StartPandaDoPartitionOnCPU]	key:FINALIZE keySize:9 val:1 dump to buckeId:[8]
+[7]
+[1][StartPandaDoPartitionOnCPU]	key:BARRIER keySize:8 val:1 dump to buckeId:[0]
+[1][StartPandaDoPartitionOnCPU]	key:EXECUTE keySize:8 val:1 dump to buckeId:[6]
+[1][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11 val:1 dump to buckeId:[2]
+[StartPandaPartitionSendData]	bucket index:7 curlen:0 maxlen:20 keySize:0 valSize:0 
+[1][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11 val:1 dump to buckeId:[2]
+[1][StartPandaDoPartitionOnCPU]	key:FINISHING keySize:10 val:1 dump to buckeId:[4]
+[1][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8 val:1 dump to buckeId:[6]
+[1][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8 val:1 dump to buckeId:[6]
+[1][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7 val:1 dump to buckeId:[4]
+[1][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7 val:1 dump to buckeId:[4]
+[1][StartPandaDoPartitionOnCPU]	key:STRCPY keySize:7 val:1 dump to buckeId:[8]
+[7][pollUnsent]	start to send out a data from 7 to 2 . data: curlen:4  keySize:42  valSize:16
+[7][StartPandaPartitionSendData]	bucket index:8 curlen:4 maxlen:20 keySize:32 valSize:16 
+[1][StartPandaDoPartitionOnCPU]	key:TOUPPER keySize:8 val:1 dump to buckeId:[4]
+[1][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7 val:1 dump to buckeId:[6]
+[1][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7 val:1 dump to buckeId:[6]
+[7][StartPandaPartitionSendData]	bucket index:9 curlen:0 maxlen:20 keySize:0 valSize:0 
+[1][StartPandaDoPartitionOnCPU]	key:ELEMENTS keySize:9 val:1 dump to buckeId:[4]
+[1][StartPandaDoPartitionOnCPU]	key:MALLOC keySize:7 val:1 dump to buckeId:[8]
+[1][StartPandaDoPartitionOnCPU]	key:SPRINTF keySize:8 val:1 dump to buckeId:[0]
+[1][StartPandaDoPartitionOnCPU]	Panda adding Key/Values to bucket is done on local host.
+
+[1][StartPandaPartitionSendData]	bucket index:0 curlen:2 maxlen:20 keySize:16 valSize:8 
+[1][StartPandaPartitionSendData]	bucket index:1 curlen:0 maxlen:20 keySize:0 valSize:0 
+[1][pollUnsent]	start to send out a data from 1 to 0 . data: curlen:2  keySize:16  valSize:8[1]
+[7][pollUnsent]	start to send out a data from 7 to 3 . data: curlen:-1  keySize:-1  valSize:-1
+[7][pollUnsent]	start to send out a data from 7 to 4 . data: curlen:9  keySize:99  valSize:36
+[StartPandaPartitionSendData]	bucket index:2 curlen:4 maxlen:20 keySize:42 valSize:16 
+[1][StartPandaPartitionSendData]	[1]bucket index:3 curlen:0 maxlen:20 keySize:0 valSize:0 
+[7][pollUnsent]	start to send out a data from 7 to 5 . data: curlen:-1  keySize:-1  valSize:-1
+[7][pollUnsent]	start to send out a data from 7 to 6 . data: curlen:6  keySize:51  valSize:24
+[7][pollUnsent]	start to send out a data from 7 to 7 . data: curlen:-1  keySize:-1  valSize:-1
+[pollUnsent]	start to send out a data from 1 to 1 . data: curlen:-1  keySize:-1  valSize:-1[1][StartPandaPartitionSendData]	bucket index:4 curlen:9 maxlen:20 keySize:99 valSize:36 
+
+[1][7][pollUnsent]	start to send out a data from 7 to 8 . data: curlen:4  keySize:32  valSize:16
+[7][pollUnsent][pollUnsent]	[1]start to send out a data from 1 to 2 . data: curlen:4  keySize:42  valSize:16[StartPandaPartitionSendData]	
+bucket index:5 curlen:0 maxlen:20 keySize:0 valSize:0 
+	start to send out a data from 7 to 9 . data: curlen:-1  keySize:-1  valSize:-1
+[1][StartPandaPartitionSendData]	bucket index:6 curlen:6 maxlen:20 keySize:51 valSize:24 
+[1][StartPandaPartitionSendData]	bucket index:7 curlen:0 maxlen:20 keySize:0 valSize:0 
+[1][StartPandaPartitionSendData]	bucket index:8 curlen:4 maxlen:20 keySize:32 valSize:16 
+[1][1][StartPandaPartitionSendData]	[pollUnsent]	bucket index:9 curlen:0 maxlen:20 keySize:0 valSize:0 
+start to send out a data from 1 to 3 . data: curlen:-1  keySize:-1  valSize:-1
+[1][pollUnsent]	start to send out a data from 1 to 4 . data: curlen:9  keySize:99  valSize:36
+[1][pollUnsent]	start to send out a data from 1 to 5 . data: curlen:-1  keySize:-1  valSize:-1
+[1][pollUnsent]	start to send out a data from 1 to 6 . data: curlen:6  keySize:51  valSize:24
+[1][pollUnsent]	start to send out a data from 1 to 7 . data: curlen:-1  keySize:-1  valSize:-1
+[1][pollUnsent]	start to send out a data from 1 to 8 . data: curlen:4  keySize:32  valSize:16
+[1][pollUnsent]	start to send out a data from 1 to 9 . data: curlen:-1  keySize:-1  valSize:-1
+[9][ExecutePandaCPUCombiner]	num_input_record:1
+[5][ExecutePandaCPUCombiner]	num_input_record:1
+[9][RunPandaCPUCombinerThread]	key:STRINPUT val:1
+[9][RunPandaCPUCombinerThread]	key:SETENABLEGPU val:1
+[9][RunPandaCPUCombinerThread]	key:SETENABLECPU val:1
+[9][RunPandaCPUCombinerThread]	key:PANDAMPIMESSAGE val:1
+[5][RunPandaCPUCombinerThread]	key:STRINPUT val:1
+[5][RunPandaCPUCombinerThread]	key:SETENABLEGPU val:1
+[5][RunPandaCPUCombinerThread]	key:SETENABLECPU val:1
+[5][RunPandaCPUCombinerThread]	key:PANDAMPIMESSAGE val:1
+[5][RunPandaCPUCombinerThread]	key:SETMESSAGE val:1
+[5][RunPandaCPUCombinerThread]	key:PANDAMAPREDUCEJOB val:1
+[9][RunPandaCPUCombinerThread]	key:SETMESSAGE val:1
+[9][RunPandaCPUCombinerThread]	key:PANDAMAPREDUCEJOB val:1
+[9][RunPandaCPUCombinerThread]	key:MAPREDUCEJOB val:1
+[5][RunPandaCPUCombinerThread]	key:MAPREDUCEJOB val:1
+[5][RunPandaCPUCombinerThread]	key:RETURN val:1
+[5][RunPandaCPUCombinerThread]	key:FINALIZE val:1
+[5][RunPandaCPUCombinerThread]	key:BARRIER val:1
+[9][RunPandaCPUCombinerThread]	key:RETURN val:1
+[9][RunPandaCPUCombinerThread]	key:FINALIZE val:1
+[9][RunPandaCPUCombinerThread]	key:BARRIER val:1
+[9][RunPandaCPUCombinerThread]	key:EXECUTE val:1
+[5][RunPandaCPUCombinerThread]	key:EXECUTE val:1
+[5][RunPandaCPUCombinerThread]	key:PROCESSING val:1
+[5][RunPandaCPUCombinerThread]	key:FINISHING val:1
+[5][RunPandaCPUCombinerThread]	key:SHOWLOG val:1
+[5][RunPandaCPUCombinerThread]	key:STRLEN val:1
+[5][RunPandaCPUCombinerThread]	key:STRCPY val:1
+[5][RunPandaCPUCombinerThread]	key:TOUPPER val:1
+[5][RunPandaCPUCombinerThread]	key:STRLEN val:1
+[5][RunPandaCPUCombinerThread]	key:SIZEOF val:1
+[5][RunPandaCPUCombinerThread]	key:ELEMENTS val:1
+[9][RunPandaCPUCombinerThread]	key:PROCESSING val:1
+[9][RunPandaCPUCombinerThread]	key:FINISHING val:1
+[9][RunPandaCPUCombinerThread]	key:SHOWLOG val:1
+[5][RunPandaCPUCombinerThread]	key:SIZEOF val:1
+[5][RunPandaCPUCombinerThread]	key:MALLOC val:1
+[9][RunPandaCPUCombinerThread]	key:STRLEN val:1
+[9][RunPandaCPUCombinerThread]	key:STRCPY val:1
+[9][RunPandaCPUCombinerThread]	key:TOUPPER val:1
+[9][RunPandaCPUCombinerThread]	key:STRLEN val:1
+[5][RunPandaCPUCombinerThread]	key:PROCESSING val:1
+[5][RunPandaCPUCombinerThread]	key:SHOWLOG val:1
+[5][RunPandaCPUCombinerThread]	key:SPRINTF val:1
+[9][RunPandaCPUCombinerThread]	key:SIZEOF val:1
+[9][RunPandaCPUCombinerThread]	key:ELEMENTS val:1
+[5][ExecutePandaCPUSort]	lihui num cores:40 num input records:1 threads:1 num_reocords_per_thread:1
+[5][ExecutePandaCPUSort]	lihui pcc total_count:25
+[5][ExecutePandaCPUSort]	lihui pnc keyvals_arr_max_len:100
+[5][ExecutePandaCPUSort]	cihui key:STRINPUT val:1
+[9][RunPandaCPUCombinerThread]	key:SIZEOF val:1
+[9][RunPandaCPUCombinerThread]	key:MALLOC val:1
+[9][RunPandaCPUCombinerThread]	key:PROCESSING val:1
+[9][RunPandaCPUCombinerThread]	key:SHOWLOG val:1
+[9][RunPandaCPUCombinerThread]	key:SPRINTF val:1
+[5][ExecutePandaCPUSort]	cihui key:SETENABLEGPU val:1
+[5][ExecutePandaCPUSort]	cihui key:SETENABLECPU val:1
+[5][ExecutePandaCPUSort]	cihui key:PANDAMPIMESSAGE val:1
+[5][ExecutePandaCPUSort]	cihui key:SETMESSAGE val:1
+[9][ExecutePandaCPUSort]	lihui num cores:40 num input records:1 threads:1 num_reocords_per_thread:1
+[9][ExecutePandaCPUSort]	lihui pcc total_count:25
+[5][ExecutePandaCPUSort]	cihui key:PANDAMAPREDUCEJOB val:1
+[5][ExecutePandaCPUSort]	cihui key:MAPREDUCEJOB val:1
+[5][ExecutePandaCPUSort]	cihui key:RETURN val:1
+[5][ExecutePandaCPUSort]	cihui key:FINALIZE val:1
+[9][ExecutePandaCPUSort]	lihui pnc keyvals_arr_max_len:100
+[9][ExecutePandaCPUSort]	cihui key:STRINPUT val:1
+[9][ExecutePandaCPUSort]	cihui key:SETENABLEGPU val:1
+[5][ExecutePandaCPUSort]	cihui key:BARRIER val:1
+[5][ExecutePandaCPUSort]	cihui key:EXECUTE val:1
+[5][ExecutePandaCPUSort]	cihui key:PROCESSING val:1
+[9][ExecutePandaCPUSort]	cihui key:SETENABLECPU val:1
+[9][ExecutePandaCPUSort]	cihui key:PANDAMPIMESSAGE val:1
+[9][ExecutePandaCPUSort]	cihui key:SETMESSAGE val:1
+[5][ExecutePandaCPUSort]	cihui key:FINISHING val:1
+[5][ExecutePandaCPUSort]	cihui key:SHOWLOG val:1
+[9][ExecutePandaCPUSort]	cihui key:PANDAMAPREDUCEJOB val:1
+[9][ExecutePandaCPUSort]	cihui key:MAPREDUCEJOB val:1
+[9][ExecutePandaCPUSort]	cihui key:RETURN val:1
+[5][ExecutePandaCPUSort]	cihui key:STRLEN val:1
+[5][ExecutePandaCPUSort]	cihui key:STRCPY val:1
+[5][ExecutePandaCPUSort]	cihui key:TOUPPER val:1
+[9][ExecutePandaCPUSort]	cihui key:FINALIZE val:1
+[5][ExecutePandaCPUSort]	cihui key:STRLEN val:1
+[9][ExecutePandaCPUSort]	cihui key:BARRIER val:1
+[9][ExecutePandaCPUSort]	cihui key:EXECUTE val:1
+[9][ExecutePandaCPUSort]	cihui key:PROCESSING val:1
+[9][ExecutePandaCPUSort]	cihui key:FINISHING val:1
+[5][ExecutePandaCPUSort]	cihui key:SIZEOF val:1
+[5][ExecutePandaCPUSort]	cihui key:ELEMENTS val:1
+[5][ExecutePandaCPUSort]	cihui key:SIZEOF val:1
+[9][ExecutePandaCPUSort]	cihui key:SHOWLOG val:1
+[5][ExecutePandaCPUSort]	cihui key:MALLOC val:1
+[9][ExecutePandaCPUSort]	cihui key:STRLEN val:1
+[9][ExecutePandaCPUSort]	cihui key:STRCPY val:1
+[9][ExecutePandaCPUSort]	cihui key:TOUPPER val:1
+[5][ExecutePandaCPUSort]	cihui key:PROCESSING val:1
+[5][ExecutePandaCPUSort]	cihui key:SHOWLOG val:1
+[5][ExecutePandaCPUSort]	cihui key:SPRINTF val:1
+[9][ExecutePandaCPUSort]	cihui key:STRLEN val:1
+[9][ExecutePandaCPUSort]	cihui key:SIZEOF val:1
+[9][ExecutePandaCPUSort]	cihui key:ELEMENTS val:1
+[9][ExecutePandaCPUSort]	cihui key:SIZEOF val:1
+[9][ExecutePandaCPUSort]	cihui key:MALLOC val:1
+[9][ExecutePandaCPUSort]	cihui key:PROCESSING val:1
+[9][ExecutePandaCPUSort]	cihui key:SHOWLOG val:1
+[5][StartPandaDoPartitionOnCPU]	this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len:21
+[9][ExecutePandaCPUSort]	cihui key:SPRINTF val:1
+[5][StartPandaDoPartitionOnCPU]	key:STRINPUT keySize:9 val:1 dump to buckeId:[8]
+[5][StartPandaDoPartitionOnCPU]	key:SETENABLEGPU keySize:13 val:1 dump to buckeId:[6]
+[5][StartPandaDoPartitionOnCPU]	key:SETENABLECPU keySize:13 val:1 dump to buckeId:[2]
+[5][StartPandaDoPartitionOnCPU]	key:PANDAMPIMESSAGE keySize:16 val:1 dump to buckeId:[4]
+[5][StartPandaDoPartitionOnCPU]	key:SETMESSAGE keySize:11 val:1 dump to buckeId:[4]
+[5][StartPandaDoPartitionOnCPU]	key:PANDAMAPREDUCEJOB keySize:18 val:1 dump to buckeId:[4]
+[9][StartPandaDoPartitionOnCPU]	[5][StartPandaDoPartitionOnCPU]	key:MAPREDUCEJOB keySize:13 val:1 dump to buckeId:[4]
+this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len:21
+[9][StartPandaDoPartitionOnCPU]	key:STRINPUT keySize:9 val:1 dump to buckeId:[8]
+[9][StartPandaDoPartitionOnCPU]	key:SETENABLEGPU keySize:13 val:1 dump to buckeId:[6]
+[5][StartPandaDoPartitionOnCPU]	key:RETURN keySize:7 val:1 dump to buckeId:[2]
+[5][StartPandaDoPartitionOnCPU]	key:FINALIZE keySize:9 val:1 dump to buckeId:[8]
+[5][StartPandaDoPartitionOnCPU]	key:BARRIER keySize:8 val:1 dump to buckeId:[0]
+[9][StartPandaDoPartitionOnCPU]	key:SETENABLECPU keySize:13 val:1 dump to buckeId:[2]
+[5][StartPandaDoPartitionOnCPU]	key:EXECUTE keySize:8 val:1 dump to buckeId:[6]
+[5][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11 val:1 dump to buckeId:[2]
+[9][StartPandaDoPartitionOnCPU]	key:PANDAMPIMESSAGE keySize:16 val:1 dump to buckeId:[4]
+[9][StartPandaDoPartitionOnCPU]	key:SETMESSAGE keySize:11 val:1 dump to buckeId:[4]
+[9][StartPandaDoPartitionOnCPU]	key:PANDAMAPREDUCEJOB keySize:18 val:1 dump to buckeId:[4]
+[9][StartPandaDoPartitionOnCPU]	key:MAPREDUCEJOB keySize:13 val:1 dump to buckeId:[4]
+[5][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11 val:1 dump to buckeId:[2]
+[5][StartPandaDoPartitionOnCPU]	key:FINISHING keySize:10 val:1 dump to buckeId:[4]
+[5][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8 val:1 dump to buckeId:[6]
+[9][StartPandaDoPartitionOnCPU]	key:RETURN keySize:7 val:1 dump to buckeId:[2]
+[5][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8 val:1 dump to buckeId:[6]
+[9][StartPandaDoPartitionOnCPU]	key:FINALIZE keySize:9 val:1 dump to buckeId:[8]
+[9][StartPandaDoPartitionOnCPU]	key:BARRIER keySize:8 val:1 dump to buckeId:[0]
+[9][StartPandaDoPartitionOnCPU]	key:EXECUTE keySize:8 val:1 dump to buckeId:[6]
+[5][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7 val:1 dump to buckeId:[4]
+[5][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7 val:1 dump to buckeId:[4]
+[5][StartPandaDoPartitionOnCPU]	key:STRCPY keySize:7 val:1 dump to buckeId:[8]
+[9][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11 val:1 dump to buckeId:[2]
+[5][StartPandaDoPartitionOnCPU]	key:TOUPPER keySize:8 val:1 dump to buckeId:[4]
+[5][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7 val:1 dump to buckeId:[6]
+[9][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11 val:1 dump to buckeId:[2]
+[9][StartPandaDoPartitionOnCPU]	key:FINISHING keySize:10 val:1 dump to buckeId:[4]
+[9][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8 val:1 dump to buckeId:[6]
+[5][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7 val:1 dump to buckeId:[6]
+[5][StartPandaDoPartitionOnCPU]	key:ELEMENTS keySize:9 val:1 dump to buckeId:[4]
+[5][StartPandaDoPartitionOnCPU]	key:MALLOC keySize:7 val:1 dump to buckeId:[8]
+[9][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8 val:1 dump to buckeId:[6]
+[9][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7 val:1 dump to buckeId:[4]
+[5][StartPandaDoPartitionOnCPU]	key:SPRINTF keySize:8 val:1 dump to buckeId:[0]
+[9][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7 val:1 dump to buckeId:[4]
+[9][StartPandaDoPartitionOnCPU]	key:STRCPY keySize:7 val:1 dump to buckeId:[8]
+[9][StartPandaDoPartitionOnCPU]	key:TOUPPER keySize:8 val:1 dump to buckeId:[4]
+[5][StartPandaDoPartitionOnCPU]	Panda adding Key/Values to bucket is done on local host.
+
+[5][StartPandaPartitionSendData]	bucket index:0 curlen:2 maxlen:20 keySize:16 valSize:8 
+[9][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7 val:1 dump to buckeId:[6]
+[9][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7 val:1 dump to buckeId:[6]
+[5][StartPandaPartitionSendData]	bucket index:1 curlen:0 maxlen:20 keySize:0 valSize:0 
+[9][StartPandaDoPartitionOnCPU]	key:ELEMENTS keySize:9 val:1 dump to buckeId:[4]
+[9][StartPandaDoPartitionOnCPU]	key:MALLOC keySize:7 val:1 dump to buckeId:[8]
+[9][StartPandaDoPartitionOnCPU]	key:SPRINTF keySize:8 val:1 dump to buckeId:[0]
+[9][StartPandaDoPartitionOnCPU]	Panda adding Key/Values to bucket is done on local host.
+[5][5][pollUnsent]	start to send out a data from 5 to 0 . data: curlen:2  keySize:16  valSize:8
+
+[9][StartPandaPartitionSendData]	bucket index:0 curlen:2 maxlen:20 keySize:16 valSize:8 
+[StartPandaPartitionSendData]	bucket index:2 curlen:4 maxlen:20 keySize:42 valSize:16 
+[9][StartPandaPartitionSendData]	bucket index:1 curlen:0 maxlen:20 keySize:0 valSize:0 
+[5][StartPandaPartitionSendData]	bucket index:3 curlen:0 maxlen:20 keySize:0 valSize:0 
+[5][StartPandaPartitionSendData]	bucket index:4 curlen:9 maxlen:20 keySize:99 valSize:36 
+[9][StartPandaPartitionSendData]	[9][pollUnsent]	start to send out a data from 9 to 0 . data: curlen:2  keySize:16  valSize:8bucket index:2 curlen:4 maxlen:20 keySize:42 valSize:16 
+[5][5][pollUnsent]	start to send out a data from 5 to 1 . data: curlen:-1  keySize:-1  valSize:-1
+[StartPandaPartitionSendData]	bucket index:5 curlen:0 maxlen:20 keySize:0 valSize:0 
+
+[9][StartPandaPartitionSendData]	bucket index:3 curlen:0 maxlen:20 keySize:0 valSize:0 
+[5][pollUnsent]	start to send out a data from 5 to 2 . data: curlen:4  keySize:42  valSize:16
+[9][pollUnsent]	start to send out a data from 9 to 1 . data: curlen:-1  keySize:-1  valSize:-1
+[5][StartPandaPartitionSendData]	bucket index:6 curlen:6 maxlen:20 keySize:51 valSize:24 
+[9][9][pollUnsent]	start to send out a data from 9 to 2 . data: curlen:4  keySize:42  valSize:16
+[StartPandaPartitionSendData]	bucket index:4 curlen:9 maxlen:20 keySize:99 valSize:36 
+[5][StartPandaPartitionSendData]	bucket index:7 curlen:0 maxlen:20 keySize:0 valSize:0 
+[5][StartPandaPartitionSendData]	bucket index:8 curlen:4 maxlen:20 keySize:32 valSize:16 
+[9][StartPandaPartitionSendData]	bucket index:5 curlen:0 maxlen:20 keySize:0 valSize:0 
+[5][StartPandaPartitionSendData]	bucket index:9 curlen:0 maxlen:20 keySize:0 valSize:0 
+[9][StartPandaPartitionSendData]	bucket index:6 curlen:6 maxlen:20 keySize:51 valSize:24 
+[9][StartPandaPartitionSendData]	bucket index:7 curlen:0 maxlen:20 keySize:0 valSize:0 
+[9][StartPandaPartitionSendData]	bucket index:8 curlen:4 maxlen:20 keySize:32 valSize:16 
+[5][pollUnsent]	start to send out a data from 5 to 3 . data: curlen:-1  keySize:-1  valSize:-1
+[9][StartPandaPartitionSendData]	bucket index:9 curlen:0 maxlen:20 keySize:0 valSize:0 
+[5][pollUnsent]	start to send out a data from 5 to 4 . data: curlen:9  keySize:99  valSize:36
+[9][pollUnsent]	start to send out a data from 9 to 3 . data: curlen:-1  keySize:-1  valSize:-1
+[5][pollUnsent]	start to send out a data from 5 to 5 . data: curlen:-1  keySize:-1  valSize:-1
+[9][pollUnsent]	start to send out a data from 9 to 4 . data: curlen:9  keySize:99  valSize:36
+[5][pollUnsent]	start to send out a data from 5 to 6 . data: curlen:6  keySize:51  valSize:24
+[9][pollUnsent]	start to send out a data from 9 to 5 . data: curlen:-1  keySize:-1  valSize:-1
+[9][pollUnsent]	start to send out a data from 9 to 6 . data: curlen:6  keySize:51  valSize:24
+[5][pollUnsent]	start to send out a data from 5 to 7 . data: curlen:-1  keySize:-1  valSize:-1
+[5][pollUnsent]	start to send out a data from 5 to 8 . data: curlen:4  keySize:32  valSize:16
+[9][pollUnsent]	start to send out a data from 9 to 7 . data: curlen:-1  keySize:-1  valSize:-1
+[9][pollUnsent]	start to send out a data from 9 to 8 . data: curlen:4  keySize:32  valSize:16
+[5][pollUnsent]	start to send out a data from 5 to 9 . data: curlen:-1  keySize:-1  valSize:-1
+[9][pollUnsent]	start to send out a data from 9 to 9 . data: curlen:-1  keySize:-1  valSize:-1
+[6][ExecutePandaCPUCombiner]	num_input_record:1
+[6][RunPandaCPUCombinerThread]	key:STRINPUT val:1
+[6][RunPandaCPUCombinerThread]	key:SETENABLEGPU val:1
+[6][RunPandaCPUCombinerThread]	key:SETENABLECPU val:1
+[6][RunPandaCPUCombinerThread]	key:PANDAMPIMESSAGE val:1
+[6][RunPandaCPUCombinerThread]	key:SETMESSAGE val:1
+[6][RunPandaCPUCombinerThread]	key:PANDAMAPREDUCEJOB val:1
+[6][RunPandaCPUCombinerThread]	key:MAPREDUCEJOB val:1
+[6][RunPandaCPUCombinerThread]	key:RETURN val:1
+[6][RunPandaCPUCombinerThread]	key:FINALIZE val:1
+[6][RunPandaCPUCombinerThread]	key:BARRIER val:1
+[6][RunPandaCPUCombinerThread]	key:EXECUTE val:1
+[6][RunPandaCPUCombinerThread]	key:PROCESSING val:1
+[6][RunPandaCPUCombinerThread]	key:FINISHING val:1
+[6][RunPandaCPUCombinerThread]	key:SHOWLOG val:1
+[6][RunPandaCPUCombinerThread]	key:STRLEN val:1
+[6][RunPandaCPUCombinerThread]	key:STRCPY val:1
+[6][RunPandaCPUCombinerThread]	key:TOUPPER val:1
+[6][RunPandaCPUCombinerThread]	key:STRLEN val:1
+[6][RunPandaCPUCombinerThread]	key:SIZEOF val:1
+[6][RunPandaCPUCombinerThread]	key:ELEMENTS val:1
+[6][RunPandaCPUCombinerThread]	key:SIZEOF val:1
+[6][RunPandaCPUCombinerThread]	key:MALLOC val:1
+[6][RunPandaCPUCombinerThread]	key:PROCESSING val:1
+[6][RunPandaCPUCombinerThread]	key:SHOWLOG val:1
+[6][RunPandaCPUCombinerThread]	key:SPRINTF val:1
+[6][ExecutePandaCPUSort]	lihui num cores:40 num input records:1 threads:1 num_reocords_per_thread:1
+[6][ExecutePandaCPUSort]	lihui pcc total_count:25
+[6][ExecutePandaCPUSort]	lihui pnc keyvals_arr_max_len:100
+[6][ExecutePandaCPUSort]	cihui key:STRINPUT val:1
+[6][ExecutePandaCPUSort]	cihui key:SETENABLEGPU val:1
+[6][ExecutePandaCPUSort]	cihui key:SETENABLECPU val:1
+[6][ExecutePandaCPUSort]	cihui key:PANDAMPIMESSAGE val:1
+[6][ExecutePandaCPUSort]	cihui key:SETMESSAGE val:1
+[6][ExecutePandaCPUSort]	cihui key:PANDAMAPREDUCEJOB val:1
+[6][ExecutePandaCPUSort]	cihui key:MAPREDUCEJOB val:1
+[6][ExecutePandaCPUSort]	cihui key:RETURN val:1
+[6][ExecutePandaCPUSort]	cihui key:FINALIZE val:1
+[6][ExecutePandaCPUSort]	cihui key:BARRIER val:1
+[6][ExecutePandaCPUSort]	cihui key:EXECUTE val:1
+[6][ExecutePandaCPUSort]	cihui key:PROCESSING val:1
+[6][ExecutePandaCPUSort]	cihui key:FINISHING val:1
+[6][ExecutePandaCPUSort]	cihui key:SHOWLOG val:1
+[6][ExecutePandaCPUSort]	cihui key:STRLEN val:1
+[6][ExecutePandaCPUSort]	cihui key:STRCPY val:1
+[6][ExecutePandaCPUSort]	cihui key:TOUPPER val:1
+[6][ExecutePandaCPUSort]	cihui key:STRLEN val:1
+[6][ExecutePandaCPUSort]	cihui key:SIZEOF val:1
+[6][ExecutePandaCPUSort]	cihui key:ELEMENTS val:1
+[6][ExecutePandaCPUSort]	cihui key:SIZEOF val:1
+[6][ExecutePandaCPUSort]	cihui key:MALLOC val:1
+[6][ExecutePandaCPUSort]	cihui key:PROCESSING val:1
+[6][ExecutePandaCPUSort]	cihui key:SHOWLOG val:1
+[6][ExecutePandaCPUSort]	cihui key:SPRINTF val:1
+[6][StartPandaDoPartitionOnCPU]	this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len:21
+[6][StartPandaDoPartitionOnCPU]	key:STRINPUT keySize:9 val:1 dump to buckeId:[8]
+[6][StartPandaDoPartitionOnCPU]	key:SETENABLEGPU keySize:13 val:1 dump to buckeId:[6]
+[6][StartPandaDoPartitionOnCPU]	key:SETENABLECPU keySize:13 val:1 dump to buckeId:[2]
+[6][StartPandaDoPartitionOnCPU]	key:PANDAMPIMESSAGE keySize:16 val:1 dump to buckeId:[4]
+[6][StartPandaDoPartitionOnCPU]	key:SETMESSAGE keySize:11 val:1 dump to buckeId:[4]
+[6][StartPandaDoPartitionOnCPU]	key:PANDAMAPREDUCEJOB keySize:18 val:1 dump to buckeId:[4]
+[6][StartPandaDoPartitionOnCPU]	key:MAPREDUCEJOB keySize:13 val:1 dump to buckeId:[4]
+[6][StartPandaDoPartitionOnCPU]	key:RETURN keySize:7 val:1 dump to buckeId:[2]
+[6][StartPandaDoPartitionOnCPU]	key:FINALIZE keySize:9 val:1 dump to buckeId:[8]
+[6][StartPandaDoPartitionOnCPU]	key:BARRIER keySize:8 val:1 dump to buckeId:[0]
+[6][StartPandaDoPartitionOnCPU]	key:EXECUTE keySize:8 val:1 dump to buckeId:[6]
+[6][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11 val:1 dump to buckeId:[2]
+[6][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11 val:1 dump to buckeId:[2]
+[6][StartPandaDoPartitionOnCPU]	key:FINISHING keySize:10 val:1 dump to buckeId:[4]
+[6][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8 val:1 dump to buckeId:[6]
+[6][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8 val:1 dump to buckeId:[6]
+[6][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7 val:1 dump to buckeId:[4]
+[6][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7 val:1 dump to buckeId:[4]
+[6][StartPandaDoPartitionOnCPU]	key:STRCPY keySize:7 val:1 dump to buckeId:[8]
+[6][StartPandaDoPartitionOnCPU]	key:TOUPPER keySize:8 val:1 dump to buckeId:[4]
+[6][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7 val:1 dump to buckeId:[6]
+[6][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7 val:1 dump to buckeId:[6]
+[6][StartPandaDoPartitionOnCPU]	key:ELEMENTS keySize:9 val:1 dump to buckeId:[4]
+[6][StartPandaDoPartitionOnCPU]	key:MALLOC keySize:7 val:1 dump to buckeId:[8]
+[6][StartPandaDoPartitionOnCPU]	key:SPRINTF keySize:8 val:1 dump to buckeId:[0]
+[6][StartPandaDoPartitionOnCPU]	Panda adding Key/Values to bucket is done on local host.
+
+[6][StartPandaPartitionSendData]	bucket index:0 curlen:2 maxlen:20 keySize:16 valSize:8 
+[6][StartPandaPartitionSendData]	bucket index:1 curlen:0 maxlen:20 keySize:0 valSize:0 
+[6][StartPandaPartitionSendData]	bucket index:2 curlen:4 maxlen:20 keySize:42 valSize:16 
+[6][StartPandaPartitionSendData]	bucket index:3 curlen:0 maxlen:20 keySize:0 valSize:0 
+[6][StartPandaPartitionSendData]	bucket index:4 curlen:9 maxlen:20 keySize:99 valSize:36 
+[6][StartPandaPartitionSendData]	bucket index:5 curlen:0 maxlen:20 keySize:0 valSize:0 
+[6][StartPandaPartitionSendData]	bucket index:6 curlen:6 maxlen:20 keySize:51 valSize:24 
+[6][pollUnsent]	start to send out a data from 6 to 0 . data: curlen:2  keySize:16  valSize:8
+[6][StartPandaPartitionSendData]	bucket index:7 curlen:0 maxlen:20 keySize:0 valSize:0 
+[6][StartPandaPartitionSendData]	bucket index:8 curlen:4 maxlen:20 keySize:32 valSize:16 
+[6][StartPandaPartitionSendData]	bucket index:9 curlen:0 maxlen:20 keySize:0 valSize:0 
+[6][pollUnsent]	start to send out a data from 6 to 1 . data: curlen:-1  keySize:-1  valSize:-1
+[6][pollUnsent]	start to send out a data from 6 to 2 . data: curlen:4  keySize:42  valSize:16
+[6][pollUnsent]	start to send out a data from 6 to 3 . data: curlen:-1  keySize:-1  valSize:-1
+[6][pollUnsent]	start to send out a data from 6 to 4 . data: curlen:9  keySize:99  valSize:36
+[6][pollUnsent]	start to send out a data from 6 to 5 . data: curlen:-1  keySize:-1  valSize:-1
+[6][pollUnsent]	start to send out a data from 6 to 6 . data: curlen:6  keySize:51  valSize:24
+[6][pollUnsent]	start to send out a data from 6 to 7 . data: curlen:-1  keySize:-1  valSize:-1
+[6][pollUnsent]	start to send out a data from 6 to 8 . data: curlen:4  keySize:32  valSize:16
+[6][pollUnsent]	start to send out a data from 6 to 9 . data: curlen:-1  keySize:-1  valSize:-1
+[2][ExecutePandaCPUCombiner]	num_input_record:1
+[2][RunPandaCPUCombinerThread]	key:STRINPUT val:1
+[2][RunPandaCPUCombinerThread]	key:SETENABLEGPU val:1
+[2][RunPandaCPUCombinerThread]	key:SETENABLECPU val:1
+[2][RunPandaCPUCombinerThread]	key:PANDAMPIMESSAGE val:1
+[2][RunPandaCPUCombinerThread]	key:SETMESSAGE val:1
+[2][RunPandaCPUCombinerThread]	key:PANDAMAPREDUCEJOB val:1
+[2][RunPandaCPUCombinerThread]	key:MAPREDUCEJOB val:1
+[2][RunPandaCPUCombinerThread]	key:RETURN val:1
+[2][RunPandaCPUCombinerThread]	key:FINALIZE val:1
+[2][RunPandaCPUCombinerThread]	key:BARRIER val:1
+[2][RunPandaCPUCombinerThread]	key:EXECUTE val:1
+[2][RunPandaCPUCombinerThread]	key:PROCESSING val:1
+[2][RunPandaCPUCombinerThread]	key:FINISHING val:1
+[2][RunPandaCPUCombinerThread]	key:SHOWLOG val:1
+[2][RunPandaCPUCombinerThread]	key:STRLEN val:1
+[2][RunPandaCPUCombinerThread]	key:STRCPY val:1
+[2][RunPandaCPUCombinerThread]	key:TOUPPER val:1
+[2][RunPandaCPUCombinerThread]	key:STRLEN val:1
+[2][RunPandaCPUCombinerThread]	key:SIZEOF val:1
+[2][RunPandaCPUCombinerThread]	key:ELEMENTS val:1
+[2][RunPandaCPUCombinerThread]	key:SIZEOF val:1
+[2][RunPandaCPUCombinerThread]	key:MALLOC val:1
+[2][RunPandaCPUCombinerThread]	key:PROCESSING val:1
+[2][RunPandaCPUCombinerThread]	key:SHOWLOG val:1
+[2][RunPandaCPUCombinerThread]	key:SPRINTF val:1
+[2][ExecutePandaCPUSort]	lihui num cores:40 num input records:1 threads:1 num_reocords_per_thread:1
+[2][ExecutePandaCPUSort]	lihui pcc total_count:25
+[2][ExecutePandaCPUSort]	lihui pnc keyvals_arr_max_len:100
+[2][ExecutePandaCPUSort]	cihui key:STRINPUT val:1
+[2][ExecutePandaCPUSort]	cihui key:SETENABLEGPU val:1
+[2][ExecutePandaCPUSort]	cihui key:SETENABLECPU val:1
+[2][ExecutePandaCPUSort]	cihui key:PANDAMPIMESSAGE val:1
+[2][ExecutePandaCPUSort]	cihui key:SETMESSAGE val:1
+[2][ExecutePandaCPUSort]	cihui key:PANDAMAPREDUCEJOB val:1
+[2][ExecutePandaCPUSort]	cihui key:MAPREDUCEJOB val:1
+[2][ExecutePandaCPUSort]	cihui key:RETURN val:1
+[2][ExecutePandaCPUSort]	cihui key:FINALIZE val:1
+[2][ExecutePandaCPUSort]	cihui key:BARRIER val:1
+[2][ExecutePandaCPUSort]	cihui key:EXECUTE val:1
+[2][ExecutePandaCPUSort]	cihui key:PROCESSING val:1
+[2][ExecutePandaCPUSort]	cihui key:FINISHING val:1
+[2][ExecutePandaCPUSort]	cihui key:SHOWLOG val:1
+[2][ExecutePandaCPUSort]	cihui key:STRLEN val:1
+[2][ExecutePandaCPUSort]	cihui key:STRCPY val:1
+[2][ExecutePandaCPUSort]	cihui key:TOUPPER val:1
+[2][ExecutePandaCPUSort]	cihui key:STRLEN val:1
+[2][ExecutePandaCPUSort]	cihui key:SIZEOF val:1
+[2][ExecutePandaCPUSort]	cihui key:ELEMENTS val:1
+[2][ExecutePandaCPUSort]	cihui key:SIZEOF val:1
+[2][ExecutePandaCPUSort]	cihui key:MALLOC val:1
+[2][ExecutePandaCPUSort]	cihui key:PROCESSING val:1
+[2][ExecutePandaCPUSort]	cihui key:SHOWLOG val:1
+[2][ExecutePandaCPUSort]	cihui key:SPRINTF val:1
+[0][ExecutePandaCPUCombiner]	num_input_record:1
+[2][StartPandaDoPartitionOnCPU]	this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len:21
+[2][StartPandaDoPartitionOnCPU]	key:STRINPUT keySize:9 val:1 dump to buckeId:[8]
+[2][StartPandaDoPartitionOnCPU]	key:SETENABLEGPU keySize:13 val:1 dump to buckeId:[6]
+[2][StartPandaDoPartitionOnCPU]	key:SETENABLECPU keySize:13 val:1 dump to buckeId:[2]
+[2][StartPandaDoPartitionOnCPU]	key:PANDAMPIMESSAGE keySize:16 val:1 dump to buckeId:[4]
+[2][StartPandaDoPartitionOnCPU]	key:SETMESSAGE keySize:11 val:1 dump to buckeId:[4]
+[2][StartPandaDoPartitionOnCPU]	key:PANDAMAPREDUCEJOB keySize:18 val:1 dump to buckeId:[4]
+[8][ExecutePandaCPUCombiner]	num_input_record:1
+[2][StartPandaDoPartitionOnCPU]	key:MAPREDUCEJOB keySize:13 val:1 dump to buckeId:[4]
+[2][StartPandaDoPartitionOnCPU]	key:RETURN keySize:7 val:1 dump to buckeId:[2]
+[2][StartPandaDoPartitionOnCPU]	key:FINALIZE keySize:9 val:1 dump to buckeId:[8]
+[2][StartPandaDoPartitionOnCPU]	key:BARRIER keySize:8 val:1 dump to buckeId:[0]
+[2][StartPandaDoPartitionOnCPU]	key:EXECUTE keySize:8 val:1 dump to buckeId:[6]
+[2][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11 val:1 dump to buckeId:[2]
+[4][ExecutePandaCPUCombiner]	num_input_record:1
+[2][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11 val:1 dump to buckeId:[2]
+[2][StartPandaDoPartitionOnCPU]	key:FINISHING keySize:10 val:1 dump to buckeId:[4]
+[2][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8 val:1 dump to buckeId:[6]
+[2][StartPandaDoPartitionOnCPU]	[8][RunPandaCPUCombinerThread]	key:STRINPUT val:1
+[8][RunPandaCPUCombinerThread]	key:SETENABLEGPU val:1
+[0][RunPandaCPUCombinerThread]	key:STRINPUT val:1
+[0][RunPandaCPUCombinerThread]	key:SETENABLEGPU val:1
+[0][RunPandaCPUCombinerThread]	key:SETENABLECPU val:1
+[0][RunPandaCPUCombinerThread]	key:PANDAMPIMESSAGE val:1
+key:SHOWLOG keySize:8 val:1 dump to buckeId:[6]
+[2][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7 val:1 dump to buckeId:[4]
+[2][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7 val:1 dump to buckeId:[4]
+[2][StartPandaDoPartitionOnCPU]	key:STRCPY keySize:7 val:1 dump to buckeId:[8]
+[2][StartPandaDoPartitionOnCPU]	key:TOUPPER keySize:8 val:1 dump to buckeId:[4]
+[2][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7 val:1 dump to buckeId:[6]
+[2][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7 val:1 dump to buckeId:[6]
+[2][StartPandaDoPartitionOnCPU]	key:ELEMENTS keySize:9 val:1 dump to buckeId:[4]
+[2][StartPandaDoPartitionOnCPU]	key:MALLOC keySize:7 val:1 dump to buckeId:[8]
+[2][StartPandaDoPartitionOnCPU]	key:SPRINTF keySize:8 val:1 dump to buckeId:[0]
+[0][RunPandaCPUCombinerThread]	key:SETMESSAGE val:1
+[0][RunPandaCPUCombinerThread]	key:PANDAMAPREDUCEJOB val:1
+[0][RunPandaCPUCombinerThread]	key:MAPREDUCEJOB val:1
+[0][RunPandaCPUCombinerThread]	key:RETURN val:1
+[0][RunPandaCPUCombinerThread]	key:FINALIZE val:1
+[0][RunPandaCPUCombinerThread]	key:BARRIER val:1
+[8][RunPandaCPUCombinerThread]	key:SETENABLECPU val:1
+[8][RunPandaCPUCombinerThread]	key:PANDAMPIMESSAGE val:1
+[8][RunPandaCPUCombinerThread]	key:SETMESSAGE val:1
+[8][RunPandaCPUCombinerThread]	key:PANDAMAPREDUCEJOB val:1
+[2][StartPandaDoPartitionOnCPU]	Panda adding Key/Values to bucket is done on local host.
+
+[2][StartPandaPartitionSendData]	bucket index:0 curlen:2 maxlen:20 keySize:16 valSize:8 
+[2][StartPandaPartitionSendData]	bucket index:1 curlen:0 maxlen:20 keySize:0 valSize:0 
+[8][RunPandaCPUCombinerThread]	key:MAPREDUCEJOB val:1
+[8][RunPandaCPUCombinerThread]	key:RETURN val:1
+[8][RunPandaCPUCombinerThread]	key:FINALIZE val:1
+[0][RunPandaCPUCombinerThread]	key:EXECUTE val:1
+[0][RunPandaCPUCombinerThread]	key:PROCESSING val:1
+[0][RunPandaCPUCombinerThread]	key:FINISHING val:1
+[0][RunPandaCPUCombinerThread]	key:SHOWLOG val:1
+[0][RunPandaCPUCombinerThread]	key:STRLEN val:1
+[0][RunPandaCPUCombinerThread]	key:STRCPY val:1
+[0][RunPandaCPUCombinerThread]	key:TOUPPER val:1
+[0][RunPandaCPUCombinerThread]	key:STRLEN val:1
+[2][StartPandaPartitionSendData]	bucket index:2 curlen:4 maxlen:20 keySize:42 valSize:16 
+[0][RunPandaCPUCombinerThread]	key:SIZEOF val:1
+[0][RunPandaCPUCombinerThread]	key:ELEMENTS val:1
+[0][RunPandaCPUCombinerThread]	key:SIZEOF val:1
+[0][RunPandaCPUCombinerThread]	key:MALLOC val:1
+[0][RunPandaCPUCombinerThread]	key:PROCESSING val:1
+[0][RunPandaCPUCombinerThread]	key:SHOWLOG val:1
+[0][RunPandaCPUCombinerThread]	key:SPRINTF val:1
+[8][RunPandaCPUCombinerThread]	key:BARRIER val:1
+[8][RunPandaCPUCombinerThread]	key:EXECUTE val:1
+[8][RunPandaCPUCombinerThread]	key:PROCESSING val:1
+[8][RunPandaCPUCombinerThread]	key:FINISHING val:1
+[8][RunPandaCPUCombinerThread]	key:SHOWLOG val:1
+[8][RunPandaCPUCombinerThread]	key:STRLEN val:1
+[8][RunPandaCPUCombinerThread]	key:STRCPY val:1
+[2][2][pollUnsent]	start to send out a data from 2 to 0 . data: curlen:2  keySize:16  valSize:8
+[StartPandaPartitionSendData]	bucket index:3 curlen:0 maxlen:20 keySize:0 valSize:0 
+[2][StartPandaPartitionSendData]	bucket index:4 curlen:9 maxlen:20 keySize:99 valSize:36 
+[8][RunPandaCPUCombinerThread]	key:TOUPPER val:1
+[8][RunPandaCPUCombinerThread]	key:STRLEN val:1
+[8][RunPandaCPUCombinerThread]	key:SIZEOF val:1
+[2][StartPandaPartitionSendData]	bucket index:5 curlen:0 maxlen:20 keySize:0 valSize:0 
+[2][StartPandaPartitionSendData]	bucket index:6 curlen:6 maxlen:20 keySize:51 valSize:24 
+[8][RunPandaCPUCombinerThread]	key:ELEMENTS val:1
+[8][RunPandaCPUCombinerThread]	key:SIZEOF val:1
+[8][RunPandaCPUCombinerThread]	key:MALLOC val:1
+[8][RunPandaCPUCombinerThread]	key:PROCESSING val:1
+[8][RunPandaCPUCombinerThread]	key:SHOWLOG val:1
+[8][RunPandaCPUCombinerThread]	key:SPRINTF val:1
+[4][RunPandaCPUCombinerThread]	key:STRINPUT val:1
+[4][RunPandaCPUCombinerThread]	key:SETENABLEGPU val:1
+[4][RunPandaCPUCombinerThread]	key:SETENABLECPU val:1
+[4][RunPandaCPUCombinerThread]	key:PANDAMPIMESSAGE val:1
+[4][RunPandaCPUCombinerThread]	key:SETMESSAGE val:1
+[4][RunPandaCPUCombinerThread]	key:PANDAMAPREDUCEJOB val:1
+[0][ExecutePandaCPUSort]	lihui num cores:40 num input records:1 threads:1 num_reocords_per_thread:1
+[0][ExecutePandaCPUSort]	lihui pcc total_count:25
+[0][ExecutePandaCPUSort]	lihui pnc keyvals_arr_max_len:100
+[0][ExecutePandaCPUSort]	cihui key:STRINPUT val:1
+[0][ExecutePandaCPUSort]	cihui key:SETENABLEGPU val:1
+[0][ExecutePandaCPUSort]	cihui key:SETENABLECPU val:1
+[0][ExecutePandaCPUSort]	cihui key:PANDAMPIMESSAGE val:1
+[0][ExecutePandaCPUSort]	cihui key:SETMESSAGE val:1
+[0][ExecutePandaCPUSort]	cihui key:PANDAMAPREDUCEJOB val:1
+[2][2][StartPandaPartitionSendData]	[pollUnsent]	start to send out a data from 2 to 1 . data: curlen:-1  keySize:-1  valSize:-1
+bucket index:7 curlen:0 maxlen:20 keySize:0 valSize:0 
+[2][StartPandaPartitionSendData]	bucket index:8 curlen:4 maxlen:20 keySize:32 valSize:16 
+[0][ExecutePandaCPUSort]	cihui key:MAPREDUCEJOB val:1
+[0][ExecutePandaCPUSort]	cihui key:RETURN val:1
+[0][ExecutePandaCPUSort]	cihui key:FINALIZE val:1
+[0][ExecutePandaCPUSort]	cihui key:BARRIER val:1
+[0][ExecutePandaCPUSort]	cihui key:EXECUTE val:1
+[4][RunPandaCPUCombinerThread]	key:MAPREDUCEJOB val:1
+[4][RunPandaCPUCombinerThread]	key:RETURN val:1
+[4][RunPandaCPUCombinerThread]	key:FINALIZE val:1
+[4][RunPandaCPUCombinerThread]	key:BARRIER val:1
+[2][StartPandaPartitionSendData]	bucket index:9 curlen:0 maxlen:20 keySize:0 valSize:0 
+[2][pollUnsent]	start to send out a data from 2 to 2 . data: curlen:4  keySize:42  valSize:16
+[4][RunPandaCPUCombinerThread]	key:EXECUTE val:1
+[4][RunPandaCPUCombinerThread]	key:PROCESSING val:1
+[4][RunPandaCPUCombinerThread]	key:FINISHING val:1
+[4][RunPandaCPUCombinerThread]	key:SHOWLOG val:1
+[4][RunPandaCPUCombinerThread]	key:STRLEN val:1
+[4][RunPandaCPUCombinerThread]	key:STRCPY val:1
+[8][ExecutePandaCPUSort]	lihui num cores:40 num input records:1 threads:1 num_reocords_per_thread:1
+[8][ExecutePandaCPUSort]	lihui pcc total_count:25
+[8][ExecutePandaCPUSort]	lihui pnc keyvals_arr_max_len:100
+[8][ExecutePandaCPUSort]	cihui key:STRINPUT val:1
+[0][ExecutePandaCPUSort]	cihui key:PROCESSING val:1
+[0][ExecutePandaCPUSort]	cihui key:FINISHING val:1
+[0][ExecutePandaCPUSort]	cihui key:SHOWLOG val:1
+[0][ExecutePandaCPUSort]	cihui key:STRLEN val:1
+[0][ExecutePandaCPUSort]	cihui key:STRCPY val:1
+[0][ExecutePandaCPUSort]	cihui key:TOUPPER val:1
+[0][ExecutePandaCPUSort]	cihui key:STRLEN val:1
+[0][ExecutePandaCPUSort]	cihui key:SIZEOF val:1
+[2][pollUnsent]	start to send out a data from 2 to 3 . data: curlen:-1  keySize:-1  valSize:-1
+[2][pollUnsent]	start to send out a data from 2 to 4 . data: curlen:9  keySize:99  valSize:36
+[0][ExecutePandaCPUSort]	cihui key:ELEMENTS val:1
+[0][ExecutePandaCPUSort]	cihui key:SIZEOF val:1
+[0][ExecutePandaCPUSort]	cihui key:MALLOC val:1
+[0][ExecutePandaCPUSort]	cihui key:PROCESSING val:1
+[0][ExecutePandaCPUSort]	cihui key:SHOWLOG val:1
+[0][ExecutePandaCPUSort]	cihui key:SPRINTF val:1
+[4][RunPandaCPUCombinerThread]	key:TOUPPER val:1
+[4][RunPandaCPUCombinerThread]	key:STRLEN val:1
+[4][RunPandaCPUCombinerThread]	key:SIZEOF val:1
+[4][RunPandaCPUCombinerThread]	key:ELEMENTS val:1
+[4][RunPandaCPUCombinerThread]	key:SIZEOF val:1
+[4][RunPandaCPUCombinerThread]	key:MALLOC val:1
+[4][RunPandaCPUCombinerThread]	key:PROCESSING val:1
+[4][RunPandaCPUCombinerThread]	key:SHOWLOG val:1
+[8][ExecutePandaCPUSort]	cihui key:SETENABLEGPU val:1
+[8][ExecutePandaCPUSort]	cihui key:SETENABLECPU val:1
+[8][ExecutePandaCPUSort]	cihui key:PANDAMPIMESSAGE val:1
+[8][ExecutePandaCPUSort]	cihui key:SETMESSAGE val:1
+[8][ExecutePandaCPUSort]	cihui key:PANDAMAPREDUCEJOB val:1
+[8][ExecutePandaCPUSort]	cihui key:MAPREDUCEJOB val:1
+[4][RunPandaCPUCombinerThread]	key:SPRINTF val:1
+[8][ExecutePandaCPUSort]	cihui key:RETURN val:1
+[8][ExecutePandaCPUSort]	cihui key:FINALIZE val:1
+[8][ExecutePandaCPUSort]	cihui key:BARRIER val:1
+[8][ExecutePandaCPUSort]	cihui key:EXECUTE val:1
+[8][ExecutePandaCPUSort]	cihui key:PROCESSING val:1
+[8][ExecutePandaCPUSort]	cihui key:FINISHING val:1
+[0][StartPandaDoPartitionOnCPU]	this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len:21
+[0][StartPandaDoPartitionOnCPU]	key:STRINPUT keySize:9 val:1 dump to buckeId:[8]
+[0][StartPandaDoPartitionOnCPU]	key:SETENABLEGPU keySize:13 val:1 dump to buckeId:[6]
+[0][StartPandaDoPartitionOnCPU]	key:SETENABLECPU keySize:13 val:1 dump to buckeId:[2]
+[0][StartPandaDoPartitionOnCPU]	key:PANDAMPIMESSAGE keySize:16 val:1 dump to buckeId:[4]
+[4][ExecutePandaCPUSort]	lihui num cores:40 num input records:1 threads:1 num_reocords_per_thread:1
+[4][ExecutePandaCPUSort]	lihui pcc total_count:25
+[4][ExecutePandaCPUSort]	lihui pnc keyvals_arr_max_len:100
+[4][ExecutePandaCPUSort]	cihui key:STRINPUT val:1
+[8][ExecutePandaCPUSort]	cihui key:SHOWLOG val:1
+[8][ExecutePandaCPUSort]	cihui key:STRLEN val:1
+[8][ExecutePandaCPUSort]	cihui key:STRCPY val:1
+[8][ExecutePandaCPUSort]	cihui key:TOUPPER val:1
+[8][ExecutePandaCPUSort]	cihui key:STRLEN val:1
+[2][pollUnsent]	start to send out a data from 2 to 5 . data: curlen:-1  keySize:-1  valSize:-1
+[2][pollUnsent]	start to send out a data from 2 to 6 . data: curlen:6  keySize:51  valSize:24
+[2][pollUnsent]	[4][ExecutePandaCPUSort]	cihui key:SETENABLEGPU val:1
+[4][ExecutePandaCPUSort]	cihui key:SETENABLECPU val:1
+[4][ExecutePandaCPUSort]	cihui key:PANDAMPIMESSAGE val:1
+[4][ExecutePandaCPUSort]	cihui key:SETMESSAGE val:1
+[4][ExecutePandaCPUSort]	cihui key:PANDAMAPREDUCEJOB val:1
+[0][StartPandaDoPartitionOnCPU]	key:SETMESSAGE keySize:11 val:1 dump to buckeId:[4]
+[0][StartPandaDoPartitionOnCPU]	key:PANDAMAPREDUCEJOB keySize:18 val:1 dump to buckeId:[4]
+[0][StartPandaDoPartitionOnCPU]	key:MAPREDUCEJOB keySize:13 val:1 dump to buckeId:[4]
+[0][StartPandaDoPartitionOnCPU]	key:RETURN keySize:7 val:1 dump to buckeId:[2]
+[0][StartPandaDoPartitionOnCPU]	key:FINALIZE keySize:9 val:1 dump to buckeId:[8]
+[0][StartPandaDoPartitionOnCPU]	key:BARRIER keySize:8 val:1 dump to buckeId:[0]
+[0][StartPandaDoPartitionOnCPU]	key:EXECUTE keySize:8 val:1 dump to buckeId:[6]
+[0][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11 val:1 dump to buckeId:[2]
+[8][ExecutePandaCPUSort]	cihui key:SIZEOF val:1
+[8][ExecutePandaCPUSort]	cihui key:ELEMENTS val:1
+[8][ExecutePandaCPUSort]	cihui key:SIZEOF val:1
+[8][ExecutePandaCPUSort]	cihui key:MALLOC val:1
+[8][ExecutePandaCPUSort]	cihui key:PROCESSING val:1
+[0][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11 val:1 dump to buckeId:[2]
+[0][StartPandaDoPartitionOnCPU]	key:FINISHING keySize:10 val:1 dump to buckeId:[4]
+[0][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8 val:1 dump to buckeId:[6]
+[0][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8 val:1 dump to buckeId:[6]
+[0][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7 val:1 dump to buckeId:[4]
+start to send out a data from 2 to 7 . data: curlen:-1  keySize:-1  valSize:-1
+[2][pollUnsent]	start to send out a data from 2 to 8 . data: curlen:4  keySize:32  valSize:16
+[4][ExecutePandaCPUSort]	cihui key:MAPREDUCEJOB val:1
+[4][ExecutePandaCPUSort]	cihui key:RETURN val:1
+[4][ExecutePandaCPUSort]	cihui key:FINALIZE val:1
+[4][ExecutePandaCPUSort]	cihui key:BARRIER val:1
+[8][ExecutePandaCPUSort]	cihui key:SHOWLOG val:1
+[8][ExecutePandaCPUSort]	cihui key:SPRINTF val:1
+[4][ExecutePandaCPUSort]	cihui key:EXECUTE val:1
+[4][ExecutePandaCPUSort]	cihui key:PROCESSING val:1
+[4][ExecutePandaCPUSort]	cihui key:FINISHING val:1
+[4][ExecutePandaCPUSort]	cihui key:SHOWLOG val:1
+[0][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7 val:1 dump to buckeId:[4]
+[0][StartPandaDoPartitionOnCPU]	key:STRCPY keySize:7 val:1 dump to buckeId:[8]
+[0][StartPandaDoPartitionOnCPU]	key:TOUPPER keySize:8 val:1 dump to buckeId:[4]
+[0][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7 val:1 dump to buckeId:[6]
+[0][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7 val:1 dump to buckeId:[6]
+[0][StartPandaDoPartitionOnCPU]	key:ELEMENTS keySize:9 val:1 dump to buckeId:[4]
+[0][StartPandaDoPartitionOnCPU]	key:MALLOC keySize:7 val:1 dump to buckeId:[8]
+[0][StartPandaDoPartitionOnCPU]	key:SPRINTF keySize:8 val:1 dump to buckeId:[0]
+[2][pollUnsent]	start to send out a data from 2 to 9 . data: curlen:-1  keySize:-1  valSize:-1
+[8][StartPandaDoPartitionOnCPU]	this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len:21
+[8][StartPandaDoPartitionOnCPU]	key:STRINPUT keySize:9 val:1 dump to buckeId:[8]
+[8][StartPandaDoPartitionOnCPU]	key:SETENABLEGPU keySize:13 val:1 dump to buckeId:[6]
+[8][StartPandaDoPartitionOnCPU]	key:SETENABLECPU keySize:13 val:1 dump to buckeId:[2]
+[4][ExecutePandaCPUSort]	cihui key:STRLEN val:1
+[4][ExecutePandaCPUSort]	cihui key:STRCPY val:1
+[4][ExecutePandaCPUSort]	cihui key:TOUPPER val:1
+[4][ExecutePandaCPUSort]	cihui key:STRLEN val:1
+[4][ExecutePandaCPUSort]	cihui key:SIZEOF val:1
+[0][StartPandaDoPartitionOnCPU]	Panda adding Key/Values to bucket is done on local host.
+
+[0][StartPandaPartitionSendData]	bucket index:0 curlen:2 maxlen:20 keySize:16 valSize:8 
+[0][StartPandaPartitionSendData]	bucket index:1 curlen:0 maxlen:20 keySize:0 valSize:0 
+[8][StartPandaDoPartitionOnCPU]	key:PANDAMPIMESSAGE keySize:16 val:1 dump to buckeId:[4]
+[8][StartPandaDoPartitionOnCPU]	key:SETMESSAGE keySize:11 val:1 dump to buckeId:[4]
+[8][StartPandaDoPartitionOnCPU]	key:PANDAMAPREDUCEJOB keySize:18 val:1 dump to buckeId:[4]
+[8][StartPandaDoPartitionOnCPU]	[4][ExecutePandaCPUSort]	cihui key:ELEMENTS val:1
+[4][ExecutePandaCPUSort]	cihui key:SIZEOF val:1
+[4][ExecutePandaCPUSort]	cihui key:MALLOC val:1
+[4][ExecutePandaCPUSort]	[0][pollUnsent]	start to send out a data from 0 to 0 . data: curlen:2  keySize:16  valSize:8
+[0][StartPandaPartitionSendData]	bucket index:2 curlen:4 maxlen:20 keySize:42 valSize:16 
+cihui key:PROCESSING val:1
+[4][ExecutePandaCPUSort]	cihui key:SHOWLOG val:1
+[4][ExecutePandaCPUSort]	cihui key:SPRINTF val:1
+key:MAPREDUCEJOB keySize:13 val:1 dump to buckeId:[4]
+[8][StartPandaDoPartitionOnCPU]	key:RETURN keySize:7 val:1 dump to buckeId:[2]
+[8][StartPandaDoPartitionOnCPU]	key:FINALIZE keySize:9 val:1 dump to buckeId:[8]
+[8][StartPandaDoPartitionOnCPU]	key:BARRIER keySize:8 val:1 dump to buckeId:[0]
+[0][StartPandaPartitionSendData]	bucket index:3 curlen:0 maxlen:20 keySize:0 valSize:0 
+[0][pollUnsent]	start to send out a data from 0 to 1 . data: curlen:-1  keySize:-1  valSize:-1
+[8][StartPandaDoPartitionOnCPU]	key:EXECUTE keySize:8 val:1 dump to buckeId:[6]
+[8][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11 val:1 dump to buckeId:[2]
+[8][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11 val:1 dump to buckeId:[2]
+[1][run]	->recved countReqs from 0, maxlen:-1 keysize:-1 valsize:-1
+[1][run]	->recved countReqs from 1, maxlen:-1 keysize:-1 valsize:-1
+[1][run]	->recved countReqs from 2, maxlen:-1 keysize:-1 valsize:-1
+[1][run]	->recved countReqs from 3, maxlen:-1 keysize:-1 valsize:-1
+[0][StartPandaPartitionSendData]	bucket index:4 curlen:9 maxlen:20 keySize:99 valSize:36 
+[0][pollUnsent]	start to send out a data from 0 to 2 . data: curlen:4  keySize:42  valSize:16
+[8][StartPandaDoPartitionOnCPU]	key:FINISHING keySize:10 val:1 dump to buckeId:[4]
+[8][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8 val:1 dump to buckeId:[6]
+[8][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8 val:1 dump to buckeId:[6]
+[0][StartPandaPartitionSendData]	bucket index:5 curlen:0 maxlen:20 keySize:0 valSize:0 
+[0][StartPandaPartitionSendData]	bucket index:6 curlen:6 maxlen:20 keySize:51 valSize:24 
+[2][run]	->recved countReqs from 0, maxlen:4 keysize:42 valsize:16
+[2][run]	->recved countReqs from 1, maxlen:4 keysize:42 valsize:16
+[8][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7 val:1 dump to buckeId:[4]
+[8][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7 val:1 dump to buckeId:[4]
+[8][StartPandaDoPartitionOnCPU]	key:STRCPY keySize:7 val:1 dump to buckeId:[8]
+[8][StartPandaDoPartitionOnCPU]	key:TOUPPER keySize:8 val:1 dump to buckeId:[4]
+[8][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7 val:1 dump to buckeId:[6]
+[8][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7 val:1 dump to buckeId:[6]
+[8][StartPandaDoPartitionOnCPU]	key:ELEMENTS keySize:9 val:1 dump to buckeId:[4]
+[4][StartPandaDoPartitionOnCPU]	this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len:21
+[4][StartPandaDoPartitionOnCPU]	key:STRINPUT keySize:9 val:1 dump to buckeId:[8]
+[4][StartPandaDoPartitionOnCPU]	key:SETENABLEGPU keySize:13 val:1 dump to buckeId:[6]
+[4][StartPandaDoPartitionOnCPU]	key:SETENABLECPU keySize:13 val:1 dump to buckeId:[2]
+[4][StartPandaDoPartitionOnCPU]	key:PANDAMPIMESSAGE keySize:16 val:1 dump to buckeId:[4]
+[0][pollUnsent]	start to send out a data from 0 to 3 . data: curlen:-1  keySize:-1  valSize:-1
+[0][StartPandaPartitionSendData]	bucket index:7 curlen:0 maxlen:20 keySize:0 valSize:0 
+[0][StartPandaPartitionSendData]	bucket index:8 curlen:4 maxlen:20 keySize:32 valSize:16 
+[4][StartPandaDoPartitionOnCPU]	key:SETMESSAGE keySize:11 val:1 dump to buckeId:[4]
+[4][StartPandaDoPartitionOnCPU]	key:PANDAMAPREDUCEJOB keySize:18 val:1 dump to buckeId:[4]
+[4][StartPandaDoPartitionOnCPU]	key:MAPREDUCEJOB keySize:13 val:1 dump to buckeId:[4]
+[4][StartPandaDoPartitionOnCPU]	key:RETURN keySize:7 val:1 dump to buckeId:[2]
+[2][run]	->recved countReqs from 2, maxlen:4 keysize:42 valsize:16
+[2][run]	->recved countReqs from 3, maxlen:4 keysize:42 valsize:16
+[3][run]	->recved countReqs from 0, maxlen:-1 keysize:-1 valsize:-1
+[3][run]	->recved countReqs from 1, maxlen:-1 keysize:-1 valsize:-1
+[3][run]	->recved countReqs from 2, maxlen:-1 keysize:-1 valsize:-1
+[3][run]	->recved countReqs from 3, maxlen:-1 keysize:-1 valsize:-1
+[8][StartPandaDoPartitionOnCPU]	key:MALLOC keySize:7 val:1 dump to buckeId:[8]
+[8][StartPandaDoPartitionOnCPU]	key:SPRINTF keySize:8 val:1 dump to buckeId:[0]
+[8][StartPandaDoPartitionOnCPU]	Panda adding Key/Values to bucket is done on local host.
+
+[8][StartPandaPartitionSendData]	bucket index:0 curlen:2 maxlen:20 keySize:16 valSize:8 
+[0][StartPandaPartitionSendData]	bucket index:9 curlen:0 maxlen:20 keySize:0 valSize:0 
+[0][pollUnsent]	start to send out a data from 0 to 4 . data: curlen:9  keySize:99  valSize:36
+[8][StartPandaPartitionSendData]	bucket index:1 curlen:0 maxlen:20 keySize:0 valSize:0 
+[8][pollUnsent]	start to send out a data from 8 to 0 . data: curlen:2  keySize:16  valSize:8
+[4][StartPandaDoPartitionOnCPU]	key:FINALIZE keySize:9 val:1 dump to buckeId:[8]
+[4][StartPandaDoPartitionOnCPU]	key:BARRIER keySize:8 val:1 dump to buckeId:[0]
+[4][StartPandaDoPartitionOnCPU]	key:EXECUTE keySize:8 val:1 dump to buckeId:[6]
+[4][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11 val:1 dump to buckeId:[2]
+[4][StartPandaDoPartitionOnCPU]	key:PROCESSING keySize:11 val:1 dump to buckeId:[2]
+[4][StartPandaDoPartitionOnCPU]	key:FINISHING keySize:10 val:1 dump to buckeId:[4]
+[4][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8 val:1 dump to buckeId:[6]
+[8][StartPandaPartitionSendData]	bucket index:2 curlen:4 maxlen:20 keySize:42 valSize:16 
+[8][pollUnsent]	start to send out a data from 8 to 1 . data: curlen:-1  keySize:-1  valSize:-1
+[4][StartPandaDoPartitionOnCPU]	key:SHOWLOG keySize:8 val:1 dump to buckeId:[6]
+[4][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7 val:1 dump to buckeId:[4]
+[4][StartPandaDoPartitionOnCPU]	key:STRLEN keySize:7 val:1 dump to buckeId:[4]
+[4][StartPandaDoPartitionOnCPU]	key:STRCPY keySize:7 val:1 dump to buckeId:[8]
+[8][StartPandaPartitionSendData]	bucket index:3 curlen:0 maxlen:20 keySize:0 valSize:0 
+[8][StartPandaPartitionSendData]	bucket index:4 curlen:9 maxlen:20 keySize:99 valSize:36 
+[4][StartPandaDoPartitionOnCPU]	key:TOUPPER keySize:8 val:1 dump to buckeId:[4]
+[4][StartPandaDoPartitionOnCPU]	key:SIZEOF keySize:7 val:1 dump to buckeId:[6]
+[4][StartPandaDoPartitionOnCPU]	[0][pollUnsent]	start to send out a data from 0 to 5 . data: curlen:-1  keySize:-1  valSize:-1
+[0][pollUnsent]	start to send out a data from 0 to 6 . data: curlen:6  keySize:51  valSize:24
+[8][pollUnsent]	start to send out a data from 8 to 2 . data: curlen:4  keySize:42  valSize:16[8]
+[StartPandaPartitionSendData]	bucket index:5 curlen:0 maxlen:20 keySize:0 valSize:0 
+[8][StartPandaPartitionSendData]	bucket index:6 curlen:6 maxlen:20 keySize:51 valSize:24 
+key:SIZEOF keySize:7 val:1 dump to buckeId:[6]
+[4][StartPandaDoPartitionOnCPU]	key:ELEMENTS keySize:9 val:1 dump to buckeId:[4]
+[4][StartPandaDoPartitionOnCPU]	key:MALLOC keySize:7 val:1 dump to buckeId:[8]
+[4][StartPandaDoPartitionOnCPU]	key:SPRINTF keySize:8 val:1 dump to buckeId:[0]
+[4][StartPandaDoPartitionOnCPU]	Panda adding Key/Values to bucket is done on local host.
+
+[8][StartPandaPartitionSendData]	bucket index:7 curlen:0 maxlen:20 keySize:0 valSize:0 
+[8][StartPandaPartitionSendData]	bucket index:8 curlen:4 maxlen:20 keySize:32 valSize:16 
+[0][pollUnsent]	start to send out a data from 0 to 7 . data: curlen:-1  keySize:-1  valSize:-1
+[0][pollUnsent]	start to send out a data from 0 to 8 . data: curlen:4  keySize:32  valSize:16
+[0][pollUnsent]	start to send out a data from 0 to 9 . data: curlen:-1  keySize:-1  valSize:-1
+[6][run]	->recved countReqs from 0, maxlen:6 keysize:51 valsize:24
+[7][run]	->recved countReqs from 0, maxlen:-1 keysize:-1 valsize:-1
+[7][run]	->recved countReqs from 1, maxlen:-1 keysize:-1 valsize:-1
+[7][run]	->recved countReqs from 2, maxlen:-1 keysize:-1 valsize:-1
+[7][run]	->recved countReqs from 3, maxlen:-1 keysize:-1 valsize:-1
+[5][run]	->recved countReqs from 0, maxlen:-1 keysize:-1 valsize:-1
+[5][run]	->recved countReqs from 1, maxlen:-1 keysize:-1 valsize:-1
+[5][run]	->recved countReqs from 2, maxlen:-1 keysize:-1 valsize:-1
+[5][run]	->recved countReqs from 3, maxlen:-1 keysize:-1 valsize:-1
+[4][StartPandaPartitionSendData]	bucket index:0 curlen:2 maxlen:20 keySize:16 valSize:8 
+[4][StartPandaPartitionSendData]	bucket index:1 curlen:0 maxlen:20 keySize:0 valSize:0 
+[9][run]	->recved countReqs from 0, maxlen:-1 keysize:-1 valsize:-1
+[9][run]	->recved countReqs from 1, maxlen:-1 keysize:-1 valsize:-1
+[9][run]	->recved countReqs from 2, maxlen:-1 keysize:-1 valsize:-1
+[9][run]	->recved countReqs from 3, maxlen:-1 keysize:-1 valsize:-1
+[8][StartPandaPartitionSendData]	bucket index:9 curlen:0 maxlen:20 keySize:0 valSize:0 
+[8][pollUnsent]	start to send out a data from 8 to 3 . data: curlen:-1  keySize:-1  valSize:-1
+[8][pollUnsent]	start to send out a data from 8 to 4 . data: curlen:9  keySize:99  valSize:36
+[0][run]	->recved countReqs from 0, maxlen:2 keysize:16 valsize:8
+[6][run]	->recved countReqs from 1, maxlen:6 keysize:51 valsize:24
+[6][run]	->recved countReqs from 2, maxlen:6 keysize:51 valsize:24
+[6][run]	->recved countReqs from 3, maxlen:6 keysize:51 valsize:24
+[4][StartPandaPartitionSendData]	[4][pollUnsent]	start to send out a data from 4 to 0 . data: curlen:2  keySize:16  valSize:8
+bucket index:2 curlen:4 maxlen:20 keySize:42 valSize:16 
+[8][pollUnsent]	start to send out a data from 8 to 5 . data: curlen:-1  keySize:-1  valSize:-1
+[4][StartPandaPartitionSendData]	bucket index:3 curlen:0 maxlen:20 keySize:0 valSize:0 
+[4][4][pollUnsent]	start to send out a data from 4 to 1 . data: curlen:-1  keySize:-1  valSize:-1
+[1][run]	->recved countReqs from 4, maxlen:-1 keysize:-1 valsize:-1
+[1][run]	->recved countReqs from 5, maxlen:-1 keysize:-1 valsize:-1
+[1][run]	->recved countReqs from 6, maxlen:-1 keysize:-1 valsize:-1
+[1][run]	->recved countReqs from 7, maxlen:-1 keysize:-1 valsize:-1
+[1][run]	->recved countReqs from 8, maxlen:-1 keysize:-1 valsize:-1
+[1][run]	->recved countReqs from 9, maxlen:-1 keysize:-1 valsize:-1
+[8][pollUnsent]	start to send out a data from 8 to 6 . data: curlen:6  keySize:51  valSize:24
+[8][pollUnsent]	start to send out a data from 8 to 7 . data: curlen:-1  keySize:-1  valSize:-1
+[8][pollUnsent]	start to send out a data from 8 to 8 . data: curlen:4  keySize:32  valSize:16
+[8][pollUnsent]	start to send out a data from 8 to 9 . data: curlen:-1  keySize:-1  valSize:-1
+[StartPandaPartitionSendData]	bucket index:4 curlen:9 maxlen:20 keySize:99 valSize:36 
+[4][4][pollUnsent]	[StartPandaPartitionSendData]	start to send out a data from 4 to 2 . data: curlen:4  keySize:42  valSize:16
+[1][run]	I am looping numSentBuckets:10 finishedWorkers:10 commSize:10
+[2][run]	->recved countReqs from 4, maxlen:4 keysize:42 valsize:16
+[0][run]	->recved countReqs from 1, maxlen:2 keysize:16 valsize:8
+[0][run]	->recved countReqs from 2, maxlen:2 keysize:16 valsize:8
+bucket index:5 curlen:0 maxlen:20 keySize:0 valSize:0 
+[4][StartPandaPartitionSendData]	bucket index:6 curlen:6 maxlen:20 keySize:51 valSize:24 
+[0][run]	->recved countReqs from 3, maxlen:2 keysize:16 valsize:8
+[4][StartPandaPartitionSendData]	bucket index:7 curlen:0 maxlen:20 keySize:0 valSize:0 
+[4][StartPandaPartitionSendData]	bucket index:8 curlen:4 maxlen:20 keySize:32 valSize:16 
+[4][StartPandaPartitionSendData]	bucket index:9 curlen:0 maxlen:20 keySize:0 valSize:0 
+[0][run]	->recved countReqs from 4, maxlen:2 keysize:16 valsize:8
+[0][run]	->recved countReqs from 5, maxlen:2 keysize:16 valsize:8
+[0][run]	->recved countReqs from 6, maxlen:2 keysize:16 valsize:8
+[1][ExecutePandaSortBucket]	numRecvedBuckets:0
+[4][pollUnsent]	start to send out a data from 4 to 3 . data: curlen:-1  keySize:-1  valSize:-1
+[4][pollUnsent]	start to send out a data from 4 to 4 . data: curlen:9  keySize:99  valSize:36
+[0][run]	->recved countReqs from 7, maxlen:2 keysize:16 valsize:8
+[0][run]	->recved countReqs from 8, maxlen:2 keysize:16 valsize:8
+[0][run]	->recved countReqs from 9, maxlen:2 keysize:16 valsize:8
+[3][run]	->recved countReqs from 4, maxlen:-1 keysize:-1 valsize:-1
+[3][run]	->recved countReqs from 5, maxlen:-1 keysize:-1 valsize:-1
+[3][run]	->recved countReqs from 6, maxlen:-1 keysize:-1 valsize:-1
+[3][run]	->recved countReqs from 7, maxlen:-1 keysize:-1 valsize:-1
+[3][run]	->recved countReqs from 8, maxlen:-1 keysize:-1 valsize:-1
+[3][run]	->recved countReqs from 9, maxlen:-1 keysize:-1 valsize:-1
+[2][run]	->recved countReqs from 5, maxlen:4 keysize:42 valsize:16
+[2][run]	->recved countReqs from 6, maxlen:4 keysize:42 valsize:16
+[2][run]	->recved countReqs from 7, maxlen:4 keysize:42 valsize:16
+[4][pollUnsent]	start to send out a data from 4 to 5 . data: curlen:-1  keySize:-1  valSize:-1
+[4][pollUnsent]	start to send out a data from 4 to 6 . data: curlen:6  keySize:51  valSize:24
+[4][pollUnsent]	start to send out a data from 4 to 7 . data: curlen:-1  keySize:-1  valSize:-1
+[5][run]	->recved countReqs from 4, maxlen:-1 keysize:-1 valsize:-1
+[5][run]	->recved countReqs from 5, maxlen:-1 keysize:-1 valsize:-1
+[5][run]	->recved countReqs from 6, maxlen:-1 keysize:-1 valsize:-1
+[5][run]	->recved countReqs from 7, maxlen:-1 keysize:-1 valsize:-1
+[5][run]	->recved countReqs from 8, maxlen:-1 keysize:-1 valsize:-1
+[5][run]	->recved countReqs from 9, maxlen:-1 keysize:-1 valsize:-1
+[6][run]	->recved countReqs from 4, maxlen:6 keysize:51 valsize:24
+[6][run]	->recved countReqs from 5, maxlen:6 keysize:51 valsize:24
+[2][run]	->recved countReqs from 8, maxlen:4 keysize:42 valsize:16
+[2][run]	->recved countReqs from 9, maxlen:4 keysize:42 valsize:16
+[0][run]	I am looping numSentBuckets:10 finishedWorkers:10 commSize:10
+[0][ExecutePandaSortBucket]	numRecvedBuckets:10
+[3][run]	I am looping numSentBuckets:10 finishedWorkers:10 commSize:10
+[7][run]	->recved countReqs from 4, maxlen:-1 keysize:-1 valsize:-1
+[7][run]	->recved countReqs from 5, maxlen:-1 keysize:-1 valsize:-1
+[7][run]	->recved countReqs from 6, maxlen:-1 keysize:-1 valsize:-1
+[7][run]	->recved countReqs from 7, maxlen:-1 keysize:-1 valsize:-1
+[7][run]	->recved countReqs from 8, maxlen:-1 keysize:-1 valsize:-1
+[7][run]	->recved countReqs from 9, maxlen:-1 keysize:-1 valsize:-1
+[4][pollUnsent]	start to send out a data from 4 to 8 . data: curlen:4  keySize:32  valSize:16
+[4][pollUnsent]	start to send out a data from 4 to 9 . data: curlen:-1  keySize:-1  valSize:-1
+[7][run]	I am looping numSentBuckets:10 finishedWorkers:10 commSize:10
+[8][run]	->recved countReqs from 0, maxlen:4 keysize:32 valsize:16
+[8][run]	->recved countReqs from 1, maxlen:4 keysize:32 valsize:16
+[8][run]	->recved countReqs from 2, maxlen:4 keysize:32 valsize:16
+[5][run]	I am looping numSentBuckets:10 finishedWorkers:10 commSize:10
+[5][ExecutePandaSortBucket]	numRecvedBuckets:0
+[9][run]	->recved countReqs from 4, maxlen:-1 keysize:-1 valsize:-1
+[9][run]	->recved countReqs from 5, maxlen:-1 keysize:-1 valsize:-1
+[9][run]	->recved countReqs from 6, maxlen:-1 keysize:-1 valsize:-1
+[9][run]	->recved countReqs from 7, maxlen:-1 keysize:-1 valsize:-1
+[9][run]	->recved countReqs from 8, maxlen:-1 keysize:-1 valsize:-1
+[9][run]	->recved countReqs from 9, maxlen:-1 keysize:-1 valsize:-1
+[9][run]	I am looping numSentBuckets:10 finishedWorkers:10 commSize:10
+[6][run]	->recved countReqs from 6, maxlen:6 keysize:51 valsize:24
+[6][run]	->recved countReqs from 7, maxlen:6 keysize:51 valsize:24
+[6][run]	->recved countReqs from 8, maxlen:6 keysize:51 valsize:24
+[2][run]	I am looping numSentBuckets:10 finishedWorkers:10 commSize:10
+[0][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:BARRIER  val:10
+[0][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:SPRINTF  val:10
+[3][ExecutePandaSortBucket]	numRecvedBuckets:0
+[7][ExecutePandaSortBucket]	numRecvedBuckets:0
+[8][run]	->recved countReqs from 3, maxlen:4 keysize:32 valsize:16
+[8][run]	->recved countReqs from 4, maxlen:4 keysize:32 valsize:16
+[8][run]	->recved countReqs from 5, maxlen:4 keysize:32 valsize:16
+[8][run]	->recved countReqs from 6, maxlen:4 keysize:32 valsize:16
+[8][run]	->recved countReqs from 7, maxlen:4 keysize:32 valsize:16
+[8][run]	->recved countReqs from 8, maxlen:4 keysize:32 valsize:16
+[8][run]	->recved countReqs from 9, maxlen:4 keysize:32 valsize:16
+[9][ExecutePandaSortBucket]	numRecvedBuckets:0
+[6][run]	->recved countReqs from 9, maxlen:6 keysize:51 valsize:24
+[6][run]	I am looping numSentBuckets:10 finishedWorkers:10 commSize:10
+[2][ExecutePandaSortBucket]	numRecvedBuckets:10
+[2][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:SETENABLECPU  val:10
+[2][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:RETURN  val:10
+[2][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:PROCESSING  val:20
+[4][run]	->recved countReqs from 0, maxlen:9 keysize:99 valsize:36
+[4][run]	->recved countReqs from 1, maxlen:9 keysize:99 valsize:36
+[8][run]	I am looping numSentBuckets:10 finishedWorkers:10 commSize:10
+[6][ExecutePandaSortBucket]	numRecvedBuckets:10
+[4][run]	->recved countReqs from 2, maxlen:9 keysize:99 valsize:36
+[4][run]	->recved countReqs from 3, maxlen:9 keysize:99 valsize:36
+[4][run]	->recved countReqs from 4, maxlen:9 keysize:99 valsize:36
+[8][ExecutePandaSortBucket]	numRecvedBuckets:10
+[6][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:SETENABLEGPU  val:10
+[6][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:EXECUTE  val:10
+[6][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:SHOWLOG  val:20
+[6][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:SIZEOF  val:20
+[8][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:STRINPUT  val:10
+[8][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:FINALIZE  val:10
+[8][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:STRCPY  val:10
+[8][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:MALLOC  val:10
+[4][run]	->recved countReqs from 5, maxlen:9 keysize:99 valsize:36
+[4][run]	->recved countReqs from 6, maxlen:9 keysize:99 valsize:36
+[4][run]	->recved countReqs from 7, maxlen:9 keysize:99 valsize:36
+[4][run]	->recved countReqs from 8, maxlen:9 keysize:99 valsize:36
+[4][run]	->recved countReqs from 9, maxlen:9 keysize:99 valsize:36
+[4][run]	I am looping numSentBuckets:10 finishedWorkers:10 commSize:10
+[4][ExecutePandaSortBucket]	numRecvedBuckets:10
+[4][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:PANDAMPIMESSAGE  val:10
+[4][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:SETMESSAGE  val:10
+[4][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:PANDAMAPREDUCEJOB  val:10
+[4][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:MAPREDUCEJOB  val:10
+[4][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:FINISHING  val:10
+[4][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:STRLEN  val:20
+[4][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:TOUPPER  val:10
+[4][PandaCPUEmitReduceOutput]	[panda_reduce_output]:key:ELEMENTS  val:10
