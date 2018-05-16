@@ -1,6 +1,6 @@
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*    Panda Code V0.60                                            11/04/2017 */
+/*    Panda Code V0.42                                            11/04/2017 */
 /*                                                       huili@ruijie.com.cn */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -16,10 +16,6 @@
 #include <panda/PartialReducer.h>
 #include <panda/PandaMapReduceJob.h>
 #include <panda/EmitConfiguration.h>
-
-#include <cudacpp/DeviceProperties.h>
-#include <cudacpp/Runtime.h>
-#include <cudacpp/Event.h>
 
 #include <algorithm>
 #include <vector>

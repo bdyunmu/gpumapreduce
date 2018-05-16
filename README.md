@@ -22,4 +22,4 @@ steps to run terasort:<br>
 	2)make terasort<br>
 	3)cd bin<br>
 	4)mpirun -host node1,node2 -np 2 ./teragen 10M /tmp<br>
-	5)mpirun -host node1,node2 -np 2 ./tmp ./tmp<br>
+	5)mpirun -host node1,node2 -np 2 ./terasort ./tmp/terasort_in ./tmp/terasort_out<br>
