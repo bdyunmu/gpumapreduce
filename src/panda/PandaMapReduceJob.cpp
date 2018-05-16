@@ -509,7 +509,6 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 
     MessageThread->join();
     delete MessageThread;
-    //ShowLog("MessageThread Join() completed.");
   }//void
 
   PandaMapReduceJob::PandaMapReduceJob(int argc,
@@ -519,7 +518,6 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
                                       const bool syncOnPartitionSends)
     : MapReduceJob(argc, argv)
   {
-	syncPartSends = true;
   }
 
   PandaMapReduceJob::~PandaMapReduceJob()
@@ -616,6 +614,7 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	  AddReduceTask4CPU(this->pCPUContext,this->pNodeContext,start_task_id,end_task_id);
   }//void
 
+#if 0
   int PandaMapReduceJob::GetHash(const char* Key, int KeySize, int commSize)
   {  
         /////FROM : http://courses.cs.vt.edu/~cs2604/spring02/Projects/4/elfhash.cpp
@@ -629,7 +628,7 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
         }//while            
         return (int) ((int)h % commSize);
   }//int
-
+#endif
   void PandaMapReduceJob::PandaAddKeyValue2Bucket(int bucketId, const char*key, int keySize, const char*val, int valSize)
   {
 
@@ -787,7 +786,7 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
 	  for (int i=0; i<this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len; i++){
 		char *key	 = (char *)(sorted_intermediate_keyvals_arr1[i].key);
 		int keySize  = sorted_intermediate_keyvals_arr1[i].keySize;
-		int bucketId = GetHash(key,keySize,this->commSize);
+		int bucketId = partition->GetHash(key,keySize,this->commSize);
 		val_t *vals  = sorted_intermediate_keyvals_arr1[i].vals;
 		int len = sorted_intermediate_keyvals_arr1[i].val_arr_len;
 		for (int j=0;j<len;j++){

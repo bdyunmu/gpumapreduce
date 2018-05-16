@@ -1,15 +1,20 @@
 #ifndef __PANDA_SUPMAPREDUCEJOB_H__
 #define __PANDA_SUPMAPREDUCEJOB_H__
 
-#include <vector>
+//#include <vector>
+
 namespace panda
 {
   class Message;
   class Chunk;
+  class Partitioner;
+
   class MapReduceJob
   {
     protected:
-      Message         * messager;
+      Message *messager;
+      Partitioner *partition;
+
       int commRank, commSize, deviceNum;
       void setDevice();
 
@@ -17,9 +22,11 @@ namespace panda
       MapReduceJob(int & argc, char **&argv);
       MapReduceJob(int & argc, char **&argv, const bool bl);
       virtual ~MapReduceJob();
-      inline Message          * getMessage()        { return messager;        }
-      inline int               getDeviceNumber()    { return deviceNum;       }
-      inline void setMessage       (Message       * const pMessage)         { messager       =	pMessage;        }
+      inline Message    *getMessage()        {return messager;}
+      inline int        getDeviceNumber()    {return deviceNum;}
+      inline void setMessage    (Message  *const pMessage)  {messager =	pMessage;}
+      inline void setPartition  (Partitioner *const pPartition) {partition = pPartition;}
+
       virtual void addInput(Chunk * chunk) = 0;
       virtual void addCPUMapTasks(Chunk *chunk) = 0;
       virtual void addGPUMapTasks(Chunk *chunk) = 0;

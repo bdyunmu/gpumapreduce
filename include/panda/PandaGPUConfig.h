@@ -3,7 +3,6 @@
 namespace panda{
 
 class PandaGPUConfig{
-
 };
 
 }

@@ -9,22 +9,12 @@ Developer: Hui Li (huili@ruijie.com.cn)
 */
 
 
-#include <mpi.h>
-#include <panda/PreLoadedPandaChunk.h>
-#include <panda/PandaMessage.h>
-#include <panda/PandaMapReduceJob.h>
-#include <panda/IntIntSorter.h>
-#include <cudacpp/Event.h>
-#include <cudacpp/Runtime.h>
-#include <cudacpp/Stream.h>
-#include <oscpp/Timer.h>
 #include <vector>
 #include <cstdlib>
 #include <cstdio>
 #include <ctype.h>
-#include "PandaAPI.h"
-//#include "terasort.h"
 
+#include "PandaAPI.h"
 
 __device__ void panda_gpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_gpu_context pgc){
 }
@@ -53,15 +43,3 @@ void panda_cpu_map(void *KEY, void*VAL, int keySize, int valSize, panda_cpu_cont
 void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context* pcc){
 
 }
-
-int main(int argc, char** argv) 
-{		
-		if (argc != 2)
-		{
-			ShowLog("terasort");
-			ShowLog("usage: %s [num of lines] ", argv[0]);
-			exit(-1);//[Dimensions] [numClusters]
-		}//if
-
-		return 0;
-}//	

@@ -1,5 +1,5 @@
-#ifndef __PANDA_FIXEDSIZEMessage_H__
-#define __PANDA_FIXEDSIZEMessage_H__
+#ifndef __PANDA_MESSAGE_H__
+#define __PANDA_MESSAGE_H__
 
 #include <mpi.h>
 #include <cuda.h>
@@ -23,55 +23,21 @@ namespace panda
       	std::vector<PandaMessagePackage *> needsToBeSent;
       	std::vector<PandaMessagePackage *> pendingIO;
 
-      	bool innerLoopDone;
       	bool copySendData;
-      	int zeroCount[2];
-      	std::vector<MPI_Request> zeroReqs;
-
-      	int singleKeySize, singleValSize;
-      	char * finalKeys, * finalVals;
-      	int finalKeySize, finalValSize;
-      	int finalKeySpace, finalValSpace;
-
       	bool pollUnsent();
       	void pollPending();
-      	void pollSends();
-      	void poll(int & finishedWorkers,
-                bool * const workerDone,
-                bool * const recvingCount,
-                int * const counts,
-                int ** keyRecv,
-                int ** valRecv,
-                MPI_Request * recvReqs);
-      	//void privateAdd(const void * const keys, const void * const vals, const int keySize, const int valSize);
-      	//void grow(const int size, const int finalSize, int & finalSpace, char *& finals);
 
     public:
-      	PandaMessage(const int pSingleKeySize, const int pSingleValSize, const bool pCopySendData = false);
      	PandaMessage(const bool pCopySendData); 
 	virtual ~PandaMessage();
 
-      	virtual oscpp::AsyncIORequest * sendTo(const int rank,
-                                             void * const keys,
-                                             void * const vals,
-                                             const int keySize,
-                                             const int valSize);
-
-	virtual oscpp::AsyncIORequest * sendTo(const int rank,
-                                             void * const keys,
-                                             void * const vals,
-			 int * const keyPosKeySizeValPosValSize,
-                                             const int keySize,
-                                             const int valSize,
-					 const int maxlen);
-
-      	virtual oscpp::AsyncIORequest * sendTo(const int rank,
-                                             void * const keys,
-                                             void * const vals,
-                                             int * const keySizes,
-                                             int * const valSizes,
-                                             const int numKeys,
-                                             const int numVals);
+	virtual oscpp::AsyncIORequest    *sendTo(const int rank,
+                                             	void * const keys,
+                                             	void * const vals,
+			 			int * const keyPosKeySizeValPosValSize,
+                                             	const int keySize,
+                                             	const int valSize,
+					 	const int maxlen);
 
  	virtual void setPnc(panda_node_context *pnc);
       	virtual void MsgInit();

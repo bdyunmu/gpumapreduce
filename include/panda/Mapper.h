@@ -1,5 +1,5 @@
-#ifndef __GPMR_MAPPER_H__
-#define __GPMR_MAPPER_H__
+#ifndef __PANDA_MAPPER_H__
+#define __PANDA_MAPPER_H__
 
 #include <panda/EmitConfiguration.h>
 #include <panda/PandaCPUConfig.h>
