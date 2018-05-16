@@ -21,7 +21,7 @@ INCFLAGS   += -I/usr/include/  -I/usr/local/cuda/include
 INCFLAGS   += -I../../include  -I../../include/panda
 LDFLAGS    += -L/usr/local/cuda/lib64/
 
-APP_TERASORT_CPP_FILES:= terasort_main.cpp Unsigned16.cpp Random16.cpp Long.cpp TeraInputFormat.cpp
+APP_TERASORT_CPP_FILES:= terasort_main.cpp Unsigned16.cpp Random16.cpp TeraSortPartitioner.cpp TeraInputFormat.cpp
 APP_TERASORT_CU_FILES:= terasort_api.cu
 
 OS_CPP_FILES 	:= $(wildcard ../../src/oscpp/*.cpp)

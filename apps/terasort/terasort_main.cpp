@@ -15,6 +15,7 @@
 #include <assert.h>
 
 #include "TeraInputFormat.h"
+#include "TeraSortPartitioner.h"
 
 using namespace std;
 
@@ -92,7 +93,8 @@ int main(int argc, char ** argv)
 	long recordsPerPartition = outputSizeInBytes/100/(long)size;
 	long numRecords = recordsPerPartition * size;
 	assert(recordsPerPartition < INT_MAX);
-	
+
+	job->setPartition(new TeraSortPartitioner());	
 	job->setMessage(new panda::PandaMPIMessage(true));
 
 	job->setEnableCPU(true);
