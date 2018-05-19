@@ -10,28 +10,17 @@
 */
 
 #include "Panda.h"
-
-#ifdef _WIN32 
-#include <windows.h> 
-#include <time.h>
-#elif MACOS 
-#include <sys/param.h> 
-#include <sys/sysctl.h> 
-#elif __linux
 #include <unistd.h> 
 #include <sys/time.h>
-#endif 
 
-#ifndef __PANDAUTILS_CU__
-#define __PANDAUTILS_CU__
+#ifndef __PANDA_UTILS_CU__
+#define __PANDA_UTILS_CU__
 
 int getGPUCoresNum() { 
-	//assert(tid<total);
 	int arch_cores_sm[3] = {1, 8, 32 };
 	cudaDeviceProp gpu_dev;
 	int tid = 0;
 	cudaGetDeviceProperties(&gpu_dev, tid);
-
 	int sm_per_multiproc = 1;
 	if (gpu_dev.major == 9999 && gpu_dev.minor == 9999)
 			sm_per_multiproc = 1;
@@ -39,9 +28,8 @@ int getGPUCoresNum() {
 			sm_per_multiproc = arch_cores_sm[gpu_dev.major];
 	else
 			sm_per_multiproc = arch_cores_sm[2];
-
 	//return ((gpu_dev.multiProcessorCount)*(sm_per_multiproc));
-	ShowLog("Configure Device ID:%d: Device Name:%s MultProcessorCount:%d sm_per_multiproc:%d", 0, gpu_dev.name,gpu_dev.multiProcessorCount,sm_per_multiproc);
+	//ShowLog("Configure Device ID:%d: Device Name:%s MultProcessorCount:%d sm_per_multiproc:%d", 0, gpu_dev.name,gpu_dev.multiProcessorCount,sm_per_multiproc);
 	return ((gpu_dev.multiProcessorCount)*(sm_per_multiproc));
 }
 
@@ -83,36 +71,18 @@ int getCPUCoresNum() {
 
 }
 
-
-void DoDiskLog(const char *str){
-	FILE *fptr;
-	char file_name[128];
-	sprintf(file_name,"%s","panda.log");
-	fptr = fopen(file_name,"a");
-	fprintf(fptr,"[PandaDiskLog]\t\t:%s\n",str);
-	//fprintf(fptr,"%s",__VA_ARGS__);
-	fclose(fptr);
-	//printf("\n");
-}//void
-
 double PandaTimer(){
-
 	#ifndef _WIN32
 	static struct timeval tv;
 	gettimeofday(&tv,NULL);
 	double curTime = tv.tv_sec + tv.tv_usec/1000000.0;
-
-	//ShowLog("\t Panda CurTime:%f", curTime);
 	return curTime;
 	#else
-	//newtime = localtime( &long_time2 ); 
 	double curTime = GetTickCount(); 
-	//ShowLog("\t Panda CurTime:%f", curTime);
 	curTime /=1000.0;
 	return curTime;
 	#endif
-
-}
+}//double PandaTimer()
 
 void __checkCudaErrors(cudaError err, const char *file, const int line )
 {
@@ -123,14 +93,4 @@ void __checkCudaErrors(cudaError err, const char *file, const int line )
 	}
 }
 
-
-//--------------------------------------------------------
-//start_task_id a timer
-//param	: start_row_id_tv
-//--------------------------------------------------------
-
-//--------------------------------------------------------
-//end a timer, and print out a message
-//--------------------------------------------------------
-
-#endif //__PANDAUTILS_CU__
+#endif //__PANDA_UTILS_CU__

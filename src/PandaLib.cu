@@ -10,15 +10,15 @@
 
  */
 
-#ifndef __PANDALIB_CU__
-#define __PANDALIB_CU__
+#ifndef __PANDA_LIB_CU__
+#define __PANDA_LIB_CU__
 
 #include "Panda.h"
 #include "PandaAPI.h"
 
 extern int gCommRank;
 
-__global__ void ExecutePandaGPUMapPartitioner(panda_gpu_context pgc)
+__global__ void RunPandaGPUMapPartitioner(panda_gpu_context pgc)
 {
 	//ShowLog2("gridDim.x:%d gridDim.y:%d gridDim.z:%d blockDim.x:%d blockDim.y:%d blockDim.z:%d blockIdx.x:%d blockIdx.y:%d blockIdx.z:%d\n",
 	// 		gridDim.x,gridDim.y,gridDim.z,blockDim.x,blockDim.y,blockDim.z,blockIdx.x,blockIdx.y,blockIdx.z);
@@ -37,7 +37,7 @@ __global__ void ExecutePandaGPUMapPartitioner(panda_gpu_context pgc)
 
 	int buddy_arr_len = num_records_per_thread;
 	int * int_arr = (int*)malloc((4+buddy_arr_len)*sizeof(int));
-	if(int_arr==NULL){ GpuShowError("there is not enough GPU memory\n"); return;}
+	if(int_arr==NULL){ GpuErrorLog("there is not enough GPU memory\n"); return;}
 
 	int *shared_arr_len = int_arr;
 	int *shared_buff_len = int_arr+1;
@@ -77,10 +77,10 @@ __global__ void ExecutePandaGPUMapPartitioner(panda_gpu_context pgc)
 
 void ExecutePandaGPUMapPartitioner(panda_gpu_context pgc, dim3 grids, dim3 blocks)
 {
-   	ExecutePandaGPUMapPartitioner<<<grids,blocks>>>(pgc);
+   	RunPandaGPUMapPartitioner<<<grids,blocks>>>(pgc);
 }
 
-void* ExecutePandaCPUMapThread(void * ptr)
+void* RunPandaCPUMapThread(void * ptr)
 {
 
 	panda_cpu_task_info_t *panda_cpu_task_info = (panda_cpu_task_info_t *)ptr;
@@ -126,7 +126,7 @@ void* ExecutePandaCPUMapThread(void * ptr)
 }//int 
 
 
-void ExecutePandaReduceTasksOnGPU(panda_gpu_context *pgc)
+void ExecutePandaGPUReduceTasks(panda_gpu_context *pgc)
 {
 	if (pgc->sorted_key_vals.d_sorted_keyvals_arr_len <= 0)
 	return;
@@ -157,7 +157,7 @@ void ExecutePandaReduceTasksOnGPU(panda_gpu_context *pgc)
 		pgc->sorted_key_vals.totalKeySize, 
 		pgc->sorted_key_vals.totalValSize);
 
-	PandaReducePartitioner<<<grids,blocks>>>(*pgc);
+	RunPandaGPUReducePartitioner<<<grids,blocks>>>(*pgc);
 
 	cudaMemcpy(pgc->output_key_vals.h_reduced_keyval_arr,
 		pgc->reduced_key_vals.d_reduced_keyval_arr,
@@ -215,9 +215,9 @@ void ExecutePandaReduceTasksOnGPU(panda_gpu_context *pgc)
 
 }//void
 
-__global__ void PandaReducePartitioner(panda_gpu_context pgc)
+__global__ void RunPandaGPUReducePartitioner(panda_gpu_context pgc)
 {
-	//ShowError("ReducePartitioner Panda_GPU_Context");
+	//ErrorLog("ReducePartitioner Panda_GPU_Context");
 	int num_records_per_thread = (pgc.sorted_key_vals.d_sorted_keyvals_arr_len + (gridDim.x*blockDim.x*blockDim.y)-1)/(gridDim.x*blockDim.x*blockDim.y);
 
 	int block_start_idx = num_records_per_thread * blockIdx.x * blockDim.x * blockDim.y;
@@ -254,13 +254,13 @@ __global__ void PandaReducePartitioner(panda_gpu_context pgc)
 			val_t_arr[index-start_idx].val = (char*)pgc.sorted_key_vals.d_sorted_vals_shared_buff + valPos;
 		}   //for
 		if( end_idx - start_idx == 0) {
-		GpuShowError("gpu_reduce valCount ==0");
+		GpuErrorLog("gpu_reduce valCount ==0");
 		}//if
 		else panda_gpu_reduce(key, val_t_arr, keySize, end_idx-start_idx, pgc);
 	}//for
 }
 
-__global__ void PandaRunGPUMapTasks(panda_gpu_context pgc, int curIter, int totalIter)
+__global__ void RunPandaGPUMapTasks(panda_gpu_context pgc, int curIter, int totalIter)
 {
 
 	//ShowLog("gridDim.x:%d gridDim.y:%d gridDim.z:%d blockDim.x:%d blockDim.y:%d blockDim.z:%d blockIdx.x:%d blockIdx.y:%d blockIdx.z:%d\n",
@@ -308,7 +308,7 @@ void *RunPandaCPUCombinerThread(void *ptr){
         int shared_buff_len = *kv_arr_p->shared_buff_len;
 
 	val_t *val_t_arr = (val_t *)malloc(sizeof(val_t)*unmerged_shared_arr_len);
-	if (val_t_arr == NULL) ShowError("there is no enough memory");
+	if (val_t_arr == NULL) ErrorLog("there is no enough memory");
 	int num_keyval_pairs_after_combiner = 0;
 	int total_intermediate_keyvalue_pairs = 0;
 
@@ -324,7 +324,7 @@ void *RunPandaCPUCombinerThread(void *ptr){
 		char *iKey = shared_buff + first_kv_p->keyPos;
 		//char *iVal = shared_buff + first_kv_p->valPos;
 		if((first_kv_p->keyPos%4!=0)||(first_kv_p->valPos%4!=0)){
-			ShowError("keyPos or valPos is not aligned with 4 bytes, results could be wrong");
+			ErrorLog("keyPos or valPos is not aligned with 4 bytes, results could be wrong");
 		}
 	
 		int index = 0;
@@ -374,12 +374,10 @@ void *RunPandaCPUCombinerThread(void *ptr){
 	return NULL;
 }
 
-void RunGPUMapTasksHost(panda_gpu_context pgc, int curIter, int totalIter, dim3 grids, dim3 blocks){
-	PandaRunGPUMapTasks<<<grids,blocks>>>(pgc, totalIter -1 - curIter, totalIter);
+void ExecutePandaGPUMapTasks(panda_gpu_context pgc, int curIter, int totalIter, dim3 grids, dim3 blocks){
+	RunPandaGPUMapTasks<<<grids,blocks>>>(pgc, totalIter -1 - curIter, totalIter);
 	cudaDeviceSynchronize();
 }//void
-
-__global__ void GPUCombiner(panda_gpu_context pgc);
 
 void ExecutePandaGPUCombiner(panda_gpu_context * pgc){
 
@@ -390,16 +388,16 @@ void ExecutePandaGPUCombiner(panda_gpu_context * pgc){
 	int numBlocks = (numGPUCores*16+(blocks.x*blocks.y)-1)/(blocks.x*blocks.y);
     	dim3 grids(numBlocks, 1);
 
-	GPUCombiner<<<grids,blocks>>>(*pgc);
+	RunPandaGPUCombiner<<<grids,blocks>>>(*pgc);
 
 	cudaThreadSynchronize();
 }
 
 void ExecutePandaCPUCombiner(panda_cpu_context *pcc){
 
-	if (pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p == NULL)	{ ShowError("intermediate_keyval_arr_arr_p == NULL"); exit(-1); }
-	if (pcc->intermediate_key_vals.intermediate_keyval_arr_arr_len <= 0)	{ ShowError("no any input keys"); exit(-1); }
-	if (pcc->num_cpus_cores <= 0)	{ ShowError("pcc->num_cpus == 0"); exit(-1); }
+	if (pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p == NULL)	{ ErrorLog("intermediate_keyval_arr_arr_p == NULL"); exit(-1); }
+	if (pcc->intermediate_key_vals.intermediate_keyval_arr_arr_len <= 0)	{ ErrorLog("no any input keys"); exit(-1); }
+	if (pcc->num_cpus_cores <= 0)	{ ErrorLog("pcc->num_cpus == 0"); exit(-1); }
 
 	//-------------------------------------------------------
 	//1, prepare buffer to store intermediate results
@@ -425,13 +423,13 @@ void ExecutePandaCPUCombiner(panda_cpu_context *pcc){
 		pcc->panda_cpu_task_thread_info[tid].end_task_idx	= end_task_idx;
 		
 		if (pthread_create(&(pcc->panda_cpu_task_thread[tid]),NULL,RunPandaCPUCombinerThread,(char *)&(pcc->panda_cpu_task_thread_info[tid]))!=0) 
-			ShowError("Thread creation failed!");
+			ErrorLog("Thread creation failed!");
 		start_task_idx = end_task_idx;
 	}//for
 	
 	for (int tid = 0; tid<num_threads; tid++){
 		void *exitstat;
-		if (pthread_join(pcc->panda_cpu_task_thread[tid],&exitstat)!=0) ShowError("joining failed");
+		if (pthread_join(pcc->panda_cpu_task_thread[tid],&exitstat)!=0) ErrorLog("joining failed");
 	}//for
 }//void
 
@@ -469,7 +467,7 @@ void ExecutePandaSortBucket(panda_node_context *pnc)
 		for (int j=0; j<maxlen; j++){
 			
 			if( keyPosArray[j] + keySizeArray[j] > keyBuffSize ) 
-				ShowError("(keyPosArray[j]:%d + keySizeArray[j]:%d > keyBuffSize:%d)", keyPosArray[j], keySizeArray[j] , keyBuffSize);
+				ErrorLog("(keyPosArray[j]:%d + keySizeArray[j]:%d > keyBuffSize:%d)", keyPosArray[j], keySizeArray[j] , keyBuffSize);
 
 			key_0		= keyBuff + keyPosArray[j];
 			keySize_0	= keySizeArray[j];
@@ -515,7 +513,7 @@ void ExecutePandaSortBucket(panda_node_context *pnc)
 			kvalsp->val_arr_len = 1;
 
 			if (valPosArray[j] + valSizeArray[j] > valBuffSize)
-				ShowError("(valPosArray[j] + valSizeArray[j] > valBuffSize)");
+				ErrorLog("(valPosArray[j] + valSizeArray[j] > valBuffSize)");
 
 			val_0   = valBuff + valPosArray[j];
 			valSize_0 = valSizeArray[j];
@@ -596,7 +594,7 @@ void ExecutePandaCPUReduceTasks(panda_cpu_context *pcc){
 		keyvals_t *kv_p = (keyvals_t *)(&(pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[map_idx]));
 
 		if (kv_p->val_arr_len <=0) 
-			ShowError("kv_p->val_arr_len <=0");
+			ErrorLog("kv_p->val_arr_len <=0");
 		else	
 			panda_cpu_reduce(kv_p->key, kv_p->vals, kv_p->keySize, kv_p->val_arr_len, pcc);
 	}//for
@@ -643,17 +641,17 @@ __global__ void copyDataFromDevice2Host4Reduce(panda_gpu_context pgc)
 
 void PandaEmitCPUMapOutput(void *key, void *val, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx){
 	
-	if(map_task_idx >= pcc->input_key_vals.num_input_record) {	ShowError("error ! map_task_idx >= d_g_state->num_input_record");		return;	}
+	if(map_task_idx >= pcc->input_key_vals.num_input_record) {	ErrorLog("error ! map_task_idx >= d_g_state->num_input_record");		return;	}
 	keyval_arr_t *kv_arr_p = &(pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[map_task_idx]);
 
 	char *buff = (char*)(kv_arr_p->shared_buff);
 	
 	if (!((*kv_arr_p->shared_buff_pos) + keySize + valSize < (*kv_arr_p->shared_buff_len) - sizeof(keyval_pos_t)*((*kv_arr_p->shared_arr_len)+1))){
-		ShowWarn("Warning! not enough memory at CPU task:%d *kv_arr_p->shared_arr_len:%d current buff_size:%d KB",
+		WarnLog("Warning! not enough memory at CPU task:%d *kv_arr_p->shared_arr_len:%d current buff_size:%d KB",
 			map_task_idx,*kv_arr_p->shared_arr_len,(*kv_arr_p->shared_buff_len)/1024);
 
 		char *new_buff = (char*)malloc(sizeof(char)*((*kv_arr_p->shared_buff_len)*2));
-		if(new_buff==NULL){ ShowError("Error ! There is not enough memory to allocat!"); return; }
+		if(new_buff==NULL){ ErrorLog("Error ! There is not enough memory to allocat!"); return; }
 
 		memcpy(new_buff, buff, sizeof(char)*(*kv_arr_p->shared_buff_pos));
 		int blockSize = sizeof(keyval_pos_t)*(*kv_arr_p->shared_arr_len);
@@ -690,7 +688,7 @@ void PandaEmitCPUMapOutput(void *key, void *val, int keySize, int valSize, panda
 
 }//
 
-void PandaCPUEmitReduceOutput (	void*		key,
+void PandaEmitCPUReduceOutput (	void*		key,
 				void*		val,
 				int		keySize,
 				int		valSize,
@@ -708,7 +706,7 @@ void PandaCPUEmitReduceOutput (	void*		key,
 
 }
 
-__device__ void PandaGPUEmitMapOutput(void *key, void *val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx){
+__device__ void PandaEmitGPUMapOutput(void *key, void *val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx){
 	
 	keyval_arr_t *kv_arr_p = pgc->intermediate_key_vals.d_intermediate_keyval_arr_arr_p[map_task_idx];
 	char *buff = (char*)(kv_arr_p->shared_buff);
@@ -726,11 +724,11 @@ __device__ void PandaGPUEmitMapOutput(void *key, void *val, int keySize, int val
 			shared_buff_len *= 2;
 		}//while
 		
-		ShowWarn("Warning! not enough memory at GPU task:%d *kv_arr_p->shared_arr_len:%d current buff_size:%d KB",
+		WarnLog("Warning! not enough memory at GPU task:%d *kv_arr_p->shared_arr_len:%d current buff_size:%d KB",
 			map_task_idx,*kv_arr_p->shared_arr_len,(*kv_arr_p->shared_buff_len)/1024);
 		
 		char *new_buff = (char*)malloc(sizeof(char)*(shared_buff_len));
-		if(new_buff==NULL){ ShowWarn("Error ! There is not enough memory to allocat!"); return; }
+		if(new_buff==NULL){ WarnLog("Error ! There is not enough memory to allocat!"); return; }
 		
 		memcpy(new_buff, buff, sizeof(char)*(*kv_arr_p->shared_buff_pos));
 		memcpy(new_buff + (shared_buff_len) - sizeof(keyval_pos_t)*(*kv_arr_p->shared_arr_len), 
@@ -772,7 +770,7 @@ __device__ void PandaGPUEmitMapOutput(void *key, void *val, int keySize, int val
 
 }//__device__
 
-__device__ void PandaGPUEmitCombinerOutput(void *key, void *val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx){
+__device__ void PandaEmitGPUCombinerOutput(void *key, void *val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx){
 			
 	keyval_arr_t *kv_arr_p	= pgc->intermediate_key_vals.d_intermediate_keyval_arr_arr_p[map_task_idx];
 	void *shared_buff		= kv_arr_p->shared_buff;
@@ -787,11 +785,11 @@ __device__ void PandaGPUEmitCombinerOutput(void *key, void *val, int keySize, in
 			shared_buff_len *= 2;
 		}//while
 
-		ShowWarn("Warning! no enough memory in GPU task:%d need:%d KB KeySize:%d ValSize:%d shared_arr_len:%d shared_buff_pos:%d shared_buff_len:%d",
+		WarnLog("Warning! no enough memory in GPU task:%d need:%d KB KeySize:%d ValSize:%d shared_arr_len:%d shared_buff_pos:%d shared_buff_len:%d",
 			map_task_idx, required_mem_len/1024,keySize,valSize,shared_arr_len,shared_buff_pos,shared_buff_len);
 		
 		char *new_buff = (char*)malloc(sizeof(char)*(shared_buff_len));
-		if(new_buff==NULL)ShowWarn(" There is not enough memory to allocat!");
+		if(new_buff==NULL)WarnLog(" There is not enough memory to allocat!");
 
 		memcpy(new_buff, shared_buff, sizeof(char)*(*kv_arr_p->shared_buff_pos));
 		memcpy(new_buff + (shared_buff_len) - sizeof(keyval_pos_t)*(*kv_arr_p->shared_arr_len), 
@@ -831,7 +829,7 @@ __device__ void PandaGPUEmitCombinerOutput(void *key, void *val, int keySize, in
 			
 }//__device__
 
-__device__ void PandaGPUEmitReduceOutput(
+__device__ void PandaEmitGPUReduceOutput(
 						void*		key, 
 						void*		val, 
 						int		keySize, 
@@ -852,7 +850,7 @@ __device__ void PandaGPUEmitReduceOutput(
 }//__device__ 
 
 
-void PandaCPUEmitCombinerOutput(void *key, void *val, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx){
+void PandaEmitCPUCombinerOutput(void *key, void *val, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx){
 
 	keyval_arr_t *kv_arr_p	= &(pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[map_task_idx]);
 	void *shared_buff		= kv_arr_p->shared_buff;
@@ -867,11 +865,11 @@ void PandaCPUEmitCombinerOutput(void *key, void *val, int keySize, int valSize, 
 			shared_buff_len *= 2;
 		}//while
 
-		ShowWarn("Warning! no enough memory in GPU task:%d need:%d KB KeySize:%d ValSize:%d shared_arr_len:%d shared_buff_pos:%d shared_buff_len:%d",
+		WarnLog("Warning! no enough memory in GPU task:%d need:%d KB KeySize:%d ValSize:%d shared_arr_len:%d shared_buff_pos:%d shared_buff_len:%d",
 			map_task_idx, required_mem_len/1024,keySize,valSize,shared_arr_len,shared_buff_pos,shared_buff_len);
 		
 		char *new_buff = (char*)malloc(sizeof(char)*(shared_buff_len));
-		if(new_buff==NULL)ShowError(" There is not enough memory to allocat!");
+		if(new_buff==NULL)ErrorLog(" There is not enough memory to allocat!");
 
 		memcpy(new_buff, shared_buff, sizeof(char)*(*kv_arr_p->shared_buff_pos));
 		memcpy(new_buff + (shared_buff_len) - sizeof(keyval_pos_t)*(*kv_arr_p->shared_arr_len), 
@@ -911,75 +909,14 @@ void PandaCPUEmitCombinerOutput(void *key, void *val, int keySize, int valSize, 
 
 }//void
 
-__global__ void PandaExecuteMapPartitionerOnGPU(panda_gpu_context pgc)
+__global__ void RunPandaGPUCombiner(panda_gpu_context pgc)
 {
 
-	//ShowLog("gridDim.x:%d gridDim.y:%d gridDim.z:%d blockDim.x:%d blockDim.y:%d blockDim.z:%d blockIdx.x:%d blockIdx.y:%d blockIdx.z:%d\n",
-	//  gridDim.x,gridDim.y,gridDim.z,blockDim.x,blockDim.y,blockDim.z,blockIdx.x,blockIdx.y,blockIdx.z);
-	int num_records_per_thread = (pgc.input_key_vals.num_input_record + (gridDim.x*blockDim.x*blockDim.y)-1)/(gridDim.x*blockDim.x*blockDim.y);
-	int block_start_idx = num_records_per_thread * blockIdx.x * blockDim.x * blockDim.y;
-	int thread_start_idx = block_start_idx 
-		+ ((threadIdx.y*blockDim.x + threadIdx.x)/STRIDE)*num_records_per_thread*STRIDE
-		+ ((threadIdx.y*blockDim.x + threadIdx.x)%STRIDE);
-
-	int thread_end_idx = thread_start_idx + num_records_per_thread*STRIDE;
-	if (thread_end_idx > pgc.input_key_vals.num_input_record)
-		thread_end_idx = pgc.input_key_vals.num_input_record;
-
-	if (thread_start_idx >= thread_end_idx)
-		return;
-
-	//if(TID==0) 	ShowWarn("hi 0 -- num_records_per_thread:%d",num_records_per_thread);
-
-	int buddy_arr_len = num_records_per_thread;
-	int * int_arr = (int*)malloc((4+buddy_arr_len)*sizeof(int));
-	if(int_arr==NULL){ GpuShowError("there is not enough GPU memory\n"); return;}
-
-	int *shared_arr_len = int_arr;
-	int *shared_buff_len = int_arr+1;
-	int *shared_buff_pos = int_arr+2;
-	//int *num_buddy = int_arr+3;
-	int *buddy = int_arr+4;
-	(*shared_buff_len) = SHARED_BUFF_LEN;
-	(*shared_arr_len) = 0;
-	(*shared_buff_pos) = 0;
-
-	char * buff = (char *)malloc(sizeof(char)*(*shared_buff_len));
-	keyval_arr_t *kv_arr_t_arr = (keyval_arr_t *)malloc(sizeof(keyval_arr_t)*(thread_end_idx-thread_start_idx+STRIDE-1)/STRIDE);
-	int index = 0;
-	
-	for(int idx = thread_start_idx; idx < thread_end_idx; idx += STRIDE){
-			buddy[index] = idx;
-			index ++;
-	}//for
-	index = 0;
-	for(int map_task_idx = thread_start_idx; map_task_idx < thread_end_idx; map_task_idx += STRIDE){
-
-		keyval_arr_t *kv_arr_t = (keyval_arr_t *)&(kv_arr_t_arr[index]);
-		index++;
-		kv_arr_t->shared_buff = buff;
-		kv_arr_t->shared_arr_len = shared_arr_len;
-		kv_arr_t->shared_buff_len = shared_buff_len;
-		kv_arr_t->shared_buff_pos = shared_buff_pos;
-		kv_arr_t->shared_buddy = buddy;
-		kv_arr_t->shared_buddy_len = buddy_arr_len;
-		kv_arr_t->arr = NULL;
-		kv_arr_t->arr_len = 0;
-		
-		pgc.intermediate_key_vals.d_intermediate_keyval_arr_arr_p[map_task_idx] = kv_arr_t;
-
-	}//for
-}
-
-
-__global__ void GPUCombiner(panda_gpu_context pgc)
-{
-
-	//GpuShowError("gridDim.x:%d gridDim.y:%d gridDim.z:%d blockDim.x:%d blockDim.y:%d blockDim.z:%d blockIdx.x:%d blockIdx.y:%d blockIdx.z:%d",
+	//GpuErrorLog("gridDim.x:%d gridDim.y:%d gridDim.z:%d blockDim.x:%d blockDim.y:%d blockDim.z:%d blockIdx.x:%d blockIdx.y:%d blockIdx.z:%d",
 	// gridDim.x,gridDim.y,gridDim.z,blockDim.x,blockDim.y,blockDim.z,blockIdx.x,blockIdx.y,blockIdx.z);
 
 	int num_records_per_thread = (pgc.input_key_vals.num_input_record + (gridDim.x*blockDim.x*blockDim.y)-1)/(gridDim.x*blockDim.x*blockDim.y);
-	//GpuShowError("num_records_per_thread:%d",num_records_per_thread);
+	//GpuErrorLog("num_records_per_thread:%d",num_records_per_thread);
 	
 	int block_start_idx = num_records_per_thread * blockIdx.x * blockDim.x * blockDim.y;
 	int thread_start_idx = block_start_idx 
@@ -997,11 +934,11 @@ __global__ void GPUCombiner(panda_gpu_context pgc)
 	//int *buddy = kv_arr_p->shared_buddy;
 
 	int unmerged_shared_arr_len = *kv_arr_p->shared_arr_len;
-	//GpuShowError("[GPUCombiner] unmerged_shared_arr_len:%d",unmerged_shared_arr_len);
+	//GpuErrorLog("[GPUCombiner] unmerged_shared_arr_len:%d",unmerged_shared_arr_len);
 
 	val_t *val_t_arr = (val_t *)malloc(sizeof(val_t)*unmerged_shared_arr_len);
 	if (val_t_arr == NULL) {
-	GpuShowError("[GPUCombiner] there is no enough memory. Return");
+	GpuErrorLog("[GPUCombiner] there is no enough memory. Return");
 	return;
 	}//if
 
@@ -1022,7 +959,7 @@ __global__ void GPUCombiner(panda_gpu_context pgc)
 		//char *iVal = shared_buff + first_kv_p->valPos;
 
 		if((first_kv_p->keyPos%4!=0)||(first_kv_p->valPos%4!=0)){
-			GpuShowError("keyPos or valPos is not aligned with 4 bytes, results could be wrong");
+			GpuErrorLog("keyPos or valPos is not aligned with 4 bytes, results could be wrong");
 			return;
 		}//if
 
@@ -1064,111 +1001,4 @@ __global__ void GPUCombiner(panda_gpu_context pgc)
 
 }//GPU
 
-//-------------------------------------------------------
-//Reducer
-//-------------------------------------------------------
-
-
-void PandaEmitCombinerOutputOnCPU(void *key, void *val, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx){
-
-	keyval_arr_t *kv_arr_p	= &(pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[map_task_idx]);
-	void *shared_buff		= kv_arr_p->shared_buff;
-	int shared_buff_len		= *kv_arr_p->shared_buff_len;
-	int shared_arr_len		= *kv_arr_p->shared_arr_len;
-	int shared_buff_pos		= *kv_arr_p->shared_buff_pos;
-		
-	int required_mem_len = (shared_buff_pos) + keySize + valSize + sizeof(keyval_pos_t)*(shared_arr_len+1);
-	if (required_mem_len> shared_buff_len){
-
-		while(required_mem_len> shared_buff_len){
-			shared_buff_len *= 2;
-		}//while
-
-		ShowWarn("Warning! no enough memory in GPU task:%d need:%d KB KeySize:%d ValSize:%d shared_arr_len:%d shared_buff_pos:%d shared_buff_len:%d",
-			map_task_idx, required_mem_len/1024,keySize,valSize,shared_arr_len,shared_buff_pos,shared_buff_len);
-		
-		char *new_buff = (char*)malloc(sizeof(char)*(shared_buff_len));
-		if(new_buff==NULL)ShowError(" There is not enough memory to allocat!");
-
-		memcpy(new_buff, shared_buff, sizeof(char)*(*kv_arr_p->shared_buff_pos));
-		memcpy(new_buff + (shared_buff_len) - sizeof(keyval_pos_t)*(*kv_arr_p->shared_arr_len), 
-			(char*)shared_buff + (*kv_arr_p->shared_buff_len) - sizeof(keyval_pos_t)*(*kv_arr_p->shared_arr_len),
-												sizeof(keyval_pos_t)*(*kv_arr_p->shared_arr_len));
-		
-		(*kv_arr_p->shared_buff_len) = shared_buff_len;	
-		
-		for(int  idx = 0; idx < (kv_arr_p->shared_buddy_len); idx++){
-
-		int cur_map_task_idx = kv_arr_p->shared_buddy[idx];			//the buddy relationship won't be changed 
-		keyval_arr_t *cur_kv_arr_p = &(pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[cur_map_task_idx]);
-		cur_kv_arr_p->shared_buff = new_buff;
-		
-		}//for
-
-		free(shared_buff);
-		shared_buff = new_buff;
-	
-	}//if
-
-	keyval_pos_t *kv_p = (keyval_pos_t *)((char *)shared_buff + shared_buff_len - sizeof(keyval_pos_t)*(shared_arr_len + 1));
-	kv_p->keySize = keySize;
-	kv_p->valSize = valSize;
-	kv_p->task_idx = map_task_idx;
-	kv_p->next_idx = _COMBINE;				//merged results
-
-	memcpy( (char*)shared_buff + *kv_arr_p->shared_buff_pos, key, keySize);
-	kv_p->keyPos = *kv_arr_p->shared_buff_pos;
-	*kv_arr_p->shared_buff_pos += (keySize+3)/4*4;
-
-	memcpy( (char*)shared_buff + *kv_arr_p->shared_buff_pos, val, valSize);
-	kv_p->valPos = *kv_arr_p->shared_buff_pos;
-	*kv_arr_p->shared_buff_pos += (valSize+3)/4*4;
-	
-	(*kv_arr_p->shared_arr_len)++;
-
-}//void
-
-void PandaEmitMapOutputOnCPU(void *key, void *val, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx){
-	if(map_task_idx >= pcc->input_key_vals.num_input_record) {ShowError("error ! map_task_idx >= d_g_state->num_input_record");return;}
-	keyval_arr_t *kv_arr_p = &(pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[map_task_idx]);
-	char *buff = (char*)(kv_arr_p->shared_buff);
-	if (!((*kv_arr_p->shared_buff_pos) + keySize + valSize < (*kv_arr_p->shared_buff_len) - sizeof(keyval_pos_t)*((*kv_arr_p->shared_arr_len)+1))){
-		ShowWarn("Warning! not enough memory at CPU task:%d *kv_arr_p->shared_arr_len:%d current buff_size:%d KB",
-			map_task_idx,*kv_arr_p->shared_arr_len,(*kv_arr_p->shared_buff_len)/1024);
-		char *new_buff = (char*)malloc(sizeof(char)*((*kv_arr_p->shared_buff_len)*2));
-		if(new_buff==NULL){ ShowError("Error ! There is not enough memory to allocat!"); return; }
-		memcpy(new_buff, buff, sizeof(char)*(*kv_arr_p->shared_buff_pos));
-		int blockSize = sizeof(keyval_pos_t)*(*kv_arr_p->shared_arr_len);
-		memcpy(new_buff + (*kv_arr_p->shared_buff_len)*2 - blockSize, 
-			(char*)buff + (*kv_arr_p->shared_buff_len) - blockSize,
-			blockSize);
-		(*kv_arr_p->shared_buff_len) = 2*(*kv_arr_p->shared_buff_len);
-		for(int  idx = 0; idx < (kv_arr_p->shared_buddy_len); idx++){
-			int cur_map_task_idx = kv_arr_p->shared_buddy[idx];  //the buddy relationship won't be changed
-			keyval_arr_t *cur_kv_arr_p = &(pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[cur_map_task_idx]);
-			cur_kv_arr_p->shared_buff = new_buff;
-		}//for
-		free(buff);//
-		buff = new_buff;
-	}//if
-	
-	keyval_pos_t *kv_p = (keyval_pos_t *)((char *)buff + *kv_arr_p->shared_buff_len - sizeof(keyval_pos_t)*((*kv_arr_p->shared_arr_len)+1));
-	(*kv_arr_p->shared_arr_len)++;
-	kv_p->task_idx = map_task_idx;
-	kv_p->next_idx = _MAP;
-	
-	kv_p->keyPos = (*kv_arr_p->shared_buff_pos);
-	*kv_arr_p->shared_buff_pos += ((keySize+3)/4)*4;		//alignment 4 bytes for reading and writing
-	memcpy((char *)(buff) + kv_p->keyPos, key, keySize);
-	kv_p->keySize = keySize;
-	
-	kv_p->valPos = (*kv_arr_p->shared_buff_pos);
-	*kv_arr_p->shared_buff_pos += ((valSize+3)/4)*4;
-	//char *val_p = (char *)(buff) + kv_p->valPos;
-	memcpy((char *)(buff) + kv_p->valPos, val, valSize);
-	kv_p->valSize = valSize;
-	(kv_arr_p->arr) = kv_p;
-	
-}//__device__
-
-#endif //__PANDALIB_CU__
+#endif //__PANDA_LIB_CU__

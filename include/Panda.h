@@ -74,21 +74,21 @@ extern int gCommRank;
 #endif
 
 #ifdef _ERROR
-#define ShowError(...) do{printf("[%d]",gCommRank);printf("[%s]\t",__FUNCTION__);printf(__VA_ARGS__);printf("\n");fflush(stdout);}while(0)
+#define ErrorLog(...) do{printf("[%d]",gCommRank);printf("[%s]\t",__FUNCTION__);printf(__VA_ARGS__);printf("\n");fflush(stdout);}while(0)
 #else
-#define ShowError(...)
+#define ErrorLog(...)
 #endif
 
 #ifdef _ERROR
-#define GpuShowError(...) do{printf("[%s]\t",__FUNCTION__);printf(__VA_ARGS__);printf("\n");}while(0)
+#define GpuErrorLog(...) do{printf("[%s]\t",__FUNCTION__);printf(__VA_ARGS__);printf("\n");}while(0)
 #else
-#define GpuShowError(...)
+#define GpuErrorLog(...)
 #endif
 
 #ifdef _WARN
-#define ShowWarn(...) do{printf("[%s]\t",__FUNCTION__);printf(__VA_ARGS__);printf("\n");}while(0)
+#define WarnLog(...) do{printf("[%s]\t",__FUNCTION__);printf(__VA_ARGS__);printf("\n");}while(0)
 #else
-#define ShowWarn(...) 
+#define WarnLog(...) 
 #endif
 
 struct panda_cpu_context;
@@ -105,28 +105,21 @@ struct keyval_t
 };// keyval_t;
 
 
-extern "C"
+
 void *RunPandaCPUCombinerThread(void *ptr);
-extern "C"
+void* RunPandaCPUMapThread(void* thread_info);
+
 void ExecutePandaGPUCombiner(panda_gpu_context *pgc);
-extern "C"
 void ExecutePandaGPUSort(panda_gpu_context *pgc);
-extern "C"
-void ExecutePandaShuffleMergeGPU(panda_node_context *d_g_state_1, panda_gpu_context *d_g_state_0);
-extern "C"
-void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc);
-extern "C"
-void ExecutePandaReduceTasksOnGPU(panda_gpu_context *pgc);
-extern "C"
-void* ExecutePandaCPUMapThread(void* thread_info);
-extern "C"
+void ExecutePandaGPUShuffleMerge(panda_node_context *d_g_state_1, panda_gpu_context *d_g_state_0);
+void ExecutePandaGPUReduceTasks(panda_gpu_context *pgc);
 void ExecutePandaGPUMapPartitioner(panda_gpu_context pgc, dim3 grids, dim3 blocks);
-extern "C"
-void RunGPUMapTasksHost(panda_gpu_context pgc, int curIter, int totalIter, dim3 grids, dim3 blocks);
-extern "C"
+void ExecutePandaGPUMapTasks(panda_gpu_context pgc, int curIter, int totalIter, dim3 grids, dim3 blocks);
+
 void ExecutePandaSortBucket(panda_node_context *pnc);
-extern "C"
 void ExecutePandaCPUCombiner(panda_cpu_context *pcc);
+void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc);
+void ExecutePandaCPUReduceTasks(panda_cpu_context *pcc);
 
 double PandaTimer();
 
@@ -143,14 +136,12 @@ struct keyval_pos_t
    
 };// keyval_pos_t;
 
-//typedef 
 struct val_pos_t
 {
    int valSize;
    int valPos;
 };// val_pos_t;
 
-//typedef
 struct sorted_keyval_pos_t
 {
    int keySize;
@@ -182,14 +173,12 @@ struct keyval_arr_t
 };// keyval_arr_t;
 
 //used for sorted or partial sorted values
-//typedef 
 struct val_t
 {
    void * val;
    int valSize;
 };// val_t;
 
-//typedef 
 struct keyvals_t
 {
    void * key;
@@ -212,7 +201,6 @@ struct panda_cpu_task_info_t {
 };// panda_cpu_task_info_t;
 
 
-//typedef
 struct panda_gpu_context
 {	
 
@@ -284,8 +272,6 @@ struct panda_gpu_context
 	
 };// panda_gpu_context;
 
-
-//typedef
 struct panda_cpu_context
 {	
 	
@@ -346,7 +332,6 @@ struct panda_cpu_context
 	
 	} output_key_vals;
 };// panda_cpu_context;
-
 
 struct panda_node_context
 {				
@@ -416,24 +401,22 @@ struct panda_runtime_context
 #define CPU_ACC				0x02
 #define CELL_ACC			0x03
 #define FPGA_ACC			0x04
-	 
-extern "C"
-void PandaEmitCPUMapOutput(void *key, void * val, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx);
-extern "C"
-void PandaCPUEmitCombinerOutput(void *key, void *val, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx); 
-extern "C"
-void PandaCPUEmitReduceOutput (void* key, void * val, int keySize, int valSize, panda_cpu_context *pcc);
+extern "C" void PandaEmitCPUMapOutput(void *key, void * val, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx);
+extern "C" void PandaEmitCPUCombinerOutput(void *key, void *val, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx); 
+extern "C" void PandaEmitCPUReduceOutput(void* key, void * val, int keySize, int valSize, panda_cpu_context *pcc);
 
-__device__ void PandaGPUEmitMapOutput(void *key, void *val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx);
-__device__ void PandaGPUEmitCombinerOutput(void* key, void * val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx);
-__device__ void PandaGPUEmitReduceOutput(void * key, void *val, int keySize, int valSize, panda_gpu_context *pgc);
+__device__ void PandaEmitGPUMapOutput(void *key, void *val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx);
+__device__ void PandaEmitGPUCombinerOutput(void* key, void * val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx);
+__device__ void PandaEmitGPUReduceOutput(void * key, void *val, int keySize, int valSize, panda_gpu_context *pgc);
 
 __global__ void copyDataFromDevice2Host1(panda_gpu_context pgc);
 __global__ void copyDataFromDevice2Host2(panda_gpu_context pgc);
 __global__ void copyDataFromDevice2Host4Reduce(panda_gpu_context pgc);
-__global__ void PandaReducePartitioner(panda_gpu_context pgc);
 
-void ExecutePandaCPUReduceTasks(panda_cpu_context *pcc);
+__global__ void RunPandaGPUReducePartitioner(panda_gpu_context pgc);
+__global__ void RunPandaGPUMapPartitioner(panda_gpu_context pgc);
+__global__ void RunPandaGPUMapTasks(panda_gpu_context pgc, int curIter, int totalIter);
+__global__ void RunPandaGPUCombiner(panda_gpu_context pgc);
 
 int getCPUCoresNum();
 int getGPUCoresNum();

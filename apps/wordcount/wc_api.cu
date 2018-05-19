@@ -75,7 +75,7 @@ __device__ void panda_gpu_core_map(void *KEY, void*VAL, int keySize, int valSize
 			ws=(int)(p-start);
 			if (ws>6){
 				char *word = start;
-				PandaGPUEmitMapOutput(word, one, ws, sizeof(int), pgc, map_task_idx);
+				PandaEmitGPUMapOutput(word, one, ws, sizeof(int), pgc, map_task_idx);
 			}//if
 			valSize = valSize - ws;
 			if(valSize<=0)
@@ -92,7 +92,7 @@ void panda_cpu_combiner(void *KEY, val_t* VAL, int keySize, int valCount, panda_
 		for (int i=0;i<valCount;i++){
 			 *count += *((int *)(VAL[i].val));
 		}//for
-		PandaCPUEmitCombinerOutput(KEY,count,keySize,sizeof(int),pcc, map_task_idx);
+		PandaEmitCPUCombinerOutput(KEY,count,keySize,sizeof(int),pcc, map_task_idx);
 }//reduce2
 
 #if 0
@@ -119,7 +119,7 @@ __device__ void panda_gpu_reduce(void *KEY, val_t* VAL, int keySize, int valCoun
 		for (int i=0;i<valCount;i++){
 			*count += *(int *)(VAL[i].val);
 		}//
-		PandaGPUEmitReduceOutput(KEY,count,keySize,sizeof(int),&pgc);
+		PandaEmitGPUReduceOutput(KEY,count,keySize,sizeof(int),&pgc);
 }//reduce2
 
 
@@ -129,7 +129,7 @@ void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cp
 		for (int i=0;i<valCount;i++){
 			count[0] += *(int *)(VAL[i].val);
 		}//
-		PandaCPUEmitReduceOutput(KEY,(void *)count,keySize,sizeof(int),pcc);
+		PandaEmitCPUReduceOutput(KEY,(void *)count,keySize,sizeof(int),pcc);
 }//reduce2
 
 #endif //__MAP_CU__

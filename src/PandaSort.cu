@@ -69,7 +69,7 @@ pgc->intermediate_key_vals.h_intermediate_keyval_pos_arr = (keyval_pos_t *)mallo
 
 	for (int i=0;i<total_count;i++){
 
-		//ShowError("[i:%d] totalValSize:%d totalKeySize:%d\n",i,totalValSize,totalKeySize);
+		//ErrorLog("[i:%d] totalValSize:%d totalKeySize:%d\n",i,totalValSize,totalKeySize);
 		h_intermediate_keyvals_pos_arr[i].valPos= totalValSize;
 		h_intermediate_keyvals_pos_arr[i].keyPos = totalKeySize;
 
@@ -81,7 +81,7 @@ pgc->intermediate_key_vals.h_intermediate_keyval_pos_arr = (keyval_pos_t *)mallo
 	}//for
 
 	if ((totalValSize<=0)||(totalKeySize<=0)){
-		ShowError("(totalValSize==0)||(totalKeySize==0) Warning!");
+		ErrorLog("(totalValSize==0)||(totalKeySize==0) Warning!");
 		pgc->sorted_key_vals.totalValSize = totalValSize;
 		pgc->sorted_key_vals.totalKeySize = totalKeySize;
 		pgc->sorted_key_vals.d_sorted_keyvals_arr_len = 0;
@@ -306,7 +306,7 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 
 }
 
-void ExecutePandaShuffleMergeGPU(panda_node_context *pnc, panda_gpu_context *pgc){
+void ExecutePandaGPUShuffleMerge(panda_node_context *pnc, panda_gpu_context *pgc){
 
 	printf("[ExecutePandaShuffleMergeGPU]");
 	
