@@ -10,7 +10,7 @@ public:
 	int GetHash(const char *Key, int KeySize, int commSize);
 private:
 	byte* toByteArray(long value);
-	long toLong(byte * byteArray);
+	unsigned long toLong(byte * byteArray);
 };
 
 #endif

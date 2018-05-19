@@ -1,22 +1,25 @@
-#ifndef _UNSIGNED_H
-#define _UNSIGNED_H
-
+#ifndef __UNSIGNED16_H__
+#define __UNSIGNED16_H__
 #include <string>
 #include <exception>
+#include <stdarg.h>
 using namespace std;
 typedef char byte;
 
-class numException:public exception{
+class Unsigned16Exception:public exception{
       public:
-            numException():exception()
+	    template<typename... Args>
+            Unsigned16Exception(const Args &...rest):exception()
             {
+		printf(rest...);
+		exit(-1);
             }
 };
 
 class Unsigned16{
 private:
-	long hi8;
-	long lo8;
+	unsigned long hi8;
+	unsigned long lo8;
 public:
 	Unsigned16();
 	Unsigned16(long l);
@@ -28,8 +31,8 @@ public:
 	static int getHexDigit(char ch);
 	byte getByte(int b);
 	char getHexDigit(int p);
-	long getHigh8();
-	long getLow8();
+	unsigned long getHigh8();
+	unsigned long getLow8();
 	void multiply(Unsigned16 b);
 	void add(Unsigned16 b);
 	void shiftLeft(int bits);

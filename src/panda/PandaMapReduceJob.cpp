@@ -507,11 +507,7 @@ void PandaMapReduceJob::InitPandaGPUMapReduce()
     delete MessageThread;
   }//void
 
-  PandaMapReduceJob::PandaMapReduceJob(int argc,
-                                      char ** argv,
-                                      const bool accumulateMapResults,
-                                      const bool accumulateReduceResults,
-                                      const bool syncOnPartitionSends)
+  PandaMapReduceJob::PandaMapReduceJob(int argc,char **argv)
     : MapReduceJob(argc, argv)
   {
   }

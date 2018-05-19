@@ -45,8 +45,8 @@ void panda_cpu_map(void *KEY, void*VAL, int keySize, int valSize, panda_cpu_cont
 
 	Unsigned16 *one = new Unsigned16(1);		
 	Unsigned16 *firstRecordNumber = new Unsigned16(*(int *)VAL*rpp);
-	unsigned long h8 = firstRecordNumber->getHigh8();
-	unsigned long l8 = firstRecordNumber->getLow8();
+	long h8 = firstRecordNumber->getHigh8();
+	long l8 = firstRecordNumber->getLow8();
 	printf("rpp:%d VAL:%d\n",rpp,*(int *)VAL);
 	printf("firstRecordNumber h8:%ld l8:%ld\n",h8,l8);
 
@@ -61,7 +61,7 @@ void panda_cpu_map(void *KEY, void*VAL, int keySize, int valSize, panda_cpu_cont
 	Unsigned16 rand = Random16::skipAhead(*firstRecordNumber);
 	h8 = rand.getHigh8();
 	l8 = rand.getLow8();
-	//printf("rand h8:%ld l8:%ld\n",h8,l8);
+	printf("rand h8:%ld l8:%ld\n",h8,l8);
 
 	byte* rowBytes = new byte[TeraInputFormat::RECORD_LEN];
 	byte* key = new byte[TeraInputFormat::KEY_LEN];
@@ -73,7 +73,7 @@ void panda_cpu_map(void *KEY, void*VAL, int keySize, int valSize, panda_cpu_cont
 	if((dp = opendir(path))==NULL)
 	{
 	printf("not open %s\n",path);
-	exit(-1);
+	exit(0);
 	}else{
 	closedir(dp);
 	}
@@ -85,18 +85,13 @@ void panda_cpu_map(void *KEY, void*VAL, int keySize, int valSize, panda_cpu_cont
 	Random16::nextRand(rand);
 	h8 = rand.getHigh8();
         l8 = rand.getLow8();
-	//printf("next rand h8:%ld l8:%ld\n",h8,l8);
+	printf("next rand h8:%ld l8:%ld\n",h8,l8);
 	TeraInputFormat::generateRecord(rowBytes,rand,*recordNumber);
 	printf("key:::");
-	for(int k = 0;k<10;k++){
-		//rowBytes[k]+=100;
-		printf("%3d",(unsigned char)rowBytes[k]);
-	}
-	printf(" \tid:::");
-	for(int k = 0;k<40;k++){
-		printf("%3d",(unsigned char)rowBytes[10+k]);
-	}
+	for(int k = 0;k<10;k++)
+		printf("%x",rowBytes[k]);
 	printf("\n");
+
 	recordNumber->add(*one);
 	TeraInputFormat::copyByte(rowBytes,key,0,TeraInputFormat::KEY_LEN);
 	TeraInputFormat::copyByte(rowBytes,value,TeraInputFormat::KEY_LEN,TeraInputFormat::RECORD_LEN);

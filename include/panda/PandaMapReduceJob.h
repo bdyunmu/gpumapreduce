@@ -86,11 +86,7 @@ namespace panda
 	virtual void PandaAddKeyValue2Bucket(int bucketId, const char*key, int keySize, const char*val, int valSize);
 
     public:
-        PandaMapReduceJob(int argc,
-                            char ** argv,
-                            const bool accumulateMapResults     = false,
-                            const bool accumulateReduceResults  = false,
-                            const bool syncOnPartitionSends     = true);
+        PandaMapReduceJob(int argc, char **argv);
         ~PandaMapReduceJob();
 
         virtual void addInput(panda::Chunk * chunk);

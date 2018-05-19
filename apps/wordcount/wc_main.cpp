@@ -24,7 +24,7 @@ int main(int argc, char ** argv)
 	  exit(-1);
 	}
 
-	panda::MapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv, false,false,true);
+	panda::MapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv);
 	int rank, size;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	MPI_Comm_size(MPI_COMM_WORLD, &size);

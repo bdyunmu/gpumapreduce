@@ -1,5 +1,4 @@
 /*
-
 Copyright 2012 The Trustees of Indiana University.  All rights reserved.
 Panda: a MapReduce Framework on GPUs and CPUs
 File: main.cu 
@@ -15,6 +14,9 @@ Developer: Hui Li (huili@ruijie.com.cn)
 #include <ctype.h>
 
 #include "PandaAPI.h"
+#include "TeraInputFormat.h"
+
+typedef char byte;
 
 __device__ void panda_gpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_gpu_context pgc){
 }
@@ -38,6 +40,11 @@ void panda_cpu_combiner(void *KEY, val_t* VAL, int keySize, int valCount, panda_
 }//reduce2
 
 void panda_cpu_map(void *KEY, void*VAL, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx){
+	byte *key = new byte[TeraInputFormat::KEY_LEN];
+	byte *value = new byte[TeraInputFormat::VALUE_LEN];
+	TeraInputFormat::copyByte((byte *)VAL,key,0,TeraInputFormat::KEY_LEN);
+	TeraInputFormat::copyByte((byte *)VAL,value,TeraInputFormat::KEY_LEN,TeraInputFormat::RECORD_LEN);
+	PandaEmitCPUMapOutput(key,value,TeraInputFormat::KEY_LEN, TeraInputFormat::VALUE_LEN, pcc, map_task_idx);	
 }
 
 void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context* pcc){

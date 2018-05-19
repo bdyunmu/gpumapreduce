@@ -340,9 +340,9 @@
 
   Unsigned16 Random16::skipAhead(Unsigned16 advance){
 	Unsigned16 *result = new Unsigned16();
-	long bit_map;
+	unsigned long bit_map;
 	bit_map = advance.getLow8();
-	for( int i = 0;bit_map != 0 && i < 64; i++){
+	for(int i=0; bit_map != 0 && i<64; i++){
 		if((bit_map & (1L << i)) != 0){
 			result->multiply(genArray[i].a);
 			result->add(genArray[i].c);
@@ -350,7 +350,7 @@
 		}//if	
 	}
 	bit_map = advance.getHigh8();
-	for (int i = 0; bit_map != 0 && i<64; i++)
+	for (int i=0; bit_map != 0 && i<64; i++)
 	{
 		if((bit_map & (1L << i)) != 0){
 			result->multiply(genArray[i+64].a);
@@ -364,7 +364,7 @@
   /**
    * Generate the next 16 byte random number.
    */
-  void Random16::nextRand(Unsigned16 rand){
+  void Random16::nextRand(Unsigned16 &rand){
 	/* advance the random number forward once using the linear congruential
 	* generator, and then return the new random number
 	*/

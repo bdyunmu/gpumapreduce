@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 
-
 /**
  * This file is copied and simplified from Hadoop package org.apache.hadoop.examples.terasort.
  */
@@ -27,8 +26,8 @@
  */
 
 #include "Unsigned16.h"
-using namespace std;
 
+  using namespace std;
 
   Unsigned16::Unsigned16() {
     hi8 = 0;
@@ -78,24 +77,22 @@ using namespace std;
   void Unsigned16::set(string s) {
     hi8 = 0;
     lo8 = 0;
-    long lastDigit = 0xfl << 60;
+    const long lastDigit = 0xfl << 60;
 
     for (int i = 0; i < s.length(); ++i) {
-
       int digit = getHexDigit(s[i]);
       if ((lastDigit & hi8) != 0) {
-	throw numException();
-      //  throw new NumberFormatException(s + " overflowed 16 bytes");
+	throw Unsigned16Exception("%s overflowed 16 bytes",s.c_str());
+      	//throw new NumberFormatException(s + " overflowed 16 bytes");
       }
       hi8 <<= 4;
       unsigned long ul_lo8_lastDigit = (unsigned)(lo8 & lastDigit);
       hi8 |= (ul_lo8_lastDigit >> 60);
       lo8 <<= 4;
       lo8 |= digit;
+    }//for (int 
 
-    }
-
-  }
+  }//void 
 
   /**
    * Set the number to a given long.
@@ -123,10 +120,9 @@ int Unsigned16::getHexDigit(char ch) {
     if (ch >= 'A' && ch <= 'F') {
       return ch - 'A' + 10;
     }
-	throw numException();
+	throw Unsigned16Exception("%c not a valid hex digit",ch);
     //throw new NumberFormatException(ch + " is not a valid hex digit");
   }
-
   /**
    * Return the number as a hex string.
    */
@@ -146,7 +142,6 @@ int Unsigned16::getHexDigit(char ch) {
     }
   }
 #endif
-
   /**
    * Get a given byte from the number.
    * @param b the byte to get with 0 meaning the most significant byte
@@ -162,7 +157,6 @@ byte Unsigned16::getByte(int b) {
     }
     return 0;
   }
-
   /**
    * Get the hexadecimal digit at the given position.
    * @param p the digit position to get with 0 meaning the most significant
@@ -185,14 +179,14 @@ byte Unsigned16::getByte(int b) {
   /**
    * Get the high 8 bytes as a long.
    */
-  long Unsigned16::getHigh8() {
+  unsigned long Unsigned16::getHigh8() {
     return hi8;
   }
 
   /**
    * Get the low 8 bytes as a long.
    */
-  long Unsigned16::getLow8() {
+  unsigned long Unsigned16::getLow8() {
     return lo8;
   }
 
@@ -205,20 +199,20 @@ byte Unsigned16::getByte(int b) {
    */
   void Unsigned16::multiply(Unsigned16 b) {
     // divide the left into 4 32 bit chunks
-    long* left = new long[4];
+    unsigned long* left = new unsigned long[4];
     left[0] = lo8 & 0xffffffffl;
-    unsigned long ul_lo8 = (unsigned)lo8;
+    unsigned long ul_lo8 = (unsigned long)lo8;
     left[1] = ul_lo8 >> 32;
     left[2] = hi8 & 0xffffffffl;
-    unsigned long ul_hi8 = (unsigned)hi8;
+    unsigned long ul_hi8 = (unsigned long)hi8;
     left[3] = ul_hi8 >> 32;
     // divide the right into 5 31 bit chunks
     long* right = new long[5];
     right[0] = b.lo8 & 0x7fffffffl;
-    unsigned long ul_blo8 = (unsigned)b.lo8;
+    unsigned long ul_blo8 = (unsigned long)b.lo8;
     right[1] = (ul_blo8 >> 31) & 0x7fffffffl;
     right[2] = (ul_blo8 >> 62) + ((b.hi8 & 0x1fffffffl) << 2);
-    unsigned long ul_bhi8 = (unsigned)b.hi8;
+    unsigned long ul_bhi8 = (unsigned long)b.hi8;
     right[3] = (ul_bhi8 >> 29) & 0x7fffffffl;
     right[4] = (ul_bhi8 >> 60);
     // clear the cur value
@@ -226,7 +220,7 @@ byte Unsigned16::getByte(int b) {
     Unsigned16 *tmp = new Unsigned16();
     for(int l=0; l < 4; ++l) {
       for (int r=0; r < 5; ++r) {
-        long prod = left[l] * right[r];
+        unsigned long prod = left[l] * right[r];
         if (prod != 0) {
           int off = l*32 + r*31;
           tmp->set(prod);

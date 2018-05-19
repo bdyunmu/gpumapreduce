@@ -93,7 +93,7 @@ public:
   /**
    * Generate the next 16 byte random number.
    */
-  static void nextRand(Unsigned16 rand);
+  static void nextRand(Unsigned16 &rand);
 
 };
 
