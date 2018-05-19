@@ -1,23 +1,13 @@
 /*
 	Copyright 2012 The Trustees of Indiana University.  All rights reserved.
-	MapReduce Framework on GPU and CPU cluster
-	Code Name: Panda
+	Panda: a MapReduce Framework on GPU and CPU cluster
 	File: Panda.h 
 	First Version:		2012-07-01 V0.1
-	Last  Version:		2012-09-01 V0.3
-	Last Updates:		2017-12-24 V0.60
+	Last Updates:		2018-05-19 V0.42
 
-	Developer: Hui Li (lihui@indiana.edu)
-	This is the source code for Panda, a MapReduce runtime on GPUs and CPUs.
+	Developer: Hui Li (huili@ruijie.com.cn)
 */
 
-/*
-#ifdef WIN32 
-#include <windows.h> 
-#endif 
-#include <pthread.h>
-*/
-#include <cuda.h>
 #ifndef __PANDA_H__
 #define __PANDA_H__
 
@@ -32,7 +22,6 @@
 #include <time.h>
 #include <stdarg.h>
 #include <pthread.h>
-#include <iostream>
 #include <vector>
 
 #define _DEBUG		0x01
@@ -51,10 +40,9 @@
 	}while (0)
 
 #define THREADS_PER_BLOCK	(blockDim.x * blockDim.y)
-#define BLOCK_ID		(gridDim.y	* blockIdx.x  + blockIdx.y)
-#define THREAD_ID		(blockDim.x	* threadIdx.y + threadIdx.x)
+#define BLOCK_ID		(gridDim.y * blockIdx.x + blockIdx.y)
+#define THREAD_ID		(blockDim.x * threadIdx.y + threadIdx.x)
 #define TID			(BLOCK_ID * THREADS_PER_BLOCK + THREAD_ID)
-//#define TID (BLOCK_ID * blockDim.x + THREAD_ID)
 
 //NOTE NUM_THREADS*NUM_BLOCKS > STRIDE !
 #define NUM_THREADS			256
@@ -75,19 +63,15 @@ extern int gCommRank;
 
 #ifdef _DEBUG
 #define ShowLog(...) do{printf("[%d]",gCommRank);printf("[%s]\t",__FUNCTION__);printf(__VA_ARGS__);printf("\n");fflush(stdout);}while(0)
-#define ShowLog2(...) do{printf("[%s]\t",__FUNCTION__);printf(__VA_ARGS__);printf("\n");}while(0)
 #else
 #define ShowLog(...) //do{printf(__VA_ARGS__);printf("\n");}while(0)
 #endif
 
 #ifdef _DISKLOG
-#define DoLog2Disk(...) do{ FILE *fptr;	fptr = fopen("panda.log","a"); fprintf(fptr,"[PandaDiskLog]\t\t"); fprintf(fptr,__VA_ARGS__);fprintf(fptr,"\n");fclose(fptr);}while(0)
+#define DiskLog(...) do{FILE *fptr;fptr=fopen("panda.log","a");fprintf(fptr,"[PandaDiskLog]\t\t"); fprintf(fptr,__VA_ARGS__);fprintf(fptr,"\n");fclose(fptr);}while(0)
 #else
-#define DoLog2Disk(...) 
+#define DiskLog(...) 
 #endif
-
-extern "C"
-void DoDiskLog(const char *str);
 
 #ifdef _ERROR
 #define ShowError(...) do{printf("[%d]",gCommRank);printf("[%s]\t",__FUNCTION__);printf(__VA_ARGS__);printf("\n");fflush(stdout);}while(0)
@@ -109,7 +93,6 @@ void DoDiskLog(const char *str);
 
 struct panda_cpu_context;
 struct panda_node_context;
-struct panda_gpu_card_context;
 struct panda_gpu_context;
 
 struct keyval_t
@@ -121,26 +104,6 @@ struct keyval_t
    int task_idx;//map_task_idx, reduce_task_idx
 };// keyval_t;
 
-struct job_configuration
-{		
-	bool auto_tuning;
-	bool local_combiner;
-	bool iterative_support;
-
-	int num_input_record;
-	keyval_t * input_keyval_arr;
-	
-	int num_mappers;
-	int num_reducers;
-	
-	int num_gpu_core_groups;
-	int num_gpu_card_groups;
-	int num_cpus_groups;
-
-	int num_cpus_cores;
-	int auto_tuning_sample_rate;
-		
-};//job_configuration;
 
 extern "C"
 void *RunPandaCPUCombinerThread(void *ptr);
@@ -157,19 +120,14 @@ void ExecutePandaReduceTasksOnGPU(panda_gpu_context *pgc);
 extern "C"
 void* ExecutePandaCPUMapThread(void* thread_info);
 extern "C"
-void StartPandaGPUMapPartitioner(panda_gpu_context pgc, dim3 grids, dim3 blocks);
+void ExecutePandaGPUMapPartitioner(panda_gpu_context pgc, dim3 grids, dim3 blocks);
 extern "C"
 void RunGPUMapTasksHost(panda_gpu_context pgc, int curIter, int totalIter, dim3 grids, dim3 blocks);
 extern "C"
 void ExecutePandaSortBucket(panda_node_context *pnc);
 extern "C"
 void ExecutePandaCPUCombiner(panda_cpu_context *pcc);
-//void __checkCudaErrors(cudaError err, const char *file, const int line );
 
-int cudaMemGetInfo(void *, size_t *);
-int cudaMemset(void *,int,int);
-void PandaLaunchMapPartitionerOnGPU(panda_gpu_context,dim3,dim3);
-void PandaLaunchMapTasksOnGPU(panda_gpu_context, int, int , dim3,dim3);
 double PandaTimer();
 
 struct keyval_pos_t
@@ -248,14 +206,10 @@ struct panda_cpu_task_info_t {
 	panda_cpu_context *pcc;			//gpu_context  cpu_context
 	panda_node_context *pnc;		//
 	void *cpu_job_conf; //depricated	
-	int start_row_idx;
-	int end_row_idx;
+	int start_task_idx;
+	int end_task_idx;
 
 };// panda_cpu_task_info_t;
-
-struct panda_gpu_card_context
-{
-};// gpu_card_context;
 
 
 //typedef
@@ -396,11 +350,10 @@ struct panda_cpu_context
 
 struct panda_node_context
 {				
-	keyval_t		*input_keyval_arr;
+	keyval_t	*input_keyval_arr;
 	keyval_arr_t	*intermediate_keyval_arr_arr_p;
 			
 	struct{	
-			
 	//data for sorted intermediate results
 	int sorted_keyvals_arr_len;
 	int sorted_keyval_arr_max_len;
@@ -411,9 +364,8 @@ struct panda_node_context
 	int totalValSize;
 			
 	}sorted_key_vals;
-			
+
 	struct{	
-			
 	//data for sending out to remote compute node
 	int numBuckets;
 	int * keyBuffSize;
@@ -425,12 +377,11 @@ struct panda_node_context
 	}buckets;
 
 	struct{
-
 	std::vector<char * > savedKeysBuff, savedValsBuff;
 	std::vector<int  * > counts, keyPos, valPos, keySize, valSize;
 
 	} recv_buckets;
-	
+#if 0	
 	int num_cpus_groups;
 	int num_gpu_core_groups;
 	int num_gpu_card_groups;
@@ -443,20 +394,19 @@ struct panda_node_context
 	float cpu_ratio;
 	float gpu_core_ratio;
 	float gpu_card_ratio;
-	
+#endif	
 };
 
 struct panda_runtime_context
 {	
 	keyval_t		*input_keyval_arr;
-	keyval_arr_t	*intermediate_keyval_arr_arr_p;
+	keyval_arr_t		*intermediate_keyval_arr_arr_p;
 	keyvals_t		*sorted_intermediate_keyvals_arr;
 	int 			sorted_keyvals_arr_len;
 	
 	int num_cpus_groups;
 	int num_gpu_core_groups;
 	int num_gpu_card_groups;
-	
 	int num_all_dev_groups;
 };
 
@@ -467,11 +417,6 @@ struct panda_runtime_context
 #define CELL_ACC			0x03
 #define FPGA_ACC			0x04
 	 
-void PandaEmitMapOutputOnCPU(void *key,void *val,int keySize,int valSize,panda_cpu_context *pcc,int map_task_idx);
-void PandaEmitCombinerOutputOnCPU(void *key, void *val, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx);
-void PandaEmitReduceOutputOnCPU(void*	key, void*	val, int	keySize, int	valSize, panda_cpu_context *pcc);
-
-
 extern "C"
 void PandaEmitCPUMapOutput(void *key, void * val, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx);
 extern "C"
@@ -483,41 +428,17 @@ __device__ void PandaGPUEmitMapOutput(void *key, void *val, int keySize, int val
 __device__ void PandaGPUEmitCombinerOutput(void* key, void * val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx);
 __device__ void PandaGPUEmitReduceOutput(void * key, void *val, int keySize, int valSize, panda_gpu_context *pgc);
 
-
-
 __global__ void copyDataFromDevice2Host1(panda_gpu_context pgc);
 __global__ void copyDataFromDevice2Host2(panda_gpu_context pgc);
 __global__ void copyDataFromDevice2Host4Reduce(panda_gpu_context pgc);
 __global__ void PandaReducePartitioner(panda_gpu_context pgc);
 
-void *PandaThreadLaunchCombinerOnCPU(void *ptr);
-void *PandaThreadExecuteMapOnCPU(void* thread_info);
-
-void PandaExecuteShuffleMergeOnGPU(panda_node_context *pnc, panda_gpu_context *pgc);
-
-void AddReduceTaskOnGPU(panda_gpu_context* pgc, panda_node_context *pnc, int start_task_id, int end_task_id);
-void AddReduceTaskOnGPUCard(panda_gpu_card_context* pgc, panda_node_context *pnc, int start_task_id, int end_task_id);
-void AddReduceTaskOnCPU(panda_cpu_context* pgc, panda_node_context *pnc, int start_task_id, int end_task_id);
-
-//void PandaLaunchMapPartitionerOnGPU(panda_gpu_context pgc, dim3 grids, dim3 blocks);
-void PandaExecuteReduceTasksOnGPU(panda_gpu_context *pgc);
-void PandaExecuteReduceTasksOnGPUCard(panda_gpu_card_context *pgcc);
-
-void PandaExecuteCombinerOnGPU(panda_gpu_context *pgc);
-void PandaExecuteCombinerOnGPUCard(panda_gpu_card_context *pgcc);
-void PandaExecuteCombinerOnCPU(panda_cpu_context *pcc);
-
-void PandaExecuteSortOnGPUCard(panda_gpu_card_context *pgcc, panda_node_context *pnc);
-void PandaExecuteSortOnCPU(panda_cpu_context *pcc, panda_node_context *pnc);
-void PandaExecuteSortOnGPU(panda_gpu_context *pgc);
-
-void PandaExecuteSortBucketOnCPU(panda_node_context *pnc);
 void ExecutePandaCPUReduceTasks(panda_cpu_context *pcc);
+
 int getCPUCoresNum();
 int getGPUCoresNum();
 
 panda_gpu_context		*CreatePandaGPUContext();
 panda_cpu_context		*CreatePandaCPUContext();
-panda_gpu_card_context		*CreatePandaGPUCardContext();
 
 #endif //__PANDA_H__
