@@ -13,7 +13,6 @@
 #include <panda/Combiner.h>
 #include <panda/Partitioner.h>
 #include <panda/PandaMessage.h>
-#include <panda/PartialReducer.h>
 #include <panda/PandaMapReduceJob.h>
 #include <panda/EmitConfiguration.h>
 
@@ -250,7 +249,6 @@ namespace panda
 	keyval_arr_t *h_keyval_arr_arr = (keyval_arr_t *)malloc(sizeof(keyval_arr_t)*pgc->input_key_vals.num_input_record);
 	keyval_arr_t *d_keyval_arr_arr;
 	cudaMalloc((void**)&(d_keyval_arr_arr),pgc->input_key_vals.num_input_record*sizeof(keyval_arr_t));
-	//ShowLog("GPU Map Tasks 2.0");
 	
 	for (int i=0; i<pgc->input_key_vals.num_input_record;i++){
 		h_keyval_arr_arr[i].arr = NULL;
@@ -261,7 +259,6 @@ namespace panda
 	cudaMalloc((void***)&(d_keyval_arr_arr_p),pgc->input_key_vals.num_input_record*sizeof(keyval_arr_t*));
 	pgc->intermediate_key_vals.d_intermediate_keyval_arr_arr_p = d_keyval_arr_arr_p;
 
-	//ShowLog("GPU Map Tasks 3.0 num_input_records:%d",pgc->input_key_vals.num_input_record);		
 	int *count = NULL;
 	cudaMalloc((void**)(&count),pgc->input_key_vals.num_input_record*sizeof(int));
 	pgc->intermediate_key_vals.d_intermediate_keyval_total_count = count;
@@ -276,8 +273,6 @@ namespace panda
 	//Note: DO *NOT* set large number of threads within block (512), which lead to too many invocation of malloc in the kernel. 
 	//--------------------------------------------------
 
-	cudaThreadSynchronize();
-	
 	int numGPUCores = getGPUCoresNum();
 
 	dim3 blocks(THREAD_BLOCK_SIZE, THREAD_BLOCK_SIZE);
@@ -287,12 +282,7 @@ namespace panda
 	ShowLog("GridDim.X:%d GridDim.Y:%d BlockDim.X:%d BlockDim.Y:%d TotalGPUThreads:%d",grids.x,grids.y,blocks.x,blocks.y,total_gpu_threads);
 
 	cudaDeviceSynchronize();
-	double t1 = PandaTimer();
-	
 	ExecutePandaGPUMapPartitioner(*pgc,grids,blocks);
-	
-	cudaThreadSynchronize();
-	double t2 = PandaTimer();
 
 	int num_records_per_thread = (pgc->input_key_vals.num_input_record + (total_gpu_threads)-1)/(total_gpu_threads);
 	int totalIter = num_records_per_thread;
@@ -300,10 +290,8 @@ namespace panda
 
 	for (int iter = 0; iter< totalIter; iter++){
 
-		double t3 = PandaTimer();
-		ExecutePandaGPUMapTasks(*pgc, totalIter -1 - iter, totalIter, grids,blocks);
+		ExecutePandaGPUMapTasks(*pgc, totalIter-1-iter, totalIter, grids, blocks);
 		cudaThreadSynchronize();
-		double t4 = PandaTimer();
 		size_t total_mem,avail_mem;
 		cudaMemGetInfo( &avail_mem, &total_mem );
 		//ShowLog("GPU_ID:[%d] RunGPUMapTasks take %f sec at iter [%d/%d] remain %d mb GPU mem processed",
@@ -492,9 +480,9 @@ namespace panda
   void PandaMapReduceJob::WaitPandaMessagerExit()
   {
     if (messager!=NULL) messager->MsgFinish();
+	MessageThread->join();
 
-    MessageThread->join();
-    delete MessageThread;
+    	delete MessageThread;
   }//void
 
   PandaMapReduceJob::PandaMapReduceJob(int argc,char **argv)
@@ -683,7 +671,6 @@ namespace panda
 	  }//if
   }//void
 
-  //void PandaMapReduceJob::PandaPartitionCheckSends(const bool sync)
 
   // send data to local bucket
   void PandaMapReduceJob::StartPandaDoPartitionOnCPU(){

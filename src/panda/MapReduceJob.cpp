@@ -1,8 +1,10 @@
 #include <mpi.h>
+
 #include <panda/Message.h>
 #include <panda/Chunk.h>
 #include <panda/MapReduceJob.h>
 #include <panda/Partitioner.h>
+#include <panda/Sorter.h>
 
 #include <cudacpp/Stream.h>
 #include <oscpp/Condition.h>
@@ -12,7 +14,6 @@
 #include <algorithm>
 #include <cstdlib>
 #include <cstring>
-#include <vector>
 
 namespace panda
 {
@@ -35,6 +36,7 @@ namespace panda
     gCommRank = commRank;
     setDevice();
     partition = new Partitioner();
+    sorter = new Sorter();
   }//MapReduceJob
 
   MapReduceJob::~MapReduceJob()
@@ -42,7 +44,7 @@ namespace panda
 
     if (messager  != NULL) delete messager;
     if (partition != NULL) delete partition;
+    if (sorter != NULL) delete sorter;
     ShowLog("destroy MapReduce job and invoke MPI_Finalize");
-
   }//MapReduceJob
 }

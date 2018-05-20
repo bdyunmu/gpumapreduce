@@ -1,19 +1,19 @@
 #ifndef __PANDA_SUPMAPREDUCEJOB_H__
 #define __PANDA_SUPMAPREDUCEJOB_H__
 
-//#include <vector>
-
 namespace panda
 {
   class Message;
   class Chunk;
   class Partitioner;
+  class Sorter;
 
   class MapReduceJob
   {
     protected:
       Message *messager;
       Partitioner *partition;
+      Sorter *sorter;
 
       int commRank, commSize, deviceNum;
       void setDevice();

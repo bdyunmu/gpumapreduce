@@ -420,6 +420,7 @@ __global__ void RunPandaGPUCombiner(panda_gpu_context pgc);
 
 int getCPUCoresNum();
 int getGPUCoresNum();
+int (*panda_cpu_compare)(const void *key_a, int len_a, const void *key_b, int len_b);
 
 panda_gpu_context		*CreatePandaGPUContext();
 panda_cpu_context		*CreatePandaCPUContext();

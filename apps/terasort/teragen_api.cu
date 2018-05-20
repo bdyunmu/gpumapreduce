@@ -19,21 +19,11 @@ Developer: Hui Li (huili@ruijie.com.cn)
 #include "Random16.h"
 #include "TeraInputFormat.h"
 
-__device__ void panda_gpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_gpu_context pgc){
-}
-__device__ int panda_gpu_core_compare(const void *key_a, int len_a, const void *key_b, int len_b){
-return 0;
-}
 __device__ void panda_gpu_core_combiner(void *KEY, val_t* VAL, int keySize, int valCount, panda_gpu_context *pgc, int map_task_idx){
 }
 __device__ void panda_gpu_core_map(void *KEY, void*VAL, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx){
 }
 __device__ void panda_gpu_core_reduce(void *key, val_t* vals, int keySize, int valCount, panda_gpu_context pgc){
-}
-
-int panda_cpu_compare(const void *key_a, int len_a, const void *key_b, int len_b)
-{
-return 0;
 }
 
 void panda_cpu_combiner(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context *pcc, int map_task_idx){

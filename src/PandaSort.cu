@@ -22,8 +22,6 @@
 #include "Panda.h"
 #include "PandaAPI.h"
 
-
-
 void ExecutePandaGPUSort(panda_gpu_context* pgc){
 
 	cudaThreadSynchronize();
@@ -308,8 +306,6 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 
 void ExecutePandaGPUShuffleMerge(panda_node_context *pnc, panda_gpu_context *pgc){
 
-	printf("[ExecutePandaShuffleMergeGPU]");
-	
 	char *sorted_keys_shared_buff_0 = (char *)pgc->sorted_key_vals.h_sorted_keys_shared_buff;
 	char *sorted_vals_shared_buff_0 = (char *)pgc->sorted_key_vals.h_sorted_vals_shared_buff;
 
@@ -397,7 +393,8 @@ __global__ void copyDataFromDevice2Host1(panda_gpu_context pgc)
 	
 	int num_records_per_thread = (pgc.input_key_vals.num_input_record + (gridDim.x*blockDim.x*blockDim.y)-1)/(gridDim.x*blockDim.x*blockDim.y);
 
-printf("[copyDataFromDevice2Host1]  pgc.input_key_vals.num_input_record:%d gx:%d,bx:%d,by:%d\n",pgc.input_key_vals.num_input_record,gridDim.x,blockDim.x,blockDim.y);
+	printf("[copyDataFromDevice2Host1]  pgc.input_key_vals.num_input_record:%d gx:%d,bx:%d,by:%d\n",
+		pgc.input_key_vals.num_input_record,gridDim.x,blockDim.x,blockDim.y);
 
 	int block_start_idx = num_records_per_thread * blockIdx.x * blockDim.x * blockDim.y;
 	int thread_start_idx = block_start_idx 
@@ -514,7 +511,5 @@ __global__ void copyDataFromDevice2Host2(panda_gpu_context pgc)
 	free(shared_buff);
 
 }//__global__	
-
-
 
 #endif 
