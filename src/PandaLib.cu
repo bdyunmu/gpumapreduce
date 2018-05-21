@@ -256,7 +256,7 @@ __global__ void RunPandaGPUReducePartitioner(panda_gpu_context pgc)
 		if( end_idx - start_idx == 0) {
 		GpuErrorLog("gpu_reduce valCount ==0");
 		}//if
-		else panda_gpu_reduce(key, val_t_arr, keySize, end_idx-start_idx, pgc);
+		else panda_gpu_core_reduce(key, val_t_arr, keySize, end_idx-start_idx, pgc);
 	}//for
 }
 
@@ -338,7 +338,7 @@ void *RunPandaCPUCombinerThread(void *ptr){
 			char *jKey = (char *)shared_buff+next_kv_p->keyPos;
 			int jKeySize = next_kv_p->keySize;
 		
-			if (!local_combiner||panda_cpu_compare(iKey,iKeySize,jKey,jKeySize)!=0){
+			if (!local_combiner||cpu_compare(iKey,iKeySize,jKey,jKeySize)!=0){
 				continue;
 			}
 			index++;
@@ -477,7 +477,7 @@ void ExecutePandaSortBucket(panda_node_context *pnc)
 
 				key_1		= (char *)(sorted_intermediate_keyvals_arr[k].key);
 				keySize_1	= sorted_intermediate_keyvals_arr[k].keySize;
-				if(panda_cpu_compare(key_0,keySize_0,key_1,keySize_1)!=0)
+				if(cpu_compare(key_0,keySize_0,key_1,keySize_1)!=0)
 				continue;
 				//ShowLog("ExecutePandaSortBucket j:[%d] k:[%d]   key_0:[%s] key_1:[%s]",j,k,key_0,key_1);
 				val_t *vals = sorted_intermediate_keyvals_arr[k].vals;
@@ -975,7 +975,7 @@ __global__ void RunPandaGPUCombiner(panda_gpu_context pgc)
 			char *jKey = (char *)shared_buff+next_kv_p->keyPos;
 			int jKeySize = next_kv_p->keySize;
 		
-			if (panda_gpu_core_compare(iKey,iKeySize,jKey,jKeySize)!=0){
+			if (gpu_compare(iKey,iKeySize,jKey,jKeySize)!=0){
 				continue;
 			}//if
 			index++;

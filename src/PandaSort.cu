@@ -139,7 +139,7 @@ pgc->intermediate_key_vals.h_intermediate_keyval_pos_arr = (keyval_pos_t *)mallo
 			int jKeySize = h_sorted_keyval_pos_arr[j].keySize;
 			char *key_i = (char *)(intermediate_key_shared_buff + h_intermediate_keyvals_pos_arr[i].keyPos);
 			char *key_j = (char *)(sorted_keys_shared_buff + h_sorted_keyval_pos_arr[j].keyPos);
-			if (panda_cpu_compare(key_i,iKeySize,key_j,jKeySize)!=0)
+			if (cpu_compare(key_i,iKeySize,key_j,jKeySize)!=0)
 				continue;
 
 			//found the match
@@ -250,7 +250,7 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 				char *key_k = (char *)(sorted_intermediate_keyvals_arr[k].key);
 				int keySize_k = sorted_intermediate_keyvals_arr[k].keySize;
 
-				if ( panda_cpu_compare(key_i, keySize_i, key_k, keySize_k) != 0 )
+				if ( cpu_compare(key_i, keySize_i, key_k, keySize_k) != 0 )
 					continue;
 
 				//found the match
@@ -327,7 +327,7 @@ void ExecutePandaGPUShuffleMerge(panda_node_context *pnc, panda_gpu_context *pgc
 			key_1 = sorted_intermediate_keyvals_arr[j].key;
 			keySize_1 = sorted_intermediate_keyvals_arr[j].keySize;
 
-			if(panda_cpu_compare(key_0,keySize_0,key_1,keySize_1)!=0)
+			if(cpu_compare(key_0,keySize_0,key_1,keySize_1)!=0)
 				continue;
 
 			val_t *vals = sorted_intermediate_keyvals_arr[j].vals;
@@ -511,5 +511,27 @@ __global__ void copyDataFromDevice2Host2(panda_gpu_context pgc)
 	free(shared_buff);
 
 }//__global__	
+
+  int cpu_compare(const void *key_a,int len_a, const void *key_b,int len_b){
+        int short_len = len_a>len_b? len_b:len_a;
+        for(int i = 0;i<short_len;i++){
+                if(((char *)key_a)[i]>((char *)key_b)[i])
+                return 1;
+                if(((char *)key_a)[i]<((char *)key_b)[i])
+                return -1;
+        }
+        return 0;
+  }
+
+  __device__ int gpu_compare(const void *key_a, int len_a, const void *key_b, int len_b){
+    int short_len = len_a>len_b? len_b:len_a;
+    for(int i = 0;i<short_len;i++){
+        if(((char *)key_a)[i]>((char *)key_b)[i])
+        return 1;
+        if(((char *)key_a)[i]<((char *)key_b)[i])
+        return -1;
+    }
+    return 0;
+  }
 
 #endif 

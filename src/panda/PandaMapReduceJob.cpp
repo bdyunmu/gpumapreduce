@@ -7,7 +7,6 @@
 #include "Panda.h"
 
 #include <panda/Chunk.h>
-#include <panda/Sorter.h>
 #include <panda/Mapper.h>
 #include <panda/Reducer.h>
 #include <panda/Combiner.h>

@@ -6,14 +6,14 @@ namespace panda
   class Message;
   class Chunk;
   class Partitioner;
-  class Sorter;
+  //class Sorter;
 
   class MapReduceJob
   {
     protected:
       Message *messager;
       Partitioner *partition;
-      Sorter *sorter;
+      //Sorter *sorter;
 
       int commRank, commSize, deviceNum;
       void setDevice();

@@ -59,7 +59,7 @@ int main(int argc, char ** argv)
 	}
 	char rb[100];
 	int count = 0;
-	while(fread(rb,100,1,fp)!=NULL){
+	while(fread(rb,100,1,fp)!=0){
 	job->addInput(new panda::PreLoadedPandaChunk((char *)rb,100,NUM_ELEMENTS));
 	count++;	
 	}
