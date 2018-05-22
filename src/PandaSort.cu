@@ -21,6 +21,125 @@
 
 #include "Panda.h"
 
+void ExecutePandaSortBucket(panda_node_context *pnc)
+{
+
+	  int numRecvedBuckets = pnc->recv_buckets.counts.size();
+	  ShowLog("numRecvedBuckets:%d",numRecvedBuckets);
+
+	  keyvals_t *sorted_intermediate_keyvals_arr = NULL; 
+          pnc->sorted_key_vals.sorted_intermediate_keyvals_arr = NULL;
+          pnc->sorted_key_vals.sorted_keyvals_arr_len = 0;
+
+	  char *key_0, *key_1;
+	  int keySize_0, keySize_1;
+	  char *val_0;
+	  // char *val_1;
+	  int valSize_0;
+	  //int valSize_1;
+	  for(int i=0; i<numRecvedBuckets; i++){
+		char *keyBuff = pnc->recv_buckets.savedKeysBuff[i];
+		char *valBuff = pnc->recv_buckets.savedValsBuff[i];
+		int *counts = pnc->recv_buckets.counts[i];
+
+		int *keyPosArray  = pnc->recv_buckets.keyPos[i];
+		int *keySizeArray = pnc->recv_buckets.keySize[i];
+		int *valPosArray  = pnc->recv_buckets.valPos[i];
+		int *valSizeArray = pnc->recv_buckets.valSize[i];
+
+		int maxlen	= counts[0];
+		int keyBuffSize	= counts[1];
+		int valBuffSize	= counts[2];
+
+		for (int j=0; j<maxlen; j++){
+			
+			if( keyPosArray[j] + keySizeArray[j] > keyBuffSize ) 
+				ErrorLog("(keyPosArray[j]:%d + keySizeArray[j]:%d > keyBuffSize:%d)", keyPosArray[j], keySizeArray[j] , keyBuffSize);
+
+			key_0		= keyBuff + keyPosArray[j];
+			keySize_0	= keySizeArray[j];
+
+			int k = 0;
+			for ( ;k<pnc->sorted_key_vals.sorted_keyvals_arr_len;k++){
+				key_1		= (char *)(sorted_intermediate_keyvals_arr[k].key);
+				keySize_1	= sorted_intermediate_keyvals_arr[k].keySize;
+				int compare_res = cpu_compare(key_0,keySize_0,key_1,keySize_1);
+				if(compare_res>0){
+				  	continue;
+				}
+				else if(compare_res==0){		
+				  	val_t *vals = sorted_intermediate_keyvals_arr[k].vals;
+				  	int index   = sorted_intermediate_keyvals_arr[k].val_arr_len;
+					sorted_intermediate_keyvals_arr[k].val_arr_len++;
+					sorted_intermediate_keyvals_arr[k].vals = (val_t*)realloc(vals, 
+						sizeof(val_t)*(sorted_intermediate_keyvals_arr[k].val_arr_len));
+					val_0   = valBuff + valPosArray[j];
+					valSize_0 = valSizeArray[j];
+					sorted_intermediate_keyvals_arr[k].vals[index].val = (char *)malloc(sizeof(char)*valSize_0);
+					sorted_intermediate_keyvals_arr[k].vals[index].valSize = valSize_0;
+					memcpy(sorted_intermediate_keyvals_arr[k].vals[index].val, val_0, valSize_0);
+					break;
+				}else{
+					int index = pnc->sorted_key_vals.sorted_keyvals_arr_len;
+					pnc->sorted_key_vals.sorted_keyvals_arr_len++;
+					sorted_intermediate_keyvals_arr = (keyvals_t *)realloc(sorted_intermediate_keyvals_arr, 
+						sizeof(keyvals_t)*(pnc->sorted_key_vals.sorted_keyvals_arr_len));
+					while(index>k){
+						keyvals_t* kvalsp0 = (keyvals_t *)&(sorted_intermediate_keyvals_arr[index]);
+						keyvals_t* kvalsp1 = (keyvals_t *)&(sorted_intermediate_keyvals_arr[index-1]);
+						kvalsp0->keySize = kvalsp1->keySize;
+						kvalsp0->key = kvalsp1->key;
+						kvalsp0->vals = kvalsp1->vals;
+						kvalsp0->val_arr_len = kvalsp1->val_arr_len;
+						index--;
+					}//while
+					keyvals_t* kvalsp2 = (keyvals_t *)&(sorted_intermediate_keyvals_arr[k]);
+					kvalsp2->keySize = keySize_0;
+					kvalsp2->key = malloc(sizeof(char)*keySize_0);
+					memcpy(kvalsp2->key,key_0,keySize_0);
+					kvalsp2->vals = (val_t *)malloc(sizeof(val_t)*1);
+					kvalsp2->val_arr_len = 1;
+					val_0 = valBuff+valPosArray[j];
+					valSize_0 = valSizeArray[j];
+					kvalsp2->vals[0].valSize = valSize_0;
+					kvalsp2->vals[0].val = (char *)malloc(sizeof(char)*valSize_0);
+					memcpy(kvalsp2->vals[0].val, val_0, valSize_0);
+					break;
+				}//else
+			}//for k
+			if (k == pnc->sorted_key_vals.sorted_keyvals_arr_len){
+
+			if (pnc->sorted_key_vals.sorted_keyvals_arr_len == 0) sorted_intermediate_keyvals_arr = NULL;
+
+			int index = pnc->sorted_key_vals.sorted_keyvals_arr_len;
+			pnc->sorted_key_vals.sorted_keyvals_arr_len++;
+			sorted_intermediate_keyvals_arr = (keyvals_t *)realloc(sorted_intermediate_keyvals_arr, 
+				sizeof(keyvals_t)*(pnc->sorted_key_vals.sorted_keyvals_arr_len));
+			keyvals_t* kvalsp = (keyvals_t *)&(sorted_intermediate_keyvals_arr[index]);
+
+			kvalsp->keySize = keySize_0;
+			kvalsp->key = malloc(sizeof(char)*keySize_0);
+			memcpy(kvalsp->key, key_0, keySize_0);
+
+			kvalsp->vals = (val_t *)malloc(sizeof(val_t)*1);
+			kvalsp->val_arr_len = 1;
+
+			if (valPosArray[j] + valSizeArray[j] > valBuffSize)
+				ErrorLog("(valPosArray[j] + valSizeArray[j] > valBuffSize)");
+
+			val_0   = valBuff + valPosArray[j];
+			valSize_0 = valSizeArray[j];
+
+			kvalsp->vals[0].valSize = valSize_0;
+			kvalsp->vals[0].val = (char *)malloc(sizeof(char)*valSize_0);
+			memcpy(kvalsp->vals[0].val, val_0, valSize_0);
+
+			}//k
+		}//j
+	  }//i
+	  pnc->sorted_key_vals.sorted_intermediate_keyvals_arr = sorted_intermediate_keyvals_arr;
+}//			
+
 void ExecutePandaGPUSort(panda_gpu_context* pgc){
 
 	cudaThreadSynchronize();
