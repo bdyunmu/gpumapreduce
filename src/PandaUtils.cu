@@ -12,15 +12,33 @@
 #include "Panda.h"
 #include <unistd.h> 
 #include <sys/time.h>
+#include <memory>
 
 #ifndef __PANDA_UTILS_CU__
 #define __PANDA_UTILS_CU__
 
+
+void getGPUDevProp(){
+	int devCount = 0;
+	cudaError_t error_id = cudaGetDeviceCount(&devCount);
+	if(error_id != cudaSuccess){
+	printf("Result = FAIL\n");
+	exit(-1);
+	}
+	int dev = 0;
+	cudaSetDevice(dev);
+	cudaDeviceProp gpu_dev;
+	cudaGetDeviceProperties(&gpu_dev,dev);
+	printf("Total amount of global memory: %.0f Mbytes\n",(float)gpu_dev.totalGlobalMem/1048576.0f);
+	printf("GPU Max Clock rate: %.0f GHz\n",gpu_dev.clockRate*1e-6f);
+	printf(" Memory Clock rate:  %.0f Mhz\n",gpu_dev.memoryClockRate*1e-3f);
+	printf(" Memory Bus Width:  %d-bit\n",gpu_dev.memoryBusWidth);
+}
 int getGPUCoresNum() { 
 	int arch_cores_sm[3] = {1, 8, 32 };
 	cudaDeviceProp gpu_dev;
 	int tid = 0;
-	cudaGetDeviceProperties(&gpu_dev, tid);
+	cudaGetDeviceProperties(&gpu_dev,tid);
 	int sm_per_multiproc = 1;
 	if (gpu_dev.major == 9999 && gpu_dev.minor == 9999)
 			sm_per_multiproc = 1;
@@ -28,7 +46,6 @@ int getGPUCoresNum() {
 			sm_per_multiproc = arch_cores_sm[gpu_dev.major];
 	else
 			sm_per_multiproc = arch_cores_sm[2];
-	//return ((gpu_dev.multiProcessorCount)*(sm_per_multiproc));
 	//ShowLog("Configure Device ID:%d: Device Name:%s MultProcessorCount:%d sm_per_multiproc:%d", 0, gpu_dev.name,gpu_dev.multiProcessorCount,sm_per_multiproc);
 	return ((gpu_dev.multiProcessorCount)*(sm_per_multiproc));
 }

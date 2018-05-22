@@ -5,7 +5,7 @@
 
         File: PandaSort.cu
         First Version:          2012-07-01 V0.1
-        Last UPdates:           2018-04-28 v0.61
+        Last UPdates:           2018-04-28 v0.41
         Developer: Hui Li (huili@ruijie.com.cn)
 
 */
@@ -20,7 +20,6 @@
 #define _PANDA_SORT_CU_
 
 #include "Panda.h"
-#include "PandaAPI.h"
 
 void ExecutePandaGPUSort(panda_gpu_context* pgc){
 
@@ -512,7 +511,7 @@ __global__ void copyDataFromDevice2Host2(panda_gpu_context pgc)
 
 }//__global__	
 
-  int cpu_compare(const void *key_a,int len_a, const void *key_b,int len_b){
+ inline int cpu_compare(const void *key_a,int len_a, const void *key_b,int len_b){
         int short_len = len_a>len_b? len_b:len_a;
         for(int i = 0;i<short_len;i++){
                 if(((char *)key_a)[i]>((char *)key_b)[i])
@@ -520,10 +519,12 @@ __global__ void copyDataFromDevice2Host2(panda_gpu_context pgc)
                 if(((char *)key_a)[i]<((char *)key_b)[i])
                 return -1;
         }
-        return 0;
+	if(len_a>len_b) return 1;
+	else if(len_a<len_b) return -1;
+	else if(len_a == len_b) return 0;
   }
 
-  __device__ int gpu_compare(const void *key_a, int len_a, const void *key_b, int len_b){
+ __device__ int gpu_compare(const void *key_a, int len_a, const void *key_b, int len_b){
     int short_len = len_a>len_b? len_b:len_a;
     for(int i = 0;i<short_len;i++){
         if(((char *)key_a)[i]>((char *)key_b)[i])
@@ -531,7 +532,9 @@ __global__ void copyDataFromDevice2Host2(panda_gpu_context pgc)
         if(((char *)key_a)[i]<((char *)key_b)[i])
         return -1;
     }
-    return 0;
+    if(len_a>len_b) return 1;
+    else if(len_a<len_b) return -1;
+    else if(len_a == len_b) return 0;
   }
 
 #endif 
