@@ -143,7 +143,7 @@ void ExecutePandaGPUReduceTasks(panda_gpu_context *pgc)
 	pgc->output_key_vals.h_reduced_keyval_arr = (keyval_t*)(malloc(sizeof(keyval_t)*pgc->output_key_vals.h_reduced_keyval_arr_len));
 	
 	cudaThreadSynchronize(); 
-	int numGPUCores = getGPUCoresNum();
+	int numGPUCores = pgc->num_gpus_cores;//getGPUCoresNum();
 	dim3 blocks(THREAD_BLOCK_SIZE, THREAD_BLOCK_SIZE);
 	int numBlocks = (numGPUCores*16+(blocks.x*blocks.y)-1)/(blocks.x*blocks.y);
         dim3 grids(numBlocks, 1);
@@ -383,7 +383,7 @@ void ExecutePandaGPUCombiner(panda_gpu_context * pgc){
 
 	cudaMemset(pgc->intermediate_key_vals.d_intermediate_keyval_total_count,0,pgc->input_key_vals.num_input_record*sizeof(int));
 	ShowLog("pgc->input_key_vals.num_input_record:%d",pgc->input_key_vals.num_input_record);
-	int numGPUCores = getGPUCoresNum();
+	int numGPUCores = pgc->num_gpus_cores;//getGPUCoresNum();
 	dim3 blocks(THREAD_BLOCK_SIZE, THREAD_BLOCK_SIZE);
 	int numBlocks = (numGPUCores*16+(blocks.x*blocks.y)-1)/(blocks.x*blocks.y);
     	dim3 grids(numBlocks, 1);

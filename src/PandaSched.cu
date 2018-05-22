@@ -4,15 +4,18 @@
 	
 	File: PandaSched.cu 
 	First Version:		2012-07-01 V0.1
-	Current Version:	2012-09-01 V0.3	
-	Last Updates:		2013-06-27 V0.43
+	Last Updates:		2018-05-22 V0.43
 
 	Developer: Hui Li (huili@ruijie.com.cn)
 
  */
 
-#ifndef _PANDASCHED_CU_
-#define _PANDASCHED_CU_
+#include "Panda.h"
 
-
-#endif // _PRESCHED_CU_
+//calculate the workload ratio between gpu and cpu using the roufline model.
+void pandaTaskSched(panda_node_context *pnc, panda_gpu_context *pgc, panda_cpu_context *pcc){
+	int gpuTotalGHz = pgc->num_gpus_cores*pgc->gpu_GHz;
+	int cpuTotalGHz = pcc->num_cpus_cores*pcc->cpu_GHz;
+	pnc->cpu_ratio = cpuTotalGHz/(gpuTotalGHz+cpuTotalGHz);
+	pnc->gpu_ratio = 1- pnc->cpu_ratio;	
+}

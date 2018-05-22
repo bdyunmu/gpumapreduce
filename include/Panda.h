@@ -104,8 +104,6 @@ struct keyval_t
    int task_idx;//map_task_idx, reduce_task_idx
 };// keyval_t;
 
-
-
 void *RunPandaCPUCombinerThread(void *ptr);
 void* RunPandaCPUMapThread(void* thread_info);
 
@@ -203,6 +201,10 @@ struct panda_cpu_task_info_t {
 
 struct panda_gpu_context
 {	
+	int num_gpus_cores;
+	int gpu_GHz; //in GHz
+	int gpu_mem_size; //in MB
+	int gpu_mem_bandwidth; //in GB/s
 
 	struct{
 
@@ -276,6 +278,10 @@ struct panda_cpu_context
 {	
 	
 	int num_cpus_cores;
+	int cpu_GHz; //in GHz
+	int cpu_mem_size; //in MB
+	int cpu_mem_bandwidth; //in GB/s
+	
 	pthread_t  *panda_cpu_task_thread;
 	panda_cpu_task_info_t *panda_cpu_task_thread_info;
 
@@ -366,20 +372,9 @@ struct panda_node_context
 	std::vector<int  * > counts, keyPos, valPos, keySize, valSize;
 
 	} recv_buckets;
-#if 0	
-	int num_cpus_groups;
-	int num_gpu_core_groups;
-	int num_gpu_card_groups;
-	int num_all_dev_groups;
-	
-	struct cpu_context 			*cpu_context;
-	struct panda_gpu_context 	*gpu_core_context;
-	struct gpu_context 			*gpu_card_context;
-	
+
 	float cpu_ratio;
-	float gpu_core_ratio;
-	float gpu_card_ratio;
-#endif	
+	float gpu_ratio;
 };
 
 struct panda_runtime_context
@@ -418,8 +413,14 @@ __global__ void RunPandaGPUMapPartitioner(panda_gpu_context pgc);
 __global__ void RunPandaGPUMapTasks(panda_gpu_context pgc, int curIter, int totalIter);
 __global__ void RunPandaGPUCombiner(panda_gpu_context pgc);
 
+int getCPUGHz();
+int getCPUMemSize();
+int getCPUMemBandwidth();
 int getCPUCoresNum();
 int getGPUCoresNum();
+int getGPUGHz();
+int getGPUMemSize();
+int getGPUMemBandwidth();
 
 __device__ int gpu_compare(const void *key_a, int len_a, const void *key_b, int len_b);
 inline int cpu_compare(const void *key_a, int len_a, const void *key_b, int len_b);

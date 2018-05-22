@@ -165,7 +165,6 @@ namespace panda
 	if (pcc->num_cpus_cores <= 0)				{ ErrorLog("Error: pcc->num_cpus == 0");		exit(-1);}
 
 	int num_cpus_cores = pcc->num_cpus_cores;
-	//ShowLog("9.0:num_cpus_cores:%d",pcc->num_cpus_cores);	
 	int totalKeySize = 0;
 	int totalValSize = 0;
 	for(int i=0; i<pcc->input_key_vals.num_input_record; i++){
@@ -308,6 +307,9 @@ namespace panda
 	this->pCPUContext->input_key_vals.num_input_record	= cpuMapTasks.size();
 	this->pCPUContext->input_key_vals.input_keyval_arr	= (keyval_t *)malloc(cpuMapTasks.size()*sizeof(keyval_t));
 	this->pCPUContext->num_cpus_cores			= getCPUCoresNum();
+	this->pCPUContext->cpu_mem_size = getCPUMemSize();
+	this->pCPUContext->cpu_mem_bandwidth = getCPUMemBandwidth();
+	this->pCPUContext->cpu_GHz = getCPUGHz();
 
 	for (unsigned int i= 0;i<cpuMapTasks.size();i++){
 
@@ -368,6 +370,11 @@ namespace panda
   {
 
 	this->pGPUContext = CreatePandaGPUContext();
+	this->pGPUContext->num_gpus_cores = getGPUCoresNum();
+	this->pGPUContext->gpu_mem_size = getGPUMemSize();
+	this->pGPUContext->gpu_mem_bandwidth = getGPUMemBandwidth();
+	this->pGPUContext->gpu_GHz = getGPUGHz();
+
 	this->pGPUContext->input_key_vals.num_input_record = gpuMapTasks.size();//Ratio
 	this->pGPUContext->input_key_vals.h_input_keyval_arr = 	(keyval_t *)malloc(gpuMapTasks.size()*sizeof(keyval_t));
 

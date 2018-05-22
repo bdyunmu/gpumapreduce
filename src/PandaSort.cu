@@ -160,7 +160,7 @@ void ExecutePandaGPUSort(panda_gpu_context* pgc){
 	//int num_mappers = 1;
 	//int num_blocks = (num_mappers + (NUM_THREADS)-1)/(NUM_THREADS);
 	//int num_blocks = (pgc->input_key_vals->num_mappers + (NUM_THREADS)-1)/(NUM_THREADS);
-	int numGPUCores = getGPUCoresNum();
+	int numGPUCores = pgc->num_gpus_cores;//getGPUCoresNum();
 	dim3 blocks(THREAD_BLOCK_SIZE, THREAD_BLOCK_SIZE);
 	int numBlocks = (numGPUCores*16+(blocks.x*blocks.y)-1)/(blocks.x*blocks.y);
 	dim3 grids(numBlocks, 1);

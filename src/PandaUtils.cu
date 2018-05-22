@@ -34,6 +34,28 @@ void getGPUDevProp(){
 	printf(" Memory Clock rate:  %.0f Mhz\n",gpu_dev.memoryClockRate*1e-3f);
 	printf(" Memory Bus Width:  %d-bit\n",gpu_dev.memoryBusWidth);
 }
+int getGPUMemBandwidth(){
+	int dev = 0;
+	cudaSetDevice(dev);
+	cudaDeviceProp gpu_dev;
+	cudaGetDeviceProperties(&gpu_dev,dev);
+	int gmbd = (gpu_dev.memoryClockRate*1e-6f)*(gpu_dev.memoryBusWidth)/8*2;
+	return gmbd; //in GB/s
+}
+int getGPUMemSize(){
+	int dev = 0;
+	cudaSetDevice(dev);
+	cudaDeviceProp gpu_dev;
+	cudaGetDeviceProperties(&gpu_dev,dev);
+	return (int)(gpu_dev.totalGlobalMem/1048576.0f);
+}
+int getGPUGHz(){
+	int dev = 0;
+	cudaSetDevice(dev);
+	cudaDeviceProp gpu_dev;
+	cudaGetDeviceProperties(&gpu_dev,dev);
+	return (int)(gpu_dev.clockRate*1e-6f);
+}
 int getGPUCoresNum() { 
 	int arch_cores_sm[3] = {1, 8, 32 };
 	cudaDeviceProp gpu_dev;
@@ -87,7 +109,17 @@ int getCPUCoresNum() {
 #endif 
 
 }
+int getCPUMemSize(){
+	return 0;
+}
 
+int getCPUMemBandwidth(){
+	return 0;
+}
+
+int getCPUGHz(){
+	return 0;
+}
 double PandaTimer(){
 	#ifndef _WIN32
 	static struct timeval tv;
