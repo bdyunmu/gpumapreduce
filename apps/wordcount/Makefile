@@ -12,63 +12,69 @@ NVCCFLAGS   = $(CFLAGS)
 LDFLAGS	    = -L/opt/openmpi/lib/
 LIBS        = -lmpi -lpthread
 
-CC          = mpicc -g
-MPICC       = mpicxx -g
-NVCC        = nvcc -g 
+CC          = mpicc 
+MPICC       = mpicxx 
+NVCC        = nvcc
 
 NVCCFLAGS  = -I/opt/openmpi/include -lcudart -arch=sm_20 -I../../include --relocatable-device-code=true
 INCFLAGS   += -I/usr/include/  -I/usr/local/cuda/include
 INCFLAGS   += -I../../include -I../../include/panda
 LDFLAGS    += -L/usr/local/cuda/lib64/ 
 
-APP_WC_CPP_FILES:= $(wildcard ./*.cpp)
-APP_WC_CU_FILES	:= $(wildcard ./*.cu)
+CPP_FILES_0     := $(wildcard ./*.cpp)
+CPP_FILES_1 	:= $(wildcard ../../src/oscpp/*.cpp)
+CPP_FILES_2     := $(wildcard ../../src/pandajob/*.cpp)
+CPP_FILES_3	:= $(wildcard ../../src/cudacpp/*.cpp)
+CPP_FILES_4     := $(wildcard ../../src/message/*.cpp)
+CPP_FILES_5     := $(wildcard ../../src/inputformat/*.cpp)
 
-OS_CPP_FILES 	:= $(wildcard ../../src/oscpp/*.cpp)
-PANDA_CPP_FILES := $(wildcard ../../src/panda/*.cpp)
-CUDA_CPP_FILES 	:= $(wildcard ../../src/cudacpp/*.cpp)
-CUDA_CU_FILES 	:= $(wildcard ../../src/*.cu)
+CU_FILES_0 	:= $(wildcard ../../src/runtime/*.cu)
+CU_FILES_1	:= $(wildcard ./*.cu)
 
-APP_WC_H_FILES	:= $(wildcard ./*.h)
-OS_H_FILES 	:= $(wildcard ../../include/oscpp/*.h)
-PANDA_H_FILES 	:= $(wildcard ../../include/panda/*.h)
-CUDA_H_FILES 	:= $(wildcard ../../include/cudacpp/*.h)
-H_FILES 	:= $(wildcard ../../include/*.h)
+H_FILES_0	:= $(wildcard ./*.h)
+H_FILES_1 	:= $(wildcard ../../include/oscpp/*.h)
+H_FILES_2 	:= $(wildcard ../../include/panda/*.h)
+H_FILES_3 	:= $(wildcard ../../include/cudacpp/*.h)
+H_FILES_4 	:= $(wildcard ../../include/*.h)
 
-APP_WC_OBJ_FILES:= $(addprefix ../../obj/,$(notdir $(APP_WC_CPP_FILES:.cpp=.o)))
-APP_WC_CU_OBJ_FILES:= $(addprefix ../../cuobj/,$(notdir $(APP_WC_CU_FILES:.cu=.o)))
+TARGET_H_FILES  := $(H_FILES_0) $(H_FILES_1) $(H_FILES_2) \
+			$(H_FILES_3) $(H_FILES_4)
+TARGET_CPP_FILES:= $(CPP_FILES_0) $(CPP_FILES_1) $(CPP_FILES_2) \
+		     $(CPP_FILES_3) $(CPP_FILES_4) $(CPP_FILES_5)
+TARGET_CU_FILES := $(CU_FILES_0) $(CU_FILES_1)
+CPP_OBJ_FILES   := $(addprefix ../../obj/,$(notdir $(TARGET_CPP_FILES:.cpp=.o)))
+CU_OBJ_FILES    := $(addprefix ../../cuobj/,$(notdir $(TARGET_CU_FILES:.cu=.o)))
+TARGET_OBJ_FILES:= $(CPP_OBJ_FILES) $(CU_OBJ_FILES)
 
-OS_OBJ_FILES 	:= $(addprefix ../../obj/,$(notdir $(OS_CPP_FILES:.cpp=.o)))
-PANDA_OBJ_FILES := $(addprefix ../../obj/,$(notdir $(PANDA_CPP_FILES:.cpp=.o)))
-CUDA_OBJ_FILES 	:= $(addprefix ../../obj/,$(notdir $(CUDA_CPP_FILES:.cpp=.o)))
-CU_OBJ_FILES 	:= $(addprefix ../../cuobj/,$(notdir $(CUDA_CU_FILES:.cu=.o)))
-
-TARGET_OBJ_FILES:=
-WC_OBJ_CU_FILES	:=
-
-wordcount: $(APP_WC_OBJ_FILES) $(OS_OBJ_FILES) $(PANDA_OBJ_FILES) \
-		$(CUDA_OBJ_FILES) $(CU_OBJ_FILES) $(APP_WC_CU_OBJ_FILES)
+wordcount: $(TARGET_OBJ_FILES)
 		$(NVCC) $(LIBS) $(NVCCFLAGS) $(LDFLAGS) -o ../../bin/wordcount $^
 
-../../obj/%.o: ./%.cpp $(APP_WC_H_FILES) 
+FILES_0		:= ./%.cpp
+FILES_1 	:= ../../src/oscpp/%.cpp
+FILES_2     	:= ../../src/pandajob/%.cpp
+FILES_3		:= ../../src/cudacpp/%.cpp
+FILES_4     	:= ../../src/message/%.cpp
+FILES_5     	:= ../../src/inputformat/%.cpp
+
+../../obj/%.o: $(FILES_0) $(TARGET_H_FILES) 
+	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
+../../obj/%.o: $(FILES_1) $(TARGET_H_FILES) 
+	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
+../../obj/%.o: $(FILES_2) $(TARGET_H_FILES) 
+	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
+../../obj/%.o: $(FILES_3) $(TARGET_H_FILES) 
+	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
+../../obj/%.o: $(FILES_4) $(TARGET_H_FILES) 
+	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
+../../obj/%.o: $(FILES_5) $(TARGET_H_FILES) 
 	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
 
-../../obj/%.o: ../../src/oscpp/%.cpp $(OS_H_FILES)	
-	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
+FILES_6 	:= ../../src/runtime/%.cu
+FILES_7		:= ./%.cu
 
-../../obj/%.o: ../../src/panda/%.cpp $(PANDA_H_FILES) $(H_FILES)
-	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
-
-../../obj/%.o: ../../src/cudacpp/%.cpp $(CUDA_H_FILES)
-	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
-
-../../obj/%.o: ../../%.cpp $(OS_H_FILES) $(PANDA_H_FILES) $(CUDA_H_FILES) $(H_FILES)
-	$(MPICC) $(LIBS) $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
-
-../../cuobj/%.o: ./%.cu $(APP_WC_H_FILES)
+../../cuobj/%.o: $(FILES_6) $(TARGET_H_FILES)
 	$(NVCC) $(NVCCFLAGS) -c -o $@ $<
-
-../../cuobj/%.o: ../../src/%.cu $(CUDA_H_FILES) $(H_FILES)
+../../cuobj/%.o: $(FILES_7) $(TARGET_H_FILES)
 	$(NVCC) $(NVCCFLAGS) -c -o $@ $<
 
 clean:

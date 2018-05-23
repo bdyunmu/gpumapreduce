@@ -1,0 +1,2 @@
+make[1]: *** No rule to make target `../../obj/wc_main.o', needed by `wordcount'.  Stop.
+make: *** [wordcount] Error 2

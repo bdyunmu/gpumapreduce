@@ -1,5 +1,4 @@
 #include <panda/PreLoadedPandaChunk.h>
-//#include <cudacpp/Runtime.h>
 #include <cuda.h>
 #include <cuda_runtime.h>
 
@@ -35,8 +34,8 @@ namespace panda
 
   void PreLoadedPandaChunk::stageAsync(void * const gpuStorage, cudacpp::Stream * const memcpyStream)
   {
-    //cudacpp::Runtime::memcpyHtoDAsync(gpuStorage, data, numElems * elemSize, memcpyStream);
-//	cudaMemcpyAsync( gpuStorage, data, numElems * elemSize,cudaMemcpyHostToDevice , memcpyStream->getHandle() );
+    	//cudacpp::Runtime::memcpyHtoDAsync(gpuStorage, data, numElems * elemSize, memcpyStream);
+	//cudaMemcpyAsync( gpuStorage, data, numElems * elemSize,cudaMemcpyHostToDevice , memcpyStream->getHandle() );
   }
 
   void PreLoadedPandaChunk::finalizeAsync()
@@ -45,7 +44,6 @@ namespace panda
 
   void PreLoadedPandaChunk::finishLoading()
   {
-
   }
 
 }//PreLoadedPandaChunk
@@ -53,38 +51,37 @@ namespace panda
 namespace panda
 {
 
-	VariousSizePandaChunk::VariousSizePandaChunk(const void * pKey, int keySize, const void *  pData, int dataSize)
-	{
+  VariousSizePandaChunk::VariousSizePandaChunk(const void * pKey, int keySize, const void *  pData, int dataSize)
+  {
 		this->data = pData;
 		this->dataSize = dataSize;
 		this->keySize = keySize;
 		this->key = pKey;
-	}//VariousSizePandaChunk
+  }//VariousSizePandaChunk
 
-	VariousSizePandaChunk::~VariousSizePandaChunk()
-	{
-	}
+  VariousSizePandaChunk::~VariousSizePandaChunk()
+  {
+  }
 
-	int VariousSizePandaChunk::getMemoryRequirementsOnGPU() const
-	{
-		return dataSize;
-	}
+  int VariousSizePandaChunk::getMemoryRequirementsOnGPU() const
+  {
+	return dataSize;
+  }
 
-	void VariousSizePandaChunk::stageAsync(void * const gpuStorage, cudacpp::Stream * const memcpyStream)
-	{
-    	//cudacpp::Runtime::memcpyHtoDAsync(gpuStorage, data, dataSize, memcpyStream);
+  void VariousSizePandaChunk::stageAsync(void * const gpuStorage, cudacpp::Stream * const memcpyStream)
+  {
+  	//cudacpp::Runtime::memcpyHtoDAsync(gpuStorage, data, dataSize, memcpyStream);
 	//cudaMemcpyAsync(gpuStorage,data,dataSize,cudaMemcpyHostToDevice,memcpyStream->getHandle());
-	}
+  }
 	
-	void VariousSizePandaChunk::finalizeAsync()
-	{
-	}
+  void VariousSizePandaChunk::finalizeAsync()
+  {
+  }
 
-	void VariousSizePandaChunk::finishLoading()
-	{
+  void VariousSizePandaChunk::finishLoading()
+  {
+  }
 
-	}
-
-	bool VariousSizePandaChunk::updateQueuePosition(const int newPosition)
-	{return false;}
+  bool VariousSizePandaChunk::updateQueuePosition(const int newPosition)
+  {return false;}
 }
