@@ -1,7 +1,9 @@
-#include <panda/PandaChunk.h>
+#include <panda/Chunk.h>
+#include <panda/FileChunk.h>
 #include <cudacpp/Stream.h>
 #include <oscpp/AsyncFileReader.h>
 #include <oscpp/AsyncIORequest.h>
+
 #include <string>
 #include <vector>
 #include <stdio.h>
@@ -12,7 +14,8 @@
 
 namespace panda
 {
-  void PandaChunk::loadData(const bool async)
+  int FileChunk::key = 0;
+  void FileChunk::loadData(const bool async)
   {
     data = reinterpret_cast<char * >(malloc(elemSize * numElems));
     reader = new oscpp::AsyncFileReader;
@@ -36,7 +39,7 @@ namespace panda
 
     if (!async) waitForLoad();
   }
-  void PandaChunk::waitForLoad()
+  void FileChunk::waitForLoad()
   {
     if (reader == NULL) return;
 
@@ -68,7 +71,7 @@ namespace panda
     reader = NULL;
   }
 
-  PandaChunk::PandaChunk(const std::string & pFileName,
+  FileChunk::FileChunk(const std::string & pFileName,
                                  const int pElemSize,
                                  const int pNumElems,
                                  const int pMaxReadSize,
@@ -84,19 +87,19 @@ namespace panda
     whenToReadAhead = readAheadPos;
     finishLoading();
   }
-  PandaChunk::~PandaChunk()
+  FileChunk::~FileChunk()
   {
     waitForLoad();
     if (data != NULL) free(data);
-  }//PandaChunk
+  }//FileChunk
 
-  void PandaChunk::finishLoading()
+  void FileChunk::finishLoading()
   {
     if (loaded) return;
     if (reader == NULL) loadData(false);
     waitForLoad();
   }
-  bool PandaChunk::updateQueuePosition(const int newPosition)
+  bool FileChunk::updateQueuePosition(const int newPosition)
   {
     if (newPosition <= whenToReadAhead && reader == NULL)
     {
@@ -104,18 +107,18 @@ namespace panda
     }
     return true;
   }
-  int  PandaChunk::getMemoryRequirementsOnGPU() const
+  int  FileChunk::getMemoryRequirementsOnGPU() const
   {
     return numElems * elemSize;
   }
-  void PandaChunk::stageAsync(void * const gpuStorage, cudacpp::Stream * const memcpyStream)
+  void FileChunk::stageAsync(void * const gpuStorage, cudacpp::Stream * const memcpyStream)
   {
     finishLoading();
     //cudacpp::Runtime::memcpyHtoDAsync(gpuStorage, data, numElems * elemSize, memcpyStream);
 	//cudaMemcpyAsync( gpuStorage, data, numElems * elemSize,cudaMemcpyHostToDevice , memcpyStream->getHandle() );
 
   }
-  void PandaChunk::finalizeAsync()
+  void FileChunk::finalizeAsync()
   {
   }
 }

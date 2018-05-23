@@ -1,5 +1,5 @@
-#ifndef __FIXEDSIZECHUNK_H__
-#define __FIXEDSIZECHUNK_H__
+#ifndef __DATA_CHUNK_H__
+#define __DATA_CHUNK_H__
 
 #include <panda/Chunk.h>
 #include <cudacpp/Stream.h>
@@ -7,11 +7,11 @@
 #include <oscpp/AsyncIORequest.h>
 #include <string>
 #include <vector>
-
+#include <stdlib.h>
 
 namespace panda
 {
-  class PandaChunk : public Chunk
+  class FileChunk : public Chunk
   {
     protected:
       enum
@@ -29,24 +29,32 @@ namespace panda
       std::vector<oscpp::AsyncIORequest * > readReqs;
       void loadData(const bool async);
       void waitForLoad();
+      static int key;
     public:
-      PandaChunk(const std::string & pFileName,
+      FileChunk(const std::string & pFileName,
                      const int pElemSize,
                      const int pNumElems,
                      const int pMaxReadSize = MAX_READ_SIZE,
                      const int readAheadPos = QUEUE_READ_AHEAD_POSITION);
-      virtual ~PandaChunk();
+      virtual ~FileChunk();
 
       virtual void finishLoading();
       virtual bool updateQueuePosition(const int newPosition);
       virtual int getMemoryRequirementsOnGPU() const;
       virtual void stageAsync(void * const gpuStorage, cudacpp::Stream * const memcpyStream);
       virtual void finalizeAsync();
-
+      inline void * getKey(){
+		int *pInt = (int *)malloc(sizeof(int));
+		*pInt = key++;
+		return (void *)pInt;
+	}
+      inline int getKeySize(){ return sizeof(int);}
+      inline void * getVal(){ return data;}
+      inline int getValSize(){return numElems*elemSize;}
+ 
       inline int      getElementCount() { return numElems;  }
       inline void *   getData()         { return data;      }
-  };
-}
+  }; }
 
 
 #endif

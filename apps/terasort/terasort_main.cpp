@@ -1,6 +1,5 @@
 #include <mpi.h>
-#include <panda/PreLoadedPandaChunk.h>
-#include <panda/PandaMessage.h>
+#include <panda/KeyValueChunk.h>
 #include <panda/PandaMPIMessage.h>
 #include <panda/PandaMapReduceJob.h>
 
@@ -13,6 +12,7 @@
 #include <assert.h>
 
 #include "TeraSortPartitioner.h"
+#include "TeraInputFormat.h"
 
 using namespace std;
 
@@ -60,7 +60,7 @@ int main(int argc, char ** argv)
 	char rb[100];
 	int count = 0;
 	while(fread(rb,100,1,fp)!=0){
-	job->addInput(new panda::PreLoadedPandaChunk((char *)rb,100,NUM_ELEMENTS));
+	job->addInput(new panda::KeyValueChunk((char *)rb,TeraInputFormat::KEY_LEN,(char *)rb+10,TeraInputFormat::VALUE_LEN));
 	count++;	
 	}
 	ShowLog("terasort job->addInput count:[%d]",count);

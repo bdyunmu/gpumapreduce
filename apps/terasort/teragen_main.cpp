@@ -1,8 +1,7 @@
 
 #include <mpi.h>
 
-#include <panda/PreLoadedPandaChunk.h>
-#include <panda/PandaMessage.h>
+#include <panda/DataChunk.h>
 #include <panda/PandaMPIMessage.h>
 #include <panda/PandaMapReduceJob.h>
 
@@ -116,7 +115,7 @@ int main(int argc, char ** argv)
 	const int NUM_ELEMENTS = 1;
 	int *index = new int[1];
 	*index = rank;
-	job->addInput(new panda::PreLoadedPandaChunk((char *)index,sizeof(int),NUM_ELEMENTS));
+	job->addInput(new panda::DataChunk((char *)index,sizeof(int),NUM_ELEMENTS));
 	ShowLog("teragen job->addInput index:[%d]",*index);
 
 	job->execute();

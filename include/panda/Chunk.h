@@ -17,11 +17,11 @@ namespace panda
       virtual void stageAsync(void * const gpuStorage, cudacpp::Stream * const memcpyStream) = 0;
       virtual void finalizeAsync() = 0;
 
-	  //virtual void getSplit() = 0;
-	  virtual void* getKey() = 0;
-	  virtual int getKeySize() = 0;
-	  virtual void* getVal() = 0;
-	  virtual int getValSize() = 0;
+      //virtual void getSplit() = 0;
+      virtual void* getKey() = 0;
+      virtual int getKeySize() = 0;
+      virtual void* getVal() = 0;
+      virtual int getValSize() = 0;
 
   };
 
