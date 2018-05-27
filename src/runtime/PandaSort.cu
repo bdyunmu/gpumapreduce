@@ -359,7 +359,7 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 		
 			char *key_i = shared_buff + p2->keyPos;
 			char *val_i = shared_buff + p2->valPos;
-			ShowLog("cihui key:%s val:%d",key_i,*(int *)(val_i));
+			//ShowLog("cihui key:%s val:%d",key_i,*(int *)(val_i));
 			int keySize_i = p2->keySize;
 			int valSize_i = p2->valSize;
 		

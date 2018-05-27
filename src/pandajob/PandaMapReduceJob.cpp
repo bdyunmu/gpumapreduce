@@ -271,7 +271,7 @@ namespace panda
 	//Note: DO *NOT* set large number of threads within block (512), which lead to too many invocation of malloc in the kernel. 
 	//--------------------------------------------------
 
-	int numGPUCores = getGPUCoresNum();
+	int numGPUCores = pgc->num_gpus_cores;//getGPUCoresNum();
 
 	dim3 blocks(THREAD_BLOCK_SIZE, THREAD_BLOCK_SIZE);
 	int numBlocks = (numGPUCores*16+(blocks.x*blocks.y)-1)/(blocks.x*blocks.y);

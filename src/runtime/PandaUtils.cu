@@ -13,7 +13,7 @@
 #include <unistd.h> 
 #include <sys/time.h>
 #include <memory>
-
+#include <stdio.h>
 #ifndef __PANDA_UTILS_CU__
 #define __PANDA_UTILS_CU__
 
@@ -110,6 +110,14 @@ int getCPUCoresNum() {
 
 }
 int getCPUMemSize(){
+
+	char cmd[128];
+	sprintf(cmd,"cat /proc/meminfo |grep MemTotal|awk -F:' ' '{print $2}'");
+	FILE *fp = popen(cmd,NULL);
+	char buf[64];
+	fread(buf,64,1,fp);
+	fclose(fp);
+	printf("%s\n",buf);
 	return 0;
 }
 
