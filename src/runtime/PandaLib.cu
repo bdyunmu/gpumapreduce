@@ -16,6 +16,9 @@
 #include "Panda.h"
 #include "PandaAPI.h"
 
+#include <cstdio>
+#include <cstdlib>
+
 extern int gCommRank;
 
 __global__ void RunPandaGPUMapPartitioner(panda_gpu_context pgc)
@@ -506,6 +509,23 @@ void ExecutePandaCPUReduceTasks(panda_cpu_context *pcc){
 		
 }//void
 
+void ExecutePandaCPUDumpReduceTasks(panda_cpu_context *pcc){
+
+	char fn[128];
+	sprintf(fn,"OUTPUT%d",gCommRank);
+	FILE *fp = fopen(fn,"wb");
+	char *buf = NULL;
+	int len = pcc->reduced_key_vals.reduced_keyval_arr_len;
+	for(int reduce_idx = 0;reduce_idx<len;reduce_idx++){
+		keyval_t *p = pcc->reduced_key_vals.reduced_keyval_arr[reduce_idx];
+		int size = p->keySize + p->valSize;
+		buf = (char *)malloc(sizeof(char)*(size+2));
+		sprintf(buf,"%s %s\n",p->key,p->val);
+		fwrite(buf,sizeof(buf),1,fp);
+		free(buf);	
+	}//for
+	fclose(fp);
+}
 
 __global__ void copyDataFromDevice2Host4Reduce(panda_gpu_context pgc)
 {

@@ -738,7 +738,9 @@ namespace panda
   void PandaMapReduceJob::StartPandaCPUReduceTasks(){
 	  ExecutePandaCPUReduceTasks(this->pCPUContext);
   }//void
-
+  void PandaMapReduceJob::StartPandaCPUDumpReduceTasks(){
+	  ExecutePandaCPUDumpReduceTasks(this->pCPUContext);
+  }//void
   void PandaMapReduceJob::StartPandaPartitionSendData()
   {
     for (int index = 0; index < commSize; index++)

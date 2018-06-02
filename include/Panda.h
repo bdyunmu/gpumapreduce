@@ -118,6 +118,7 @@ void ExecutePandaSortBucket(panda_node_context *pnc);
 void ExecutePandaCPUCombiner(panda_cpu_context *pcc);
 void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc);
 void ExecutePandaCPUReduceTasks(panda_cpu_context *pcc);
+void ExecutePandaCPUDumpReduceTasks(panda_cpu_context *pcc);
 
 double PandaTimer();
 

@@ -38,6 +38,7 @@ namespace panda
 	void StartPandaCPUReduceTasks();
 	void StartPandaCPUCombineTasks();
 	void StartPandaCPUSortTasks();
+	void StartPandaCPUDumpReduceTasks();
 
  	void StartPandaCopyRecvedBucketToCPU(int, int);
 	
