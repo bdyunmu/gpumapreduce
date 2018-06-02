@@ -96,5 +96,5 @@ void panda_cpu_map(void *KEY, void*VAL, int keySize, int valSize, panda_cpu_cont
 
 }
 
-void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context* pcc){
+void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context* pcc, int reduce_task_idx){
 }

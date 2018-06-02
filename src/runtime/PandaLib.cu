@@ -489,18 +489,16 @@ panda_cpu_context *CreatePandaCPUContext(){
 
 void ExecutePandaCPUReduceTasks(panda_cpu_context *pcc){
 
-	//panda_cpu_context *pcc = this->pCPUContext;
-	
 	if (pcc->sorted_key_vals.sorted_keyvals_arr_len <= 0) return;
 	
-	for (int map_idx = 0; map_idx < pcc->sorted_key_vals.sorted_keyvals_arr_len; map_idx++){
+	for (int reduce_idx = 0; reduce_idx < pcc->sorted_key_vals.sorted_keyvals_arr_len; reduce_idx++){
 	
-		keyvals_t *kv_p = (keyvals_t *)(&(pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[map_idx]));
+		keyvals_t *kv_p = (keyvals_t *)(&(pcc->sorted_key_vals.sorted_intermediate_keyvals_arr[reduce_idx]));
 
 		if (kv_p->val_arr_len <=0) 
 			ErrorLog("kv_p->val_arr_len <=0");
 		else	
-			panda_cpu_reduce(kv_p->key, kv_p->vals, kv_p->keySize, kv_p->val_arr_len, pcc);
+			panda_cpu_reduce(kv_p->key, kv_p->vals, kv_p->keySize, kv_p->val_arr_len, pcc, reduce_idx);
 	}//for
 		
 }//void

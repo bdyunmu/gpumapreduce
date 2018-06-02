@@ -90,7 +90,7 @@ void panda_cpu_combiner(void *KEY, val_t* VAL, int keySize, int valCount, panda_
                 PandaEmitCPUCombinerOutput(KEY,count,keySize,sizeof(int),pcc, map_task_idx);
 }
 
-void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context* pcc){
+void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context* pcc, int reduce_task_idx){
 		int *count = new int[1];
 		count[0] = 0;
 		for (int i=0;i<valCount;i++){
