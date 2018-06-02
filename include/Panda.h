@@ -398,7 +398,7 @@ struct panda_runtime_context
 #define FPGA_ACC			0x04
 extern "C" void PandaEmitCPUMapOutput(void *key, void * val, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx);
 extern "C" void PandaEmitCPUCombinerOutput(void *key, void *val, int keySize, int valSize, panda_cpu_context *pcc, int map_task_idx); 
-extern "C" void PandaEmitCPUReduceOutput(void* key, void * val, int keySize, int valSize, panda_cpu_context *pcc);
+extern "C" void PandaEmitCPUReduceOutput(void* key, void * val, int keySize, int valSize, panda_cpu_context *pcc, int reduce_task_idx);
 
 __device__ void PandaEmitGPUMapOutput(void *key, void *val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx);
 __device__ void PandaEmitGPUCombinerOutput(void* key, void * val, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx);

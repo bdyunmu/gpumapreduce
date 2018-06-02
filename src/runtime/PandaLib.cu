@@ -490,6 +490,9 @@ panda_cpu_context *CreatePandaCPUContext(){
 void ExecutePandaCPUReduceTasks(panda_cpu_context *pcc){
 
 	if (pcc->sorted_key_vals.sorted_keyvals_arr_len <= 0) return;
+	//keyval_t *p = (keyval_t *)(&(pcc->reduced_key_vals.reduced_keyval_arr[0]));
+	pcc->reduced_key_vals.reduced_keyval_arr_len = pcc->sorted_key_vals.sorted_keyvals_arr_len;
+	pcc->reduced_key_vals.reduced_keyval_arr = (keyval_t *)malloc(sizeof(keyval_t)*pcc->reduced_key_vals.reduced_keyval_arr_len);
 	
 	for (int reduce_idx = 0; reduce_idx < pcc->sorted_key_vals.sorted_keyvals_arr_len; reduce_idx++){
 	
@@ -594,16 +597,14 @@ void PandaEmitCPUReduceOutput (	void*		key,
 				void*		val,
 				int		keySize,
 				int		valSize,
-				panda_cpu_context *pcc){
-			/*
-			keyval_t *p = (keyval_t *)(&(pcc->reduced_key_vals.reduced_keyval_arr[0]));
+				panda_cpu_context *pcc, int reduce_task_idx){
+			keyval_t *p = (keyval_t *)(&(pcc->reduced_key_vals.reduced_keyval_arr[reduce_task_idx]));
 			p->keySize = keySize;
 			p->key = malloc(keySize);
 			memcpy(p->key,key,keySize);
 			p->valSize = valSize;
 			p->val = malloc(valSize);
 			memcpy(p->val,val,valSize);
-			*/
 			ShowLog("key:%s  val:%d",(char*)key,*(int *)val);
 
 }

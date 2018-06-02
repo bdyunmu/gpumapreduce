@@ -96,7 +96,7 @@ void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cp
 		for (int i=0;i<valCount;i++){
 			count[0] += *(int *)(VAL[i].val);
 		}//
-		PandaEmitCPUReduceOutput(KEY,(void *)count,keySize,sizeof(int),pcc);
+		PandaEmitCPUReduceOutput(KEY,(void *)count,keySize,sizeof(int),pcc,reduce_task_idx);
 }
 
 #endif //__MAP_CU__
