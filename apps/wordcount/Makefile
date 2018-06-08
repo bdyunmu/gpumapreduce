@@ -78,4 +78,4 @@ FILES_7		:= ./%.cu
 	$(NVCC) $(NVCCFLAGS) -c -o $@ $<
 
 clean:
-	rm -rf ../../obj/*.o ../../cuobj/*.o ../../bin/wordcount 
+	rm -rf ../../obj/*.o ../../cuobj/*.o ../../bin/wordcount ../../bin/OUTPUT*
