@@ -110,23 +110,40 @@ int getCPUCoresNum() {
 
 }
 int getCPUMemSize(){
-
 	char cmd[128];
 	sprintf(cmd,"cat /proc/meminfo |grep MemTotal|awk -F:' ' '{print $2}'");
-	FILE *fp = popen(cmd,NULL);
-	char buf[64];
-	fread(buf,64,1,fp);
-	fclose(fp);
-	printf("%s\n",buf);
-	return 0;
+	FILE *fp = popen(cmd,"r");
+	if(fp == NULL){
+		printf("cat /proc/meminfo/ fp ==  NULL\n");
+		exit(0);
+	}//if
+	char buf1[128];
+	fread(buf1,128,1,fp);
+	pclose(fp);
+	int cpuMemSize;
+	char buf2[128];
+	sscanf(buf1,"%d %s",&cpuMemSize,buf2);
+	return cpuMemSize;
 }
 
 int getCPUMemBandwidth(){
 	return 0;
 }
 
-int getCPUGHz(){
-	return 0;
+double getCPUGHz(){
+	char cmd[128];
+	sprintf(cmd,"cat /proc/cpuinfo |grep MHz|awk -F':' '{print $2}'|head -n 1");
+	FILE *fp = popen(cmd,"r");
+	if(fp == NULL){
+		printf("cat /proc/cpuinfo/ fp == NULL\n");
+		exit(0);
+	}
+	char buf[128];
+	fread(buf,128,1,fp);
+	pclose(fp);
+	double CPUGHz = 0;
+	sscanf(buf,"%lf",&CPUGHz);
+	return CPUGHz/1000.0;
 }
 double PandaTimer(){
 	#ifndef _WIN32

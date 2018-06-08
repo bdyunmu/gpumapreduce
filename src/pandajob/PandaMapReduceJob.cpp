@@ -32,7 +32,6 @@ namespace panda
 	
 	if(end_task_id <= start_task_id)
 		return;
-		
 	keyvals_t * sorted_intermediate_keyvals_arr = pnc->sorted_key_vals.sorted_intermediate_keyvals_arr;
 		
 	int total_count = 0;
@@ -280,21 +279,19 @@ namespace panda
 	ShowLog("GridDim.X:%d GridDim.Y:%d BlockDim.X:%d BlockDim.Y:%d TotalGPUThreads:%d",grids.x,grids.y,blocks.x,blocks.y,total_gpu_threads);
 
 	cudaDeviceSynchronize();
-	ExecutePandaGPUMapPartitioner(*pgc,grids,blocks);
+	ExecutePandaGPUMapTasks(*pgc,grids,blocks);
 
 	int num_records_per_thread = (pgc->input_key_vals.num_input_record + (total_gpu_threads)-1)/(total_gpu_threads);
 	int totalIter = num_records_per_thread;
 	//ShowLog("num_records_per_thread:%d totalIter:%d",num_records_per_thread, totalIter);
 
 	for (int iter = 0; iter< totalIter; iter++){
-
-		ExecutePandaGPUMapTasks(*pgc, totalIter-1-iter, totalIter, grids, blocks);
+		ExecutePandaGPUMapTasksIterative(*pgc, totalIter-1-iter, totalIter, grids, blocks);
 		cudaThreadSynchronize();
 		size_t total_mem,avail_mem;
 		cudaMemGetInfo( &avail_mem, &total_mem );
 		//ShowLog("GPU_ID:[%d] RunGPUMapTasks take %f sec at iter [%d/%d] remain %d mb GPU mem processed",
 		//	pgc->gpu_id, t4-t3,iter,totalIter, avail_mem/1024/1024);
-
 	}//for
 	//ShowLog("GPU_ID:[%d] Done %d Tasks",pgc->gpu_id,pgc->num_input_record);
   }//int 
@@ -302,15 +299,16 @@ namespace panda
 
   void PandaMapReduceJob::InitPandaCPUMapReduce()
   {
-
+	ShowLog("0.1");
 	this->pCPUContext					= CreatePandaCPUContext();
 	this->pCPUContext->input_key_vals.num_input_record	= cpuMapTasks.size();
 	this->pCPUContext->input_key_vals.input_keyval_arr	= (keyval_t *)malloc(cpuMapTasks.size()*sizeof(keyval_t));
 	this->pCPUContext->num_cpus_cores			= getCPUCoresNum();
 	this->pCPUContext->cpu_mem_size = getCPUMemSize();
+	ShowLog("0.2");
 	this->pCPUContext->cpu_mem_bandwidth = getCPUMemBandwidth();
 	this->pCPUContext->cpu_GHz = getCPUGHz();
-
+	ShowLog("0.3");
 	for (unsigned int i= 0;i<cpuMapTasks.size();i++){
 
 		void *key = this->cpuMapTasks[i]->key;
@@ -451,7 +449,7 @@ namespace panda
 	//if(this->messager == NULL) exit(-1);
 	
 	this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len = 0;
-	int max_len = 100;														//configurable
+	int max_len = 100;//configurable
 	this->pNodeContext->sorted_key_vals.sorted_keyval_arr_max_len = max_len;
 	this->pNodeContext->sorted_key_vals.sorted_intermediate_keyvals_arr = (keyvals_t *)malloc(sizeof(keyvals_t)*max_len);
 
@@ -461,7 +459,7 @@ namespace panda
 	}//if
 	else
 		this->pRuntimeContext = NULL;
-
+	ShowLog("debug 1.0");
 	if (messager    != NULL) {
 		messager->MsgInit();
 		messager->setPnc(this->pNodeContext);
@@ -471,7 +469,7 @@ namespace panda
 		exit(-1);
 	}
 	MPI_Barrier(MPI_COMM_WORLD);
-
+	ShowLog("debug 2.0");
   }//void
 
   
@@ -830,12 +828,14 @@ namespace panda
   {
 
 	InitPandaRuntime();
-
+	ShowLog("debug 3.5");
 	if(this->getEnableGPU())
 		InitPandaGPUMapReduce();
-	if(this->getEnableCPU())
+	if(this->getEnableCPU()){
 		InitPandaCPUMapReduce();
-
+		ShowLog("debug 4.5");
+	}//if
+	ShowLog("debug 5.0");
 	if(this->getEnableGPU())
 		StartPandaGPUMapTasks();
 	if(this->getEnableCPU())
@@ -894,6 +894,8 @@ namespace panda
 		StartPandaGPUReduceTasks();
 	if(this->getEnableCPU())
 		StartPandaCPUReduceTasks();
+	if(this->getEnableCPU())
+		StartPandaCPUDumpReduceTasks();
     	//MPI_Barrier(MPI_COMM_WORLD);
 	
   }

@@ -55,6 +55,7 @@ int main(int argc, char ** argv)
 			total_len=0;
 		}//if
 	}//while
+	ShowLog("job->execute.......");
 	job->execute();
 	delete job;
 	MPI_Finalize();

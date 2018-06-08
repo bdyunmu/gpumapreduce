@@ -111,8 +111,8 @@ void ExecutePandaGPUCombiner(panda_gpu_context *pgc);
 void ExecutePandaGPUSort(panda_gpu_context *pgc);
 void ExecutePandaGPUShuffleMerge(panda_node_context *d_g_state_1, panda_gpu_context *d_g_state_0);
 void ExecutePandaGPUReduceTasks(panda_gpu_context *pgc);
-void ExecutePandaGPUMapPartitioner(panda_gpu_context pgc, dim3 grids, dim3 blocks);
-void ExecutePandaGPUMapTasks(panda_gpu_context pgc, int curIter, int totalIter, dim3 grids, dim3 blocks);
+void ExecutePandaGPUMapTasks(panda_gpu_context pgc, dim3 grids, dim3 blocks);
+void ExecutePandaGPUMapTasksIterative(panda_gpu_context pgc, int curIter, int totalIter, dim3 grids, dim3 blocks);
 
 void ExecutePandaSortBucket(panda_node_context *pnc);
 void ExecutePandaCPUCombiner(panda_cpu_context *pcc);
@@ -409,12 +409,12 @@ __global__ void copyDataFromDevice2Host1(panda_gpu_context pgc);
 __global__ void copyDataFromDevice2Host2(panda_gpu_context pgc);
 __global__ void copyDataFromDevice2Host4Reduce(panda_gpu_context pgc);
 
-__global__ void RunPandaGPUReducePartitioner(panda_gpu_context pgc);
-__global__ void RunPandaGPUMapPartitioner(panda_gpu_context pgc);
-__global__ void RunPandaGPUMapTasks(panda_gpu_context pgc, int curIter, int totalIter);
+__global__ void RunPandaGPUReduceTasks(panda_gpu_context pgc);
+__global__ void RunPandaGPUMapTasks(panda_gpu_context pgc);
+__global__ void RunPandaGPUMapTasksIterative(panda_gpu_context pgc, int curIter, int totalIter);
 __global__ void RunPandaGPUCombiner(panda_gpu_context pgc);
 
-int getCPUGHz();
+double getCPUGHz();
 int getCPUMemSize();
 int getCPUMemBandwidth();
 int getCPUCoresNum();

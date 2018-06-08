@@ -21,7 +21,7 @@
 
 extern int gCommRank;
 
-__global__ void RunPandaGPUMapPartitioner(panda_gpu_context pgc)
+__global__ void RunPandaGPUMapTasks(panda_gpu_context pgc)
 {
 	//ShowLog2("gridDim.x:%d gridDim.y:%d gridDim.z:%d blockDim.x:%d blockDim.y:%d blockDim.z:%d blockIdx.x:%d blockIdx.y:%d blockIdx.z:%d\n",
 	// 		gridDim.x,gridDim.y,gridDim.z,blockDim.x,blockDim.y,blockDim.z,blockIdx.x,blockIdx.y,blockIdx.z);
@@ -55,9 +55,9 @@ __global__ void RunPandaGPUMapPartitioner(panda_gpu_context pgc)
 	keyval_arr_t *kv_arr_t_arr = (keyval_arr_t *)malloc(sizeof(keyval_arr_t)*(thread_end_idx-thread_start_idx+STRIDE-1)/STRIDE);
 	int index = 0;
 	
-	for(int idx = thread_start_idx; idx < thread_end_idx; idx += STRIDE){
-			buddy[index] = idx;
-			index ++;
+	for(int idx=thread_start_idx;idx<thread_end_idx;idx+=STRIDE){
+			buddy[index]=idx;
+			index++;
 	}//for
 	index = 0;
 	for(int map_task_idx = thread_start_idx; map_task_idx < thread_end_idx; map_task_idx += STRIDE){
@@ -78,9 +78,9 @@ __global__ void RunPandaGPUMapPartitioner(panda_gpu_context pgc)
 	}//for
 }
 
-void ExecutePandaGPUMapPartitioner(panda_gpu_context pgc, dim3 grids, dim3 blocks)
+void ExecutePandaGPUMapTasks(panda_gpu_context pgc, dim3 grids, dim3 blocks)
 {
-   	RunPandaGPUMapPartitioner<<<grids,blocks>>>(pgc);
+   	RunPandaGPUMapTasks<<<grids,blocks>>>(pgc);
 }
 
 void* RunPandaCPUMapThread(void * ptr)
@@ -160,7 +160,7 @@ void ExecutePandaGPUReduceTasks(panda_gpu_context *pgc)
 		pgc->sorted_key_vals.totalKeySize, 
 		pgc->sorted_key_vals.totalValSize);
 
-	RunPandaGPUReducePartitioner<<<grids,blocks>>>(*pgc);
+	RunPandaGPUReduceTasks<<<grids,blocks>>>(*pgc);
 
 	cudaMemcpy(pgc->output_key_vals.h_reduced_keyval_arr,
 		pgc->reduced_key_vals.d_reduced_keyval_arr,
@@ -218,7 +218,7 @@ void ExecutePandaGPUReduceTasks(panda_gpu_context *pgc)
 
 }//void
 
-__global__ void RunPandaGPUReducePartitioner(panda_gpu_context pgc)
+__global__ void RunPandaGPUReduceTasks(panda_gpu_context pgc)
 {
 	//ErrorLog("ReducePartitioner Panda_GPU_Context");
 	int num_records_per_thread = (pgc.sorted_key_vals.d_sorted_keyvals_arr_len + (gridDim.x*blockDim.x*blockDim.y)-1)/(gridDim.x*blockDim.x*blockDim.y);
@@ -263,7 +263,7 @@ __global__ void RunPandaGPUReducePartitioner(panda_gpu_context pgc)
 	}//for
 }
 
-__global__ void RunPandaGPUMapTasks(panda_gpu_context pgc, int curIter, int totalIter)
+__global__ void RunPandaGPUMapTasksIterative(panda_gpu_context pgc, int curIter, int totalIter)
 {
 
 	//ShowLog("gridDim.x:%d gridDim.y:%d gridDim.z:%d blockDim.x:%d blockDim.y:%d blockDim.z:%d blockIdx.x:%d blockIdx.y:%d blockIdx.z:%d\n",
@@ -377,8 +377,8 @@ void *RunPandaCPUCombinerThread(void *ptr){
 	return NULL;
 }
 
-void ExecutePandaGPUMapTasks(panda_gpu_context pgc, int curIter, int totalIter, dim3 grids, dim3 blocks){
-	RunPandaGPUMapTasks<<<grids,blocks>>>(pgc, totalIter -1 - curIter, totalIter);
+void ExecutePandaGPUMapTasksIterative(panda_gpu_context pgc, int curIter, int totalIter, dim3 grids, dim3 blocks){
+	RunPandaGPUMapTasksIterative<<<grids,blocks>>>(pgc, totalIter -1 - curIter, totalIter);
 	cudaDeviceSynchronize();
 }//void
 
@@ -516,13 +516,15 @@ void ExecutePandaCPUDumpReduceTasks(panda_cpu_context *pcc){
 	FILE *fp = fopen(fn,"wb");
 	char *buf = NULL;
 	int len = pcc->reduced_key_vals.reduced_keyval_arr_len;
-	for(int reduce_idx = 0;reduce_idx<len;reduce_idx++){
-		keyval_t *p = pcc->reduced_key_vals.reduced_keyval_arr[reduce_idx];
+	for(int reduce_idx=0;reduce_idx<len;reduce_idx++){
+
+		keyval_t *p = (keyval_t *)(&pcc->reduced_key_vals.reduced_keyval_arr[reduce_idx]);
 		int size = p->keySize + p->valSize;
 		buf = (char *)malloc(sizeof(char)*(size+2));
 		sprintf(buf,"%s %s\n",p->key,p->val);
 		fwrite(buf,sizeof(buf),1,fp);
 		free(buf);	
+
 	}//for
 	fclose(fp);
 }
