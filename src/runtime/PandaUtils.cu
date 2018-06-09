@@ -109,7 +109,7 @@ int getCPUCoresNum() {
 #endif 
 
 }
-int getCPUMemSize(){
+double getCPUMemSizeGb(){
 	char cmd[128];
 	sprintf(cmd,"cat /proc/meminfo |grep MemTotal|awk -F:' ' '{print $2}'");
 	FILE *fp = popen(cmd,"r");
@@ -123,11 +123,55 @@ int getCPUMemSize(){
 	int cpuMemSize;
 	char buf2[128];
 	sscanf(buf1,"%d %s",&cpuMemSize,buf2);
-	return cpuMemSize;
+	return cpuMemSize/1024/1024;
 }
 
-int getCPUMemBandwidth(){
-	return 0;
+double getCPUMemBandwidthGb(){
+	char cmd[128];
+	sprintf(cmd,"dmidecode -t memory|grep \"Type\"|grep -v \"Type Detail\" |grep -v \"Correction Type\"|uniq|awk -F':' '{print $2}'");
+	FILE *fp = popen(cmd,"r");
+	if(fp == NULL){
+		printf("dmidecode -t memory == NULL\n");
+		exit(0);
+	}
+	char output[128];
+	fread(output,128,1,fp);
+	pclose(fp);
+	int multiplier = 1;
+	if(strstr(output,"DDR3")){
+		multiplier = 8;
+	}else if(strstr(output,"DDR2")){
+		multiplier = 4;
+	}else if(strstr(output,"DDR")){
+		multiplier = 2;
+	}
+	sprintf(cmd,"dmidecode -t memory|grep \"Data Width\"|uniq|awk -F':' '{print $2}'");	
+	fp = popen(cmd,"r");
+	if(fp == NULL){
+		printf("dmidecode -t memory == NULL\n");
+		exit(0);
+	}
+	fread(output,128,1,fp);
+	pclose(fp);
+	int memBits = 32;
+	char buf2[128];
+	sscanf(output,"%d %s",&memBits,buf2);
+	printf("debug memBits:%d\n",memBits);
+	sprintf(cmd,"dmidecode -t memory|grep Speed|grep -v \"Unknow\"|grep -v \"Configured Clock Speed\"|uniq|awk -F':' '{print $2}'");	
+	fp = popen(cmd,"r");
+	if(fp == NULL){
+		printf("dmidecode -t memory == NULL\n");
+		exit(0);
+	}
+	fread(output,128,1,fp);
+	pclose(fp);
+	int memSpeed = 1000;
+	sscanf(output,"%d %s",&memSpeed,buf2);
+	printf("debug memSpeed:%d\n",memSpeed);	
+	double memBandwidth = 0.0;
+	memBandwidth = memSpeed/8.0*memBits*multiplier/8.0/1024.0;
+	printf("debug memBandwidth:%lf Gbyte/s\n",memBandwidth);
+	return memBandwidth;
 }
 
 double getCPUGHz(){

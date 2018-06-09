@@ -415,9 +415,10 @@ __global__ void RunPandaGPUMapTasksIterative(panda_gpu_context pgc, int curIter,
 __global__ void RunPandaGPUCombiner(panda_gpu_context pgc);
 
 double getCPUGHz();
-int getCPUMemSize();
-int getCPUMemBandwidth();
+double getCPUMemSizeGb();
+double getCPUMemBandwidthGb();
 int getCPUCoresNum();
+
 int getGPUCoresNum();
 int getGPUGHz();
 int getGPUMemSize();

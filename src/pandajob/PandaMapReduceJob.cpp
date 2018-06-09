@@ -299,16 +299,13 @@ namespace panda
 
   void PandaMapReduceJob::InitPandaCPUMapReduce()
   {
-	ShowLog("0.1");
 	this->pCPUContext					= CreatePandaCPUContext();
 	this->pCPUContext->input_key_vals.num_input_record	= cpuMapTasks.size();
 	this->pCPUContext->input_key_vals.input_keyval_arr	= (keyval_t *)malloc(cpuMapTasks.size()*sizeof(keyval_t));
 	this->pCPUContext->num_cpus_cores			= getCPUCoresNum();
-	this->pCPUContext->cpu_mem_size = getCPUMemSize();
-	ShowLog("0.2");
-	this->pCPUContext->cpu_mem_bandwidth = getCPUMemBandwidth();
+	this->pCPUContext->cpu_mem_size = getCPUMemSizeGb();
+	this->pCPUContext->cpu_mem_bandwidth = getCPUMemBandwidthGb();
 	this->pCPUContext->cpu_GHz = getCPUGHz();
-	ShowLog("0.3");
 	for (unsigned int i= 0;i<cpuMapTasks.size();i++){
 
 		void *key = this->cpuMapTasks[i]->key;
@@ -459,7 +456,6 @@ namespace panda
 	}//if
 	else
 		this->pRuntimeContext = NULL;
-	ShowLog("debug 1.0");
 	if (messager    != NULL) {
 		messager->MsgInit();
 		messager->setPnc(this->pNodeContext);
@@ -469,7 +465,6 @@ namespace panda
 		exit(-1);
 	}
 	MPI_Barrier(MPI_COMM_WORLD);
-	ShowLog("debug 2.0");
   }//void
 
   
@@ -828,14 +823,11 @@ namespace panda
   {
 
 	InitPandaRuntime();
-	ShowLog("debug 3.5");
 	if(this->getEnableGPU())
 		InitPandaGPUMapReduce();
 	if(this->getEnableCPU()){
 		InitPandaCPUMapReduce();
-		ShowLog("debug 4.5");
 	}//if
-	ShowLog("debug 5.0");
 	if(this->getEnableGPU())
 		StartPandaGPUMapTasks();
 	if(this->getEnableCPU())
