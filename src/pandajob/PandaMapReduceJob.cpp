@@ -813,9 +813,48 @@ namespace panda
   }//void
 
   void PandaMapReduceJob::StartPandaMapTasksSchedule(){
+
 	//ExecutePandaMapTasksSchedule();
-	//pandaTaskSched(panda_node_context *pnc, panda_gpu_context *pgc, panda_cpu_context *pcc);
 	ExecutePandaTasksSched(this->pNodeContext,this->pGPUContext,this->pCPUContext);
+	
+	if(!this->getEnableCPU()&&!this->getEnableGPU()){
+        	ShowLog("neither GPU nor CPU are enabled");
+		return;
+        }
+
+        if(!this->getEnableCPU()&&this->getEnableGPU()){
+		for(auto i = chunks.begin(); i!=chunks.end(); i++){
+        		addGPUMapTasks(*i);
+        		ShowLog("addGPUMapTasks");
+		}
+		return;
+        }
+
+        if(this->getEnableCPU()&&!this->getEnableGPU()){
+		for(auto i = chunks.begin(); i!=chunks.end(); i++){
+        		addCPUMapTasks(*i);
+        		ShowLog("addCPUMapTasks");
+		}
+		return;
+        }
+
+        if(this->getEnableCPU()&&this->getEnableGPU()){
+		double cpu_ratio = this->pNodeContext->cpu_ratio;
+		int size = chunks.size();
+		int cpu_size = (int)(size*cpu_ratio);
+		int gpu_size = size - cpu_size;
+		ShowLog("schedule: size:%d cpu_size:%d gpu_size:%d\n",size,cpu_size,gpu_size);
+
+		for(int i = 0;i<cpu_size;i++){
+                	addCPUMapTasks(chunks[i]);
+                	ShowLog("addCPUMapTasks");
+        	}
+		for(int i = cpu_size;i<size;i++){
+                	addGPUMapTasks(chunks[i]);
+                	ShowLog("addGPUMapTasks");
+        	}//if(this->
+	}//if
+
   }//void
 
   void PandaMapReduceJob::InitPandaCPUContext(){
@@ -844,7 +883,7 @@ namespace panda
 
   void PandaMapReduceJob::execute()
   {
-
+	
 	InitPandaNodeContextAndRuntime();
 
 	if(this->getEnableCPU())

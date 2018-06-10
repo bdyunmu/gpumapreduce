@@ -7,13 +7,13 @@ all: wordcount
 
 OPTFLAGS    = -O2
 INCFLAGS    = -I/opt/openmpi/include
-CFLAGS      = $(OPTFLAGS) $(INCFLAGS) -DBLOCK_SHARED_MEM_OPTIMIZATION=0
+CFLAGS      = -std=c++11 $(OPTFLAGS) $(INCFLAGS) -DBLOCK_SHARED_MEM_OPTIMIZATION=0
 NVCCFLAGS   = $(CFLAGS)
 LDFLAGS	    = -L/opt/openmpi/lib/
 LIBS        = -lmpi -lpthread
 
 CC          = mpicc 
-MPICC       = mpicxx 
+MPICC       = mpicxx -std=c++11
 NVCC        = nvcc
 
 NVCCFLAGS  = -I/opt/openmpi/include -lcudart -arch=sm_20 -I../../include --relocatable-device-code=true
