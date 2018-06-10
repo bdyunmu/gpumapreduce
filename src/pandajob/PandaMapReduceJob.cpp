@@ -298,8 +298,8 @@ namespace panda
 
   void PandaMapReduceJob::InitPandaCPUMapReduce()
   {
-	for (unsigned int i= 0;i<cpuMapTasks.size();i++){
 
+	for (unsigned int i= 0;i<cpuMapTasks.size();i++){
 		void *key = this->cpuMapTasks[i]->key;
 		int keySize = this->cpuMapTasks[i]->keySize;
 		void *val = this->cpuMapTasks[i]->val;
@@ -308,11 +308,10 @@ namespace panda
 		this->pCPUContext->input_key_vals.input_keyval_arr[i].keySize = keySize;
 		this->pCPUContext->input_key_vals.input_keyval_arr[i].val = val;
 		this->pCPUContext->input_key_vals.input_keyval_arr[i].valSize = valSize;
-
 	}//for
 
 	panda_cpu_context* pcc = this->pCPUContext;
-
+	pcc->input_key_vals.num_input_record = cpuMapTasks.size();
 	int totalKeySize = 0;
 	int totalValSize = 0;
 	for(int i=0;i<pcc->input_key_vals.num_input_record;i++){
@@ -320,12 +319,8 @@ namespace panda
 		totalValSize += pcc->input_key_vals.input_keyval_arr[i].valSize;
 	}//for
 
-	//ShowLog("GPU_ID:[%d] copy %d input records from Host to GPU memory totalKeySize:%d KB totalValSize:%d KB",
-	//	pgc->gpu_id, pgc->num_input_record, totalKeySize/1024, totalValSize/1024);
-	
 	void *input_vals_shared_buff = malloc(totalValSize);
 	void *input_keys_shared_buff = malloc(totalKeySize);
-	
 	keyval_pos_t *input_keyval_pos_arr = 
 				(keyval_pos_t *)malloc(sizeof(keyval_pos_t)*pcc->input_key_vals.num_input_record);
 	
@@ -372,6 +367,7 @@ namespace panda
 	}//for
 
 	panda_gpu_context* pgc = this->pGPUContext;
+	pgc->input_key_vals.num_input_record = gpuMapTasks.size();
 
 	int totalKeySize = 0;
 	int totalValSize = 0;
@@ -379,9 +375,6 @@ namespace panda
 		totalKeySize += pgc->input_key_vals.h_input_keyval_arr[i].keySize;
 		totalValSize += pgc->input_key_vals.h_input_keyval_arr[i].valSize;
 	}//for
-
-	//ShowLog("GPU_ID:[%d] copy %d input records from Host to GPU memory totalKeySize:%d KB totalValSize:%d KB",
-	//	pgc->gpu_id, pgc->num_input_record, totalKeySize/1024, totalValSize/1024);
 
 	void *input_vals_shared_buff = malloc(totalValSize);
 	void *input_keys_shared_buff = malloc(totalKeySize);
@@ -865,7 +858,7 @@ namespace panda
 	this->pCPUContext->cpu_mem_size = getCPUMemSizeGb();
 	this->pCPUContext->cpu_mem_bandwidth = getCPUMemBandwidthGb();
 	this->pCPUContext->cpu_GHz = getCPUGHz();
-	ShowLog("CPU ncores:%d memSize:%.3lf memBandwidth:%.3lf GHz:%.3lf\n",	                                                                	
+	ShowLog("CPU ncores:%d memSize:%.3lf memBandwidth:%.3lf GHz:%.3lf",	                                                                	
 		this->pCPUContext->num_cpus_cores,this->pCPUContext->cpu_mem_size,this->pCPUContext->cpu_mem_bandwidth,this->pCPUContext->cpu_GHz);  
  }//void
 
@@ -876,7 +869,7 @@ namespace panda
 	this->pGPUContext->gpu_mem_size = getGPUMemSizeGb();
 	this->pGPUContext->gpu_mem_bandwidth = getGPUMemBandwidthGb();
 	this->pGPUContext->gpu_GHz = getGPUGHz();
-	ShowLog("GPU ncores:%d memSize:%.3lf  memBandwidth:%.3lf GHz:%.3lf\n",
+	ShowLog("GPU ncores:%d memSize:%.3lf  memBandwidth:%.3lf GHz:%.3lf",
 		this->pGPUContext->num_gpus_cores,this->pGPUContext->gpu_mem_size,this->pGPUContext->gpu_mem_bandwidth,this->pGPUContext->gpu_GHz);
 	
   }//void
@@ -886,11 +879,11 @@ namespace panda
 	
 	InitPandaNodeContextAndRuntime();
 
-	if(this->getEnableCPU())
-		InitPandaCPUContext();
+	//if(this->getEnableCPU())
+	InitPandaCPUContext();
 
-	if(this->getEnableGPU())
-		InitPandaGPUContext();
+	//if(this->getEnableGPU())
+	InitPandaGPUContext();
 
 	StartPandaMapTasksSchedule();
 
