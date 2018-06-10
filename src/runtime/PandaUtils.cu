@@ -29,32 +29,35 @@ void getGPUDevProp(){
 	cudaSetDevice(dev);
 	cudaDeviceProp gpu_dev;
 	cudaGetDeviceProperties(&gpu_dev,dev);
-	printf("Total amount of global memory: %.0f Mbytes\n",(float)gpu_dev.totalGlobalMem/1048576.0f);
+	printf("GPU Total amount of global memory: %.0f Mbytes\n",(float)gpu_dev.totalGlobalMem/1048576.0f);
 	printf("GPU Max Clock rate: %.0f GHz\n",gpu_dev.clockRate*1e-6f);
-	printf(" Memory Clock rate:  %.0f Mhz\n",gpu_dev.memoryClockRate*1e-3f);
-	printf(" Memory Bus Width:  %d-bit\n",gpu_dev.memoryBusWidth);
+	printf("  Memory Clock rate:  %.0f Mhz\n",gpu_dev.memoryClockRate*1e-3f);
+	printf("  Memory Bus Width:  %d-bit\n",gpu_dev.memoryBusWidth);
 }
-int getGPUMemBandwidth(){
+
+double getGPUMemBandwidthGb(){
 	int dev = 0;
 	cudaSetDevice(dev);
 	cudaDeviceProp gpu_dev;
 	cudaGetDeviceProperties(&gpu_dev,dev);
-	int gmbd = (gpu_dev.memoryClockRate*1e-6f)*(gpu_dev.memoryBusWidth)/8*2;
+	double gghz = gpu_dev.memoryClockRate*1e-6f;
+	int gbit = gpu_dev.memoryBusWidth;
+	double gmbd = gghz*gbit/8*4;
 	return gmbd; //in GB/s
 }
-int getGPUMemSize(){
+double getGPUMemSizeGb(){
 	int dev = 0;
 	cudaSetDevice(dev);
 	cudaDeviceProp gpu_dev;
 	cudaGetDeviceProperties(&gpu_dev,dev);
-	return (int)(gpu_dev.totalGlobalMem/1048576.0f);
+	return (gpu_dev.totalGlobalMem/1048576.0f/1024.0);
 }
-int getGPUGHz(){
+double getGPUGHz(){
 	int dev = 0;
 	cudaSetDevice(dev);
 	cudaDeviceProp gpu_dev;
 	cudaGetDeviceProperties(&gpu_dev,dev);
-	return (int)(gpu_dev.clockRate*1e-6f);
+	return (gpu_dev.clockRate*1e-6f);
 }
 int getGPUCoresNum() { 
 	int arch_cores_sm[3] = {1, 8, 32 };
@@ -156,7 +159,6 @@ double getCPUMemBandwidthGb(){
 	int memBits = 32;
 	char buf2[128];
 	sscanf(output,"%d %s",&memBits,buf2);
-	printf("debug memBits:%d\n",memBits);
 	sprintf(cmd,"dmidecode -t memory|grep Speed|grep -v \"Unknow\"|grep -v \"Configured Clock Speed\"|uniq|awk -F':' '{print $2}'");	
 	fp = popen(cmd,"r");
 	if(fp == NULL){
@@ -167,10 +169,8 @@ double getCPUMemBandwidthGb(){
 	pclose(fp);
 	int memSpeed = 1000;
 	sscanf(output,"%d %s",&memSpeed,buf2);
-	printf("debug memSpeed:%d\n",memSpeed);	
 	double memBandwidth = 0.0;
 	memBandwidth = memSpeed/8.0*memBits*multiplier/8.0/1024.0;
-	printf("debug memBandwidth:%lf Gbyte/s\n",memBandwidth);
 	return memBandwidth;
 }
 

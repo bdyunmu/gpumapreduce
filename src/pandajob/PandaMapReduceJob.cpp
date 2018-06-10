@@ -279,7 +279,7 @@ namespace panda
 	ShowLog("GridDim.X:%d GridDim.Y:%d BlockDim.X:%d BlockDim.Y:%d TotalGPUThreads:%d",grids.x,grids.y,blocks.x,blocks.y,total_gpu_threads);
 
 	cudaDeviceSynchronize();
-	ExecutePandaGPUMapTasks(*pgc,grids,blocks);
+	ExecutePandaGPUMapTasksSplit(*pgc,grids,blocks);
 
 	int num_records_per_thread = (pgc->input_key_vals.num_input_record + (total_gpu_threads)-1)/(total_gpu_threads);
 	int totalIter = num_records_per_thread;
@@ -306,6 +306,8 @@ namespace panda
 	this->pCPUContext->cpu_mem_size = getCPUMemSizeGb();
 	this->pCPUContext->cpu_mem_bandwidth = getCPUMemBandwidthGb();
 	this->pCPUContext->cpu_GHz = getCPUGHz();
+	printf("CPU ncores:%d memSize:%.3lf memBandwidth:%.3lf GHz:%.3lf\n",	
+		this->pCPUContext->num_cpus_cores,this->pCPUContext->cpu_mem_size,this->pCPUContext->cpu_mem_bandwidth,this->pCPUContext->cpu_GHz);
 	for (unsigned int i= 0;i<cpuMapTasks.size();i++){
 
 		void *key = this->cpuMapTasks[i]->key;
@@ -366,10 +368,11 @@ namespace panda
 
 	this->pGPUContext = CreatePandaGPUContext();
 	this->pGPUContext->num_gpus_cores = getGPUCoresNum();
-	this->pGPUContext->gpu_mem_size = getGPUMemSize();
-	this->pGPUContext->gpu_mem_bandwidth = getGPUMemBandwidth();
+	this->pGPUContext->gpu_mem_size = getGPUMemSizeGb();
+	this->pGPUContext->gpu_mem_bandwidth = getGPUMemBandwidthGb();
 	this->pGPUContext->gpu_GHz = getGPUGHz();
-
+	printf("GPU ncores:%d memSize:%.3lf  memBandwidth:%.3lf GHz:%.3lf\n",
+			this->pGPUContext->num_gpus_cores,this->pGPUContext->gpu_mem_size,this->pGPUContext->gpu_mem_bandwidth,this->pGPUContext->gpu_GHz);
 	this->pGPUContext->input_key_vals.num_input_record = gpuMapTasks.size();//Ratio
 	this->pGPUContext->input_key_vals.h_input_keyval_arr = 	(keyval_t *)malloc(gpuMapTasks.size()*sizeof(keyval_t));
 

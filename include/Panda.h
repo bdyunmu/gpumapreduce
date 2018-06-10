@@ -111,7 +111,7 @@ void ExecutePandaGPUCombiner(panda_gpu_context *pgc);
 void ExecutePandaGPUSort(panda_gpu_context *pgc);
 void ExecutePandaGPUShuffleMerge(panda_node_context *d_g_state_1, panda_gpu_context *d_g_state_0);
 void ExecutePandaGPUReduceTasks(panda_gpu_context *pgc);
-void ExecutePandaGPUMapTasks(panda_gpu_context pgc, dim3 grids, dim3 blocks);
+void ExecutePandaGPUMapTasksSplit(panda_gpu_context pgc, dim3 grids, dim3 blocks);
 void ExecutePandaGPUMapTasksIterative(panda_gpu_context pgc, int curIter, int totalIter, dim3 grids, dim3 blocks);
 
 void ExecutePandaSortBucket(panda_node_context *pnc);
@@ -203,9 +203,9 @@ struct panda_cpu_task_info_t {
 struct panda_gpu_context
 {	
 	int num_gpus_cores;
-	int gpu_GHz; //in GHz
-	int gpu_mem_size; //in MB
-	int gpu_mem_bandwidth; //in GB/s
+	double gpu_GHz; //in GHz
+	double gpu_mem_size; //in MB
+	double gpu_mem_bandwidth; //in GB/s
 
 	struct{
 
@@ -279,9 +279,9 @@ struct panda_cpu_context
 {	
 	
 	int num_cpus_cores;
-	int cpu_GHz; //in GHz
-	int cpu_mem_size; //in MB
-	int cpu_mem_bandwidth; //in GB/s
+	double cpu_GHz; //in GHz
+	double cpu_mem_size; //in MB
+	double cpu_mem_bandwidth; //in GB/s
 	
 	pthread_t  *panda_cpu_task_thread;
 	panda_cpu_task_info_t *panda_cpu_task_thread_info;
@@ -410,7 +410,7 @@ __global__ void copyDataFromDevice2Host2(panda_gpu_context pgc);
 __global__ void copyDataFromDevice2Host4Reduce(panda_gpu_context pgc);
 
 __global__ void RunPandaGPUReduceTasks(panda_gpu_context pgc);
-__global__ void RunPandaGPUMapTasks(panda_gpu_context pgc);
+__global__ void RunPandaGPUMapTasksSplit(panda_gpu_context pgc);
 __global__ void RunPandaGPUMapTasksIterative(panda_gpu_context pgc, int curIter, int totalIter);
 __global__ void RunPandaGPUCombiner(panda_gpu_context pgc);
 
@@ -418,11 +418,11 @@ double getCPUGHz();
 double getCPUMemSizeGb();
 double getCPUMemBandwidthGb();
 int getCPUCoresNum();
-
+void getGPUDevProp();
 int getGPUCoresNum();
-int getGPUGHz();
-int getGPUMemSize();
-int getGPUMemBandwidth();
+double getGPUGHz();
+double getGPUMemSizeGb();
+double getGPUMemBandwidthGb();
 
 __device__ int gpu_compare(const void *key_a, int len_a, const void *key_b, int len_b);
 inline int cpu_compare(const void *key_a, int len_a, const void *key_b, int len_b);

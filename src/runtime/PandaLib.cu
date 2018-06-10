@@ -21,7 +21,7 @@
 
 extern int gCommRank;
 
-__global__ void RunPandaGPUMapTasks(panda_gpu_context pgc)
+__global__ void RunPandaGPUMapTasksSplit(panda_gpu_context pgc)
 {
 	//ShowLog2("gridDim.x:%d gridDim.y:%d gridDim.z:%d blockDim.x:%d blockDim.y:%d blockDim.z:%d blockIdx.x:%d blockIdx.y:%d blockIdx.z:%d\n",
 	// 		gridDim.x,gridDim.y,gridDim.z,blockDim.x,blockDim.y,blockDim.z,blockIdx.x,blockIdx.y,blockIdx.z);
@@ -78,9 +78,9 @@ __global__ void RunPandaGPUMapTasks(panda_gpu_context pgc)
 	}//for
 }
 
-void ExecutePandaGPUMapTasks(panda_gpu_context pgc, dim3 grids, dim3 blocks)
+void ExecutePandaGPUMapTasksSplit(panda_gpu_context pgc, dim3 grids, dim3 blocks)
 {
-   	RunPandaGPUMapTasks<<<grids,blocks>>>(pgc);
+   	RunPandaGPUMapTasksSplit<<<grids,blocks>>>(pgc);
 }
 
 void* RunPandaCPUMapThread(void * ptr)
