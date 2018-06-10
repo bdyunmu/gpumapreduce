@@ -1,4 +1,6 @@
 #include <mpi.h>
+#include "Panda.h"
+
 #include <panda/KeyValueChunk.h>
 #include <panda/PandaMPIMessage.h>
 #include <panda/PandaMapReduceJob.h>
@@ -18,14 +20,14 @@ using namespace std;
 
 int main(int argc, char ** argv)
 {
-
+	
  	if (argc != 3)
         {
-           ShowLog("terasort");
-	   ShowLog("usage: %s [input][output]",argv[0]);
-	   ShowLog("Example:");
-	   ShowLog("mpirun -host node1,node2 -np 2 ./%s file:///tmp/terasort_in file:///tmp/terasort_out",argv[0]);
-           exit(-1);//
+           panda::ShowLog("terasort");
+	   panda::ShowLog("usage: %s [input][output]",argv[0]);
+	   panda::ShowLog("Example:");
+	   panda::ShowLog("mpirun -host node1,node2 -np 2 ./%s file:///tmp/terasort_in file:///tmp/terasort_out",argv[0]);
+           exit(-1);
         }  //if
 	panda::MapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv);
 	int rank, size;
@@ -40,13 +42,13 @@ int main(int argc, char ** argv)
 
 	if (rank == 0)
 	{
-	ShowLog("========================================================");
-	ShowLog("========================================================");
-	ShowLog("TeraSort");
-	ShowLog("Input:%s",argv[1]);
-	ShowLog("Output:%s",argv[2]);
-	ShowLog("=========================================================");
-	ShowLog("=========================================================");	
+	panda::ShowLog("========================================================");
+	panda::ShowLog("========================================================");
+	panda::ShowLog("TeraSort");
+	panda::ShowLog("Input:%s",argv[1]);
+	panda::ShowLog("Output:%s",argv[2]);
+	panda::ShowLog("=========================================================");
+	panda::ShowLog("=========================================================");	
 	}
 	
 	const int NUM_ELEMENTS = 1;
@@ -54,7 +56,7 @@ int main(int argc, char ** argv)
 	sprintf(input,"%s/INPUT%d",argv[1],rank);
 	FILE *fp = fopen(input,"r");
 	if(fp == NULL){
-	ShowLog("can not open:%s",input);
+	panda::ShowLog("can not open:%s",input);
 	exit(-1);
 	}
 	char rb[100];
@@ -63,7 +65,7 @@ int main(int argc, char ** argv)
 	job->addInput(new panda::KeyValueChunk((char *)rb,TeraInputFormat::KEY_LEN,(char *)rb+10,TeraInputFormat::VALUE_LEN));
 	count++;	
 	}
-	ShowLog("terasort job->addInput count:[%d]",count);
+	panda::ShowLog("terasort job->addInput count:[%d]",count);
 	fclose(fp);
 	job->execute();
 	delete job;

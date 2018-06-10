@@ -15,6 +15,8 @@ Developer: Hui Li (huili@ruijie.com.cn)
 #include "PandaAPI.h"
 #include "TeraInputFormat.h"
 
+namespace panda{
+
 typedef char byte;
 
 __device__ void panda_gpu_core_combiner(void *KEY, val_t* VAL, int keySize, int valCount, panda_gpu_context *pgc, int map_task_idx){
@@ -38,4 +40,6 @@ void panda_cpu_map(void *KEY, void*VAL, int keySize, int valSize, panda_cpu_cont
 
 void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context* pcc, int reduce_task_idx){
 	PandaEmitCPUReduceOutput(KEY, VAL, keySize, TeraInputFormat::VALUE_LEN, pcc, reduce_task_idx);
+}
+
 }

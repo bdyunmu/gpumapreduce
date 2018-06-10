@@ -73,10 +73,10 @@ int main(int argc, char ** argv)
 
  	if (argc != 3)
         {
-           ShowLog("teragen");
-	   ShowLog("usage: %s [file size][file path]",argv[0]);
-	   ShowLog("Example:"); 
-	   ShowLog("mpirun -host node1,node2 -np 2 ./%s 100G file:///tmp/terasort_in",argv[0]);
+           panda::ShowLog("teragen");
+	   panda::ShowLog("usage: %s [file size][file path]",argv[0]);
+	   panda::ShowLog("Example:"); 
+	   panda::ShowLog("mpirun -host node1,node2 -np 2 ./%s 100G file:///tmp/terasort_in",argv[0]);
            exit(-1);//
         }  //if
 	long outputSizeInBytes = sizeStrToBytes(argv[1]);
@@ -99,14 +99,14 @@ int main(int argc, char ** argv)
 
 	if (rank == 0)
 	{
-	ShowLog("========================================================");
-	ShowLog("========================================================");
-	ShowLog("Input Size:%s",sizeStr);
-	ShowLog("Total number of records:%ld",numRecords);
-	ShowLog("Number of output partitions:%d",size);
-	ShowLog("Number of records/output parititon:%d",numRecords/size);
-	ShowLog("=========================================================");
-	ShowLog("=========================================================");	
+	panda::ShowLog("========================================================");
+	panda::ShowLog("========================================================");
+	panda::ShowLog("Input Size:%s",sizeStr);
+	panda::ShowLog("Total number of records:%ld",numRecords);
+	panda::ShowLog("Number of output partitions:%d",size);
+	panda::ShowLog("Number of records/output parititon:%d",numRecords/size);
+	panda::ShowLog("=========================================================");
+	panda::ShowLog("=========================================================");	
 	}
 
 	TeraInputFormat::recordsPerPartition = recordsPerPartition;
@@ -116,9 +116,10 @@ int main(int argc, char ** argv)
 	int *index = new int[1];
 	*index = rank;
 	job->addInput(new panda::DataChunk((char *)index,sizeof(int),NUM_ELEMENTS));
-	ShowLog("teragen job->addInput index:[%d]",*index);
+	panda::ShowLog("teragen job->addInput index:[%d]",*index);
 
 	job->execute();
-	MPI_Finalize();
+	delete job;
+	//MPI_Finalize();
 	return 0;
 }//int main

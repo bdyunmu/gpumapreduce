@@ -22,11 +22,10 @@
 
 #include <mpi.h>
 
-int gCommRank = 0;
-
 namespace panda
 {
 
+  int gCommRank = 0;
   void PandaMapReduceJob::AddGPUReduceTask(panda_gpu_context* pgc, panda_node_context *pnc, int start_task_id, int end_task_id)
   {
 	

@@ -11,6 +11,7 @@
  */
 
 #include "Panda.h"
+namespace panda{
 
 //calculate the workload ratio between gpu and cpu using the roufline model.
 void pandaTaskSched(panda_node_context *pnc, panda_gpu_context *pgc, panda_cpu_context *pcc){
@@ -18,4 +19,6 @@ void pandaTaskSched(panda_node_context *pnc, panda_gpu_context *pgc, panda_cpu_c
 	int cpuTotalGHz = pcc->num_cpus_cores*pcc->cpu_GHz;
 	pnc->cpu_ratio = cpuTotalGHz/(gpuTotalGHz+cpuTotalGHz);
 	pnc->gpu_ratio = 1- pnc->cpu_ratio;	
+}
+
 }

@@ -10,14 +10,16 @@
 
  */
 
-#ifndef __PANDA_LIB_CU__
-#define __PANDA_LIB_CU__
+//#ifndef __PANDA_LIB_CU__
+//#define __PANDA_LIB_CU__
 
 #include "Panda.h"
 #include "PandaAPI.h"
 
 #include <cstdio>
 #include <cstdlib>
+
+namespace panda{
 
 extern int gCommRank;
 
@@ -926,4 +928,5 @@ __global__ void RunPandaGPUCombiner(panda_gpu_context pgc)
 
 }//GPU
 
-#endif //__PANDA_LIB_CU__
+}
+//#endif //__PANDA_LIB_CU__

@@ -17,6 +17,7 @@
 #ifndef __PANDA_UTILS_CU__
 #define __PANDA_UTILS_CU__
 
+namespace panda{
 
 void getGPUDevProp(){
 	int devCount = 0;
@@ -211,4 +212,5 @@ void __checkCudaErrors(cudaError err, const char *file, const int line )
 	}
 }
 
+}
 #endif //__PANDA_UTILS_CU__

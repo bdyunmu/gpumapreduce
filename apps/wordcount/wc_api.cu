@@ -8,11 +8,10 @@
 	Developer: Hui Li (huili@ruijie.com.cn)
 */
 
-#ifndef __USER_CU__
-#define __USER_CU__
-
 #include "Panda.h"
 #include "PandaAPI.h"
+
+namespace panda{
 
 __device__ void panda_gpu_core_combiner(void *KEY, val_t* VAL, int keySize, int valCount, panda_gpu_context *pgc, int map_task_idx){
 	//PandaGPUEmitCombinerOutput(KEY,&count,keySize,sizeof(int),pgc, map_task_idx);
@@ -99,4 +98,4 @@ void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cp
 		PandaEmitCPUReduceOutput(KEY,(void *)count,keySize,sizeof(int),pcc,reduce_task_idx);
 }
 
-#endif //__MAP_CU__
+}

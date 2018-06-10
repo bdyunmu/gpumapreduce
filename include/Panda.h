@@ -24,19 +24,15 @@
 #include <pthread.h>
 #include <vector>
 
-
+namespace panda{
 
 #define _DEBUG		0x01
-#define _WARN		0x02
-#define _ERROR		0x03
-#define _DISKLOG	0x04
-
-namespace panda{
+//#define _WARN		0x02
+//#define _ERROR		0x03
+//#define _DISKLOG	0x04
 
 const int TaskLevelOne = 1;
 const int TaskLevelTwo = 2;
-
-}
 
 #define CEIL(n,m) (n/m + (int)(n%m !=0))
 #define THREAD_CONF(grid, block, gridBound, blockBound) do {\
@@ -71,9 +67,10 @@ const int TaskLevelTwo = 2;
 extern int gCommRank;
 
 #ifdef _DEBUG
-#define ShowLog(...) do{printf("[%d]",gCommRank);printf("[%s]\t",__FUNCTION__);printf(__VA_ARGS__);printf("\n");fflush(stdout);}while(0)
+template<typename... Args>
+	void ShowLog(const Args &...rest) {do{printf("[%d]",gCommRank);printf("[%s]\t",__FUNCTION__);printf(rest...);printf("\n");fflush(stdout);}while(0);}
 #else
-#define ShowLog(...) //do{printf(__VA_ARGS__);printf("\n");}while(0)
+	#define ShowLog(...) //do{printf(__VA_ARGS__);printf("\n");}while(0)
 #endif
 
 #ifdef _DISKLOG
@@ -438,5 +435,7 @@ inline int cpu_compare(const void *key_a, int len_a, const void *key_b, int len_
 
 panda_gpu_context		*CreatePandaGPUContext();
 panda_cpu_context		*CreatePandaCPUContext();
+
+}
 
 #endif //__PANDA_H__

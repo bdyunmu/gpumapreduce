@@ -13,12 +13,12 @@ int main(int argc, char ** argv)
 {
  	if (argc != 2)
         {
-	   ShowLog("mpirun -host node1,node2 -np 2 ./%s input.txt",argv[0]);
+	   //panda::ShowLog("mpirun -host node1,node2 -np 2 ./%s input.txt",argv[0]);
            exit(-1);//
         }  //if
 	if(strlen(argv[1])<2)
 	{
-	  ShowLog("file path too short!");
+	  //panda::ShowLog("file path too short!");
 	  exit(-1);
 	}
 	panda::PandaMapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv);
@@ -44,15 +44,15 @@ int main(int argc, char ** argv)
 		strcpy((chunk_data + total_len),str);
 		total_len += (int)strlen(str);
 		if(total_len>=chunk_size){
-			ShowLog("(wordcount job->addInput)");
+			//panda::ShowLog("(wordcount job->addInput)");
 			job->addInput(new panda::DataChunk((char *)chunk_data, total_len, NUM_ELEMENTS));
 			total_len=0;
 		}//if
 	}//while
-	ShowLog("(wordcount job->execute)");
+	//panda::ShowLog("(wordcount job->execute)");
 	job->execute();
 	delete job;
-	ShowLog("(wordcount delete job)");
+	//panda::ShowLog("(wordcount delete job)");
 	return 0;
 
 }//int main

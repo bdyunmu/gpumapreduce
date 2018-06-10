@@ -21,6 +21,8 @@
 
 #include "Panda.h"
 
+namespace panda{
+
 void ExecutePandaSortBucket(panda_node_context *pnc)
 {
 
@@ -655,5 +657,6 @@ __global__ void copyDataFromDevice2Host2(panda_gpu_context pgc)
     else if(len_a<len_b) return -1;
     else if(len_a == len_b) return 0;
   }
+}
 
 #endif 
