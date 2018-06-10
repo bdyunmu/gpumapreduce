@@ -44,8 +44,10 @@ namespace panda
 	
 	bool getEnableGPU() {return enableGPU;}
 	bool getEnableCPU() {return enableCPU;}
-        void setEnableCPU(bool b) {enableCPU = b;}
-	void setEnableGPU(bool b) {enableGPU = b;}
+        //void setEnableCPU(bool b) {enableCPU = b;}
+	//void setEnableGPU(bool b) {enableGPU = b;}
+	int  taskLevel;
+	//bool setTaskLevel(int tl) {taskLevel = tl;return true;}
 
 	bool enableGPU;
 	bool enableCPU;
@@ -88,9 +90,12 @@ namespace panda
     public:
         PandaMapReduceJob(int argc, char **argv);
         ~PandaMapReduceJob();
-
+	bool setTaskLevel(int tl) {taskLevel = tl;return true;}
+	void setEnableCPU(bool b) {enableCPU = b;}
+	void setEnableGPU(bool b) {enableGPU = b;}
         virtual void addInput(panda::Chunk * chunk);
         virtual void execute();
+
   };
 }
 

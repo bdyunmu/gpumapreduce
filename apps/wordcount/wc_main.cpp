@@ -11,7 +11,6 @@
 
 int main(int argc, char ** argv)
 {
-
  	if (argc != 2)
         {
 	   ShowLog("mpirun -host node1,node2 -np 2 ./%s input.txt",argv[0]);
@@ -22,27 +21,22 @@ int main(int argc, char ** argv)
 	  ShowLog("file path too short!");
 	  exit(-1);
 	}
-
-	panda::MapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv);
-	int rank, size;
-	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-	MPI_Comm_size(MPI_COMM_WORLD, &size);
-
+	panda::PandaMapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv);
 	job->setMessage(new panda::PandaMPIMessage(true));
-
 	job->setEnableCPU(true);
 	job->setEnableGPU(true);
 
-    	char fn[128];
-	char str[512];
-	sprintf(fn,"%s",argv[1]);
+	job->setTaskLevel(panda::TaskLevelOne);
+
+    	char wcfn[128];
+	char str[1024];
+	sprintf(wcfn,"%s",argv[1]);
 	int  chunk_size = 1024;
 	char *chunk_data = (char *)malloc(sizeof(char)*2*(chunk_size));
 	FILE *wcfp;
-	wcfp = fopen(fn, "r");
+	wcfp = fopen(wcfn, "r");
 	const int NUM_ELEMENTS = 1;
 	int total_len = 0;
-
 	while(fgets(str,sizeof(str),wcfp) != NULL)
 	{
 		for (int i = 0; i < strlen(str); i++)
@@ -50,14 +44,15 @@ int main(int argc, char ** argv)
 		strcpy((chunk_data + total_len),str);
 		total_len += (int)strlen(str);
 		if(total_len>=chunk_size){
-			ShowLog("wordcount job->addInput");
+			ShowLog("(wordcount job->addInput)");
 			job->addInput(new panda::DataChunk((char *)chunk_data, total_len, NUM_ELEMENTS));
 			total_len=0;
 		}//if
 	}//while
-	ShowLog("job->execute.......");
+	ShowLog("(wordcount job->execute)");
 	job->execute();
 	delete job;
-	MPI_Finalize();
+	ShowLog("(wordcount delete job)");
 	return 0;
+
 }//int main

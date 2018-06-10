@@ -24,10 +24,19 @@
 #include <pthread.h>
 #include <vector>
 
+
+
 #define _DEBUG		0x01
 #define _WARN		0x02
 #define _ERROR		0x03
 #define _DISKLOG	0x04
+
+namespace panda{
+
+const int TaskLevelOne = 1;
+const int TaskLevelTwo = 2;
+
+}
 
 #define CEIL(n,m) (n/m + (int)(n%m !=0))
 #define THREAD_CONF(grid, block, gridBound, blockBound) do {\
