@@ -298,15 +298,6 @@ namespace panda
 
   void PandaMapReduceJob::InitPandaCPUMapReduce()
   {
-	this->pCPUContext					= CreatePandaCPUContext();
-	this->pCPUContext->input_key_vals.num_input_record	= cpuMapTasks.size();
-	this->pCPUContext->input_key_vals.input_keyval_arr	= (keyval_t *)malloc(cpuMapTasks.size()*sizeof(keyval_t));
-	this->pCPUContext->num_cpus_cores			= getCPUCoresNum();
-	this->pCPUContext->cpu_mem_size = getCPUMemSizeGb();
-	this->pCPUContext->cpu_mem_bandwidth = getCPUMemBandwidthGb();
-	this->pCPUContext->cpu_GHz = getCPUGHz();
-	printf("CPU ncores:%d memSize:%.3lf memBandwidth:%.3lf GHz:%.3lf\n",	
-		this->pCPUContext->num_cpus_cores,this->pCPUContext->cpu_mem_size,this->pCPUContext->cpu_mem_bandwidth,this->pCPUContext->cpu_GHz);
 	for (unsigned int i= 0;i<cpuMapTasks.size();i++){
 
 		void *key = this->cpuMapTasks[i]->key;
@@ -365,13 +356,6 @@ namespace panda
   void PandaMapReduceJob::InitPandaGPUMapReduce()
   {
 
-	this->pGPUContext = CreatePandaGPUContext();
-	this->pGPUContext->num_gpus_cores = getGPUCoresNum();
-	this->pGPUContext->gpu_mem_size = getGPUMemSizeGb();
-	this->pGPUContext->gpu_mem_bandwidth = getGPUMemBandwidthGb();
-	this->pGPUContext->gpu_GHz = getGPUGHz();
-	printf("GPU ncores:%d memSize:%.3lf  memBandwidth:%.3lf GHz:%.3lf\n",
-			this->pGPUContext->num_gpus_cores,this->pGPUContext->gpu_mem_size,this->pGPUContext->gpu_mem_bandwidth,this->pGPUContext->gpu_GHz);
 	this->pGPUContext->input_key_vals.num_input_record = gpuMapTasks.size();//Ratio
 	this->pGPUContext->input_key_vals.h_input_keyval_arr = 	(keyval_t *)malloc(gpuMapTasks.size()*sizeof(keyval_t));
 
@@ -439,13 +423,12 @@ namespace panda
 	
   }//void
 
-  void PandaMapReduceJob::InitPandaRuntime(){
+  void PandaMapReduceJob::InitPandaNodeContextAndRuntime(){
 	
 	this->pNodeContext = new panda_node_context;
 	if (this->pNodeContext == NULL) exit(-1);
 	memset(this->pNodeContext, 0, sizeof(panda_node_context));
-
-	//if(this->messager == NULL) exit(-1);
+	this->pNodeContext->task_level = taskLevel;
 	
 	this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len = 0;
 	int max_len = 100;//configurable
@@ -489,6 +472,11 @@ namespace panda
   PandaMapReduceJob::PandaMapReduceJob(int argc,char **argv)
     : MapReduceJob(argc, argv)
   {
+	taskLevel = TaskLevelOne;
+	enableCPU = false;
+	enableGPU = false;
+	MessageThread = NULL;
+		
   }
 
   PandaMapReduceJob::~PandaMapReduceJob()
@@ -498,7 +486,8 @@ namespace panda
   //Significant change is required in this place
   void PandaMapReduceJob::addInput(Chunk * chunk)
   {
-	//chunks.push_back(chunk);
+	chunks.push_back(chunk);
+#if 0
 	if(!this->getEnableCPU()&&!this->getEnableGPU()){
 	ShowLog("neither GPU nor CPU are enabled");
 	return;
@@ -533,7 +522,9 @@ namespace panda
 		lastgpu = true;
 		return;	
 	}
-	}//if
+	}//if(this->
+#endif
+
   }//void
 
   void PandaMapReduceJob::addCPUMapTasks(panda::Chunk *chunk)
@@ -821,10 +812,49 @@ namespace panda
 	  */
   }//void
 
+  void PandaMapReduceJob::StartPandaMapTasksSchedule(){
+	//ExecutePandaMapTasksSchedule();
+	//pandaTaskSched(panda_node_context *pnc, panda_gpu_context *pgc, panda_cpu_context *pcc);
+	ExecutePandaTasksSched(this->pNodeContext,this->pGPUContext,this->pCPUContext);
+  }//void
+
+  void PandaMapReduceJob::InitPandaCPUContext(){
+	this->pCPUContext					= CreatePandaCPUContext();
+	this->pCPUContext->input_key_vals.num_input_record	= cpuMapTasks.size();
+	this->pCPUContext->input_key_vals.input_keyval_arr	= (keyval_t *)malloc(cpuMapTasks.size()*sizeof(keyval_t));
+	this->pCPUContext->num_cpus_cores			= getCPUCoresNum();
+	this->pCPUContext->cpu_mem_size = getCPUMemSizeGb();
+	this->pCPUContext->cpu_mem_bandwidth = getCPUMemBandwidthGb();
+	this->pCPUContext->cpu_GHz = getCPUGHz();
+	ShowLog("CPU ncores:%d memSize:%.3lf memBandwidth:%.3lf GHz:%.3lf\n",	                                                                	
+		this->pCPUContext->num_cpus_cores,this->pCPUContext->cpu_mem_size,this->pCPUContext->cpu_mem_bandwidth,this->pCPUContext->cpu_GHz);  
+ }//void
+
+  void PandaMapReduceJob::InitPandaGPUContext(){
+
+	this->pGPUContext = CreatePandaGPUContext();
+	this->pGPUContext->num_gpus_cores = getGPUCoresNum();
+	this->pGPUContext->gpu_mem_size = getGPUMemSizeGb();
+	this->pGPUContext->gpu_mem_bandwidth = getGPUMemBandwidthGb();
+	this->pGPUContext->gpu_GHz = getGPUGHz();
+	ShowLog("GPU ncores:%d memSize:%.3lf  memBandwidth:%.3lf GHz:%.3lf\n",
+		this->pGPUContext->num_gpus_cores,this->pGPUContext->gpu_mem_size,this->pGPUContext->gpu_mem_bandwidth,this->pGPUContext->gpu_GHz);
+	
+  }//void
+
   void PandaMapReduceJob::execute()
   {
 
-	InitPandaRuntime();
+	InitPandaNodeContextAndRuntime();
+
+	if(this->getEnableCPU())
+		InitPandaCPUContext();
+
+	if(this->getEnableGPU())
+		InitPandaGPUContext();
+
+	StartPandaMapTasksSchedule();
+
 	if(this->getEnableGPU())
 		InitPandaGPUMapReduce();
 	if(this->getEnableCPU()){

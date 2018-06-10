@@ -33,7 +33,11 @@ namespace panda
 	void addGPUMapTasks(panda::Chunk *chunk);
 	void AddGPUReduceTask(panda_gpu_context* pgc, panda_node_context *pnc, int start_id, int end_id);	
 	void AddCPUReduceTask(panda_cpu_context* pgc, panda_node_context *pnc, int start_id, int end_id);
-	
+
+	void InitPandaCPUContext();
+	void InitPandaGPUContext();
+
+	void StartPandaMapTasksSchedule();	
 	void StartPandaCPUMapTasks();
 	void StartPandaCPUReduceTasks();
 	void StartPandaCPUCombineTasks();
@@ -72,7 +76,7 @@ namespace panda
 
  	virtual void StartPandaMessageThread();
 	  
-	virtual void InitPandaRuntime();
+	virtual void InitPandaNodeContextAndRuntime();
 	virtual void InitPandaGPUMapReduce();
 	virtual void InitPandaCPUMapReduce();
 

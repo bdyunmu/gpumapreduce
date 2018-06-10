@@ -379,7 +379,8 @@ struct panda_node_context
 	std::vector<int  * > counts, keyPos, valPos, keySize, valSize;
 
 	} recv_buckets;
-
+	
+	int   task_level;
 	float cpu_ratio;
 	float gpu_ratio;
 };
@@ -419,6 +420,9 @@ __global__ void RunPandaGPUReduceTasks(panda_gpu_context pgc);
 __global__ void RunPandaGPUMapTasksSplit(panda_gpu_context pgc);
 __global__ void RunPandaGPUMapTasksIterative(panda_gpu_context pgc, int curIter, int totalIter);
 __global__ void RunPandaGPUCombiner(panda_gpu_context pgc);
+
+void ExecutePandaMapTasksSchedule();
+void ExecutePandaTasksSched(panda_node_context *pnc, panda_gpu_context *pgc, panda_cpu_context *pcc);
 
 double getCPUGHz();
 double getCPUMemSizeGb();
