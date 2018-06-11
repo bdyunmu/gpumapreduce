@@ -68,7 +68,7 @@ extern int gCommRank;
 
 #ifdef _DEBUG
 template<typename... Args>
-	void ShowLog(const Args &...rest) {do{printf("[%d]",gCommRank);printf("[%s]\t",__FUNCTION__);printf(rest...);printf("\n");fflush(stdout);}while(0);}
+	void ShowLog(const Args &...rest) {do{printf("[%d]",gCommRank);printf("[log]\t");printf(rest...);printf("\n");fflush(stdout);}while(0);}
 #else
 	#define ShowLog(...) //do{printf(__VA_ARGS__);printf("\n");}while(0)
 #endif

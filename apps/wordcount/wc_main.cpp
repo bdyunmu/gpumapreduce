@@ -50,7 +50,7 @@ int main(int argc, char ** argv)
 	}//while
 	if(total_len >0){
 		panda::ShowLog("(wordcount job->addInput)");
-	//	job->addInput(new panda::DataChunk((char *)chunk_data, total_len, NUM_ELEMENTS));
+		job->addInput(new panda::DataChunk((char *)chunk_data, total_len, NUM_ELEMENTS));
 	}
 	panda::ShowLog("(wordcount job->execute)");
 	job->execute();

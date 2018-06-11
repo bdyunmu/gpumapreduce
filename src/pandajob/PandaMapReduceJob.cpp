@@ -456,10 +456,10 @@ namespace panda
 
   void PandaMapReduceJob::WaitPandaMessagerExit()
   {
-    if (messager!=NULL) messager->MsgFinish();
-	MessageThread->join();
-
-    	delete MessageThread;
+    if (messager!=NULL) 
+	messager->MsgFinish();
+    MessageThread->join();
+    delete MessageThread;
   }//void
 
   PandaMapReduceJob::PandaMapReduceJob(int argc,char **argv)
@@ -688,12 +688,12 @@ namespace panda
 		  this->pNodeContext->buckets.valPos.push_back(valPos);
 		  this->pNodeContext->buckets.valSize.push_back(valSize);
 		  this->pNodeContext->buckets.keySize.push_back(keySize);
-		  int* counts_i		= new int[4];
-		  counts_i[0]		= 0;	//curlen
-		  counts_i[1]		= maxlen;	
-		  counts_i[2]		= 0;	//keybufflen
-		  counts_i[3]		= 0;	//valbufflen
-		  this->pNodeContext->buckets.counts.push_back(counts_i);
+		  int* counters		= new int[4];
+		  counters[0]		= 0;	//curlen
+		  counters[1]		= maxlen;	
+		  counters[2]		= 0;	//keybufflen
+		  counters[3]		= 0;	//valbufflen
+		  this->pNodeContext->buckets.counts.push_back(counters);
 
 	  }//for
 
@@ -707,11 +707,11 @@ namespace panda
 		val_t *vals  = sorted_intermediate_keyvals_arr1[i].vals;
 		int len = sorted_intermediate_keyvals_arr1[i].val_arr_len;
 		for (int j=0;j<len;j++){
-			ShowLog("key:%s keySize:%d val:%d dump to buckeId:[%d]",key, keySize, *(int *)vals[j].val, bucketId);
+			ShowLog("mapoutput key:%s keySize:%d val:%d dump to bucket:[%d]",key, keySize, *(int *)vals[j].val, bucketId);
 			PandaAddKeyValue2Bucket(bucketId, (char *)key, keySize,(char *)(vals[j].val),vals[j].valSize);
 		}//for
 	  }//for
-	  ShowLog("Panda adding Key/Values to bucket is done on local host.\n");
+	  ShowLog("Panda adding Key/Values to bucket is done on local host.");
   }//void
 
   void PandaMapReduceJob::StartPandaCPUReduceTasks(){

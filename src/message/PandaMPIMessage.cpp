@@ -42,6 +42,7 @@ namespace panda
 		this->copySendData = false;
 		this->getSendData = false;
 		this->numSentBuckets = 0;
+		this->startRecvKeyValData = false;
 	}//void
 
 	void PandaMPIMessage::MsgFinalize(){
@@ -58,90 +59,90 @@ namespace panda
 
 		ShowLog("start PandaMPIMessage thread. run() thread [%d/%d]", commRank, commSize);
 		
-		int finishedWorkers	= 0;
-		bool  * workerDone					= new bool[commSize];
-		int   * counts						= new int [commSize*3];
-		int  ** keyRecv						= new int*[commSize];
-		int  ** valRecv						= new int*[commSize];
+		int   * counts		= new int [commSize*3];
+		int  ** keyRecv		= new int*[commSize];
+		int  ** valRecv		= new int*[commSize];
 		int  ** keyPosKeySizeValPosValSize	= new int*[commSize];
 		memset(counts,0,sizeof(int)*commSize*3);
 	
-		if(workerDone==NULL)		ShowLog("Error");
 		if(counts==NULL)		ShowLog("Error");
 		if(keyRecv==NULL)		ShowLog("Error");
 		if(valRecv==NULL)		ShowLog("Error");
 		if(keyPosKeySizeValPosValSize == NULL)	ShowLog("Error");
-
 		MPI_Request * dataReqs  = new MPI_Request[commSize*3];
 		MPI_Request * countReqs = new MPI_Request[commSize];
 		MPI_Status reqStats[3];
 
-		for (int i = 0; i < commSize; ++i)
+		for (int i = 0; i < commSize; i++)
 		{
-			workerDone[i]   = false;
 			keyRecv[i] 		= NULL;
 			valRecv[i] 		= NULL;
 			keyPosKeySizeValPosValSize[i] = NULL;
 			MPI_Irecv(counts+i*3,3,MPI_INT,i,0,MPI_COMM_WORLD,(MPI_Request *)&(countReqs[i]));
 		}//for
+		MPI_Barrier(MPI_COMM_WORLD);
 
-		while (numSentBuckets < commSize || finishedWorkers < commSize)
+		for (int i = 0; i < commSize; i++)
 		{
-
-			//ShowLog("I am looping numSentBuckets:%d finishedWorkers:%d commSize:%d",numSentBuckets,finishedWorkers,commSize);
-			const int MAX_SENDS_PER_LOOP = 30;
-			int index = 0;
-			while (index<MAX_SENDS_PER_LOOP && pollUnsent())
-			{
-				index++;
-			}//while
-			//pollPending();
-			for (int i=0; i<commSize; i++)
-			{
-				if (workerDone[i])
-					continue;
-
-			      	MPI_Wait(&(countReqs[i]),NULL);
-				ShowLog("->recved countReqs from %d, maxlen:%d keysize:%d valsize:%d",
+		   PandaMessagePackage * data = NULL;
+		   do {
+		   	addDataLock.lock();
+		   	if (!needsToBeSent.empty())
+		   	{
+		   	data = needsToBeSent.front();
+		   	needsToBeSent.erase(needsToBeSent.begin());
+		   	}
+		   	addDataLock.unlock();
+		   	if (data != NULL)
+				break;
+	 	   }while(data == NULL);
+		   MPI_Isend(data->counts,3,MPI_INT,data->rank,0,MPI_COMM_WORLD,&data->reqs[0]);
+		   pendingIO.push_back(data);	
+		}
+		MPI_Barrier(MPI_COMM_WORLD);
+		for(int i = 0;i<commSize; i++)
+		{
+		MPI_Wait(&(countReqs[i]),NULL);
+		}
+		MPI_Barrier(MPI_COMM_WORLD);	
+		for(int i = 0;i<commSize; i++)
+		{
+			if(counts[i*3+0]>0 && counts[i*3+1]>0 && counts[i*3+2]>0){
+			keyPosKeySizeValPosValSize[i] = new int[4*counts[i*3+0]];
+                        keyRecv[i] = new int[(counts[i*3+1] + sizeof(int)-1)/sizeof(int)];
+                        valRecv[i] = new int[(counts[i*3+2] + sizeof(int)-1)/sizeof(int)];
+                        MPI_Irecv((char*)(keyRecv[i]),counts[i*3+1],MPI_CHAR,i,1,MPI_COMM_WORLD,dataReqs+i*3+1);
+                        MPI_Irecv((char*)(valRecv[i]),counts[i*3+2],MPI_CHAR,i,2,MPI_COMM_WORLD,dataReqs+i*3+2);
+                        MPI_Irecv(keyPosKeySizeValPosValSize[i],4*counts[i*3+0],MPI_INT,i,3,MPI_COMM_WORLD,dataReqs+i*3+0);
+			}
+		}//for	
+		MPI_Barrier(MPI_COMM_WORLD);	
+		for(auto p = pendingIO.begin(); p!= pendingIO.end(); p++)
+		{
+			if((*p)->counts[0]>0 && (*p)->counts[1]>0 && (*p)->counts[2]>0){
+			MPI_Isend((*p)->keysBuff,(*p)->keyBuffSize, MPI_CHAR, (*p)->rank, 1, MPI_COMM_WORLD, &((*p)->reqs[1]));
+                        MPI_Isend((*p)->valsBuff,(*p)->valBuffSize, MPI_CHAR, (*p)->rank, 2, MPI_COMM_WORLD, &((*p)->reqs[2]));
+                        MPI_Isend((*p)->keyPosKeySizeValPosValSize, (*p)->counts[0]*4, MPI_INT, (*p)->rank, 3, MPI_COMM_WORLD, &((*p)->reqs[3]));
+			}	
+		}	
+		for (int i=0; i<commSize; i++)
+		{
+			ShowLog("->recved countReqs from %d, maxlen:%d keysize:%d valsize:%d",
 							i, counts[i*3+0], counts[i*3+1], counts[i*3+2]);
-				//received null chunk
-				if(counts[i*3+0] == -1 && counts[i*3+1] == -1 && counts[i*3+2] == -1){
-					workerDone[i] = true;
-					finishedWorkers++;
-					continue;
-				}//if
-					
-				keyPosKeySizeValPosValSize[i] = new int[4*counts[i*3+0]];
-				keyRecv[i] = new int[(counts[i*3+1] + sizeof(int)-1)/sizeof(int)];
-				valRecv[i] = new int[(counts[i*3+2] + sizeof(int)-1)/sizeof(int)];
-
-				MPI_Irecv((char*)(keyRecv[i]),counts[i*3+1],MPI_CHAR,i,1,MPI_COMM_WORLD,dataReqs+i*3+1);
-				MPI_Irecv((char*)(valRecv[i]),counts[i*3+2],MPI_CHAR,i,2,MPI_COMM_WORLD,dataReqs+i*3+2);
-				MPI_Irecv(keyPosKeySizeValPosValSize[i],4*counts[i*3+0],MPI_INT,i,3,MPI_COMM_WORLD,dataReqs+i*3+0);
-
+			if(counts[i*3+0]>0 && counts[i*3+1]>0 && counts[i*3+2]>0){
 				MPI_Wait(dataReqs+i*3+1, &reqStats[1]);
 				MPI_Wait(dataReqs+i*3+2, &reqStats[2]);
 				MPI_Wait(dataReqs+i*3+0, &reqStats[0]);
-
-				if ((counts[0]>0)&&(counts[1]>0)&&(counts[2]>0))
 				PandaAddRecvedBucket((char *)keyRecv[i],(char *)valRecv[i],keyPosKeySizeValPosValSize[i], 
 					counts[i*3+1],counts[i*3+2], counts[i*3+0]);
-
-				workerDone[i] = true;
-				finishedWorkers++;
 			}
-			pollPending();
-		}//while
-		ShowLog("Message Looping Done (numSentBuckets:%d finishedWorkers:%d commSize:%d)",numSentBuckets,finishedWorkers,commSize);
+		}
+		ShowLog("Message Looping Done (numSentBuckets:%d commSize:%d)",numSentBuckets,commSize);
 		//MPI_Waitall(commSize, zeroReqs, MPI_STATUSES_IGNORE);
-		/*
-		delete [] workerDone;
-		delete [] recvingCount;
 		delete [] counts;
 		delete [] keyRecv;
 		delete [] valRecv;
 		delete [] dataReqs;
-		*/
 	}
 
 
@@ -202,39 +203,26 @@ namespace panda
 		data->keyBuffSize	= keySize;
 		data->valBuffSize	= valSize;
 		data->rank		= rank;
-
-		/*if (rank == commRank)
-		{
-			data->counts[0] = maxlen;
-			data->counts[1] = keySize;
-			data->counts[2] = valSize;
-			data->done[0]   = false; 
-			data->done[1]   = false;
-			data->done[2]   = false;
-			data->done[3]   = false;
-		}*/
  
-			data->counts[0] = maxlen;
-			data->counts[1] = keySize;
-			data->counts[2] = valSize;
-			data->done[0]   = false;
-			data->done[1]   = false;
-			data->done[2]   = false;
-			data->done[3]   = false;
+		data->counts[0] = maxlen;
+		data->counts[1] = keySize;
+		data->counts[2] = valSize;
+		data->done[0]   = false;
+		data->done[1]   = false;
+		data->done[2]   = false;
+		data->done[3]   = false;
 
 		PandaMessageIORequest * req = new PandaMessageIORequest(data->flag, data->waiting,
 			4*data->counts[0]*sizeof(int) + data->counts[1] + data->counts[2]);
-		data->cond = &req->condition();
+		//data->cond = &req->condition();
 		addDataLock.lock();
 		needsToBeSent.push_back(data);
 		addDataLock.unlock();
 		return req;
-	}
-
+	}	//return req
 
 	bool PandaMPIMessage::pollUnsent()
-		{
-
+	{
 		PandaMessagePackage * data = NULL;
 		do {
 			addDataLock.lock();
@@ -256,22 +244,13 @@ namespace panda
 
 		ShowLog("start to send out a data from %d to %d . data: curlen:%d  keySize:%d  valSize:%d",
 					commRank, data->rank, data->counts[0], data->counts[1], data->counts[2]);
-
-		/*if (data->rank == commRank)
-		{
-			data->cond->lockMutex();
-			if (*data->waiting) {
-				data->cond->broadcast();
-			} //if
-			*data->flag = true;
-			data->cond->unlockMutex();
-		}*///if
 		
 		if(data->counts[0]==-1 && data->counts[1]==-1 && data->counts[2]==-1){
 		MPI_Isend(data->counts,3,MPI_INT,data->rank,0,MPI_COMM_WORLD,&data->reqs[0]);
 		}
 		if(data->counts[0]>0 && data->counts[1]>0 && data->counts[2]>0){
 		MPI_Isend(data->counts,3,MPI_INT,data->rank,0,MPI_COMM_WORLD,&data->reqs[0]);
+		MPI_Wait(&data->reqs[0],NULL);
 		MPI_Isend(data->keysBuff,data->keyBuffSize, MPI_CHAR, data->rank, 1, MPI_COMM_WORLD, &data->reqs[1]);
                	MPI_Isend(data->valsBuff,data->valBuffSize, MPI_CHAR, data->rank, 2, MPI_COMM_WORLD, &data->reqs[2]);
 	       	MPI_Isend(data->keyPosKeySizeValPosValSize, data->counts[0]*4, MPI_INT, data->rank, 3, MPI_COMM_WORLD, &data->reqs[3]);
@@ -296,10 +275,10 @@ namespace panda
 				MPI_Testall(1, data->reqs, &flag, data->stats);
 			if (flag)
 			{
-				data->cond->lockMutex();
-				if (*data->waiting) data->cond->broadcast();
-				*data->flag = true;
-				data->cond->unlockMutex();
+				//data->cond->lockMutex();
+				//if (*data->waiting) data->cond->broadcast();
+				//*data->flag = true;
+				//data->cond->unlockMutex();
 				pendingIO.erase(it);
 				if (copySendData)
 				{
