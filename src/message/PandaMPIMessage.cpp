@@ -1,9 +1,9 @@
 /***********************************************************************
 Copyright 2012 The Trustees of Indiana University.  All rights reserved.
-Panda:a MapReduce Framework on GPUs and CPUs
+Panda: a heterogeneous MapReduce Framework on GPUs and CPUs cluster
 
 File: PandaMPIMessage.cpp
-Time: 2017-12-11
+Time: 2018-06-11
 
 Developer: Hui Li (huili@ruijie.com.cn)
 
@@ -38,11 +38,8 @@ namespace panda
 
 	void PandaMPIMessage::MsgInit(){
 		Message::MsgInit();
-		this->innerLoopDone = false;
 		this->copySendData = false;
 		this->getSendData = false;
-		this->numSentBuckets = 0;
-		this->startRecvKeyValData = false;
 	}//void
 
 	void PandaMPIMessage::MsgFinalize(){
@@ -140,9 +137,13 @@ namespace panda
 		ShowLog("Message Looping Done (numSentBuckets:%d commSize:%d)",numSentBuckets,commSize);
 		//MPI_Waitall(commSize, zeroReqs, MPI_STATUSES_IGNORE);
 		delete [] counts;
+		for(int i = 0;i<commSize;i++){
+			delete [] keyRecv[i];
+			delete [] valRecv[i];
+		}
+		delete [] dataReqs;
 		delete [] keyRecv;
 		delete [] valRecv;
-		delete [] dataReqs;
 	}
 
 
@@ -220,83 +221,6 @@ namespace panda
 		addDataLock.unlock();
 		return req;
 	}	//return req
-
-	bool PandaMPIMessage::pollUnsent()
-	{
-		PandaMessagePackage * data = NULL;
-		do {
-			addDataLock.lock();
-			if (!needsToBeSent.empty())
-			{
-			data = needsToBeSent.front();
-			needsToBeSent.erase(needsToBeSent.begin());
-			}//if
-			addDataLock.unlock();
-
-			if (data != NULL){
-				this->getSendData = true;
-				break;
-			}//if
-		} while((data == NULL)&&(!this->getSendData));
-
-		if (data == NULL)
-			return false;
-
-		ShowLog("start to send out a data from %d to %d . data: curlen:%d  keySize:%d  valSize:%d",
-					commRank, data->rank, data->counts[0], data->counts[1], data->counts[2]);
-		
-		if(data->counts[0]==-1 && data->counts[1]==-1 && data->counts[2]==-1){
-		MPI_Isend(data->counts,3,MPI_INT,data->rank,0,MPI_COMM_WORLD,&data->reqs[0]);
-		}
-		if(data->counts[0]>0 && data->counts[1]>0 && data->counts[2]>0){
-		MPI_Isend(data->counts,3,MPI_INT,data->rank,0,MPI_COMM_WORLD,&data->reqs[0]);
-		MPI_Wait(&data->reqs[0],NULL);
-		MPI_Isend(data->keysBuff,data->keyBuffSize, MPI_CHAR, data->rank, 1, MPI_COMM_WORLD, &data->reqs[1]);
-               	MPI_Isend(data->valsBuff,data->valBuffSize, MPI_CHAR, data->rank, 2, MPI_COMM_WORLD, &data->reqs[2]);
-	       	MPI_Isend(data->keyPosKeySizeValPosValSize, data->counts[0]*4, MPI_INT, data->rank, 3, MPI_COMM_WORLD, &data->reqs[3]);
-		}
-		pendingIO.push_back(data);
-		return true;
-	}
-
-	void PandaMPIMessage::pollPending()
-	{
-		if (pendingIO.empty()) 
-			return;
-		std::vector<PandaMessagePackage * > newPending;
-		for (std::vector<PandaMessagePackage * >::iterator it=pendingIO.begin(); it!=pendingIO.end();)
-		{
-			PandaMessagePackage *data = *it;
-			int flag = 0;
-			if(data->counts[0]>0&&data->counts[1]>0&&data->counts[2]>0){
-				MPI_Testall(4, data->reqs, &flag, data->stats);
-			}
-			if(data->counts[0]==-1&&data->counts[1]==-1&&data->counts[2]==-1)
-				MPI_Testall(1, data->reqs, &flag, data->stats);
-			if (flag)
-			{
-				//data->cond->lockMutex();
-				//if (*data->waiting) data->cond->broadcast();
-				//*data->flag = true;
-				//data->cond->unlockMutex();
-				pendingIO.erase(it);
-				if (copySendData)
-				{
-					//if (data->keysBuff != NULL) delete [] reinterpret_cast<char * >(data->keysBuff);
-					//if (data->valsBuff != NULL) delete [] reinterpret_cast<char * >(data->valsBuff);
-					//if (data->keyPosKeySizeValPosValSize != NULL) delete [] reinterpret_cast<char *>(data->keyPosKeySizeValPosValSize);
-				}//if
-				delete data;
-				this->numSentBuckets++;
-			}//if
-			else 
-			{
-				newPending.push_back(data);
-				it++;
-			}//else
-		}//for
-		pendingIO = newPending;
-	}//void
 
 	void PandaMPIMessage::PandaAddRecvedBucket(char *keyRecv, char *valRecv, int *keyPosKeySizeValPosValSize, int keyBuffSize, int valBuffSize, int maxlen)
 	{

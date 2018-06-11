@@ -1,10 +1,10 @@
-Panda, a framework co-processing SPMD computation on GPUs and CPUs
+Panda, a heterogeneous MapReduce framework on GPUs and CPUs cluster
 =================================================================
 		huili@ruijie.com.cn
 		Ruijie network co.ltd
 		2017.11.09
 
-Title: docs/Co-processing SPMD computation on CPUs and GPUs cluster.pdf
+Paper: docs/Co-processing SPMD computation on CPUs and GPUs cluster.pdf
 
 Support apps:
 1) word count
@@ -21,5 +21,5 @@ steps to run terasort:<br>
 	1)cd gpumapreduce<br>
 	2)make terasort<br>
 	3)cd bin<br>
-	4)mpirun -host node1,node2 -np 2 ./teragen 10M /tmp<br>
+	4)mpirun -host node1,node2 -np 2 ./teragen 10M /tmp/terasort_in<br>
 	5)mpirun -host node1,node2 -np 2 ./terasort ./tmp/terasort_in ./tmp/terasort_out<br>

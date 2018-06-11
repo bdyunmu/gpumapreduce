@@ -24,14 +24,10 @@ namespace panda
           std::vector<PandaMessagePackage * > needsToBeSent;
           std::vector<PandaMessagePackage * > pendingIO;
 
-	  bool startRecvKeyValData;
-          bool innerLoopDone;
           bool copySendData;
-          bool getSendData;
-	  int  numSentBuckets;
-	
-          bool pollUnsent();
-          void pollPending();
+//	  int  numSentBuckets;
+//        bool pollUnsent();
+//        void pollPending();
 //        void pollSends();
 
 	  virtual oscpp::AsyncIORequest * sendTo(const int rank,
