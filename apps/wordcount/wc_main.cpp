@@ -1,5 +1,6 @@
 #include <mpi.h>
 
+#include <panda/Output.h>
 #include <panda/DataChunk.h>
 #include <panda/PandaMPIMessage.h>
 #include <panda/PandaMapReduceJob.h>
@@ -23,9 +24,9 @@ int main(int argc, char ** argv)
 	}
 	panda::PandaMapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv);
 	job->setMessage(new panda::PandaMPIMessage(true));
-	job->setTaskLevel(panda::TaskLevelOne);
+	job->setTaskLevel(panda::TaskLevelTwo);
 	job->setEnableCPU(true);
-	job->setEnableGPU(false);
+	job->setEnableGPU(true);
 
     	char wcfn[128];
 	char str[1024];

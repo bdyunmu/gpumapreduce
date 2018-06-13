@@ -82,7 +82,7 @@ int main(int argc, char ** argv)
 	long outputSizeInBytes = sizeStrToBytes(argv[1]);
 	char *sizeStr = sizeToSizeStr(outputSizeInBytes);
 
-	panda::MapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv);
+	panda::PandaMapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv);
 
 	int rank, size;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);

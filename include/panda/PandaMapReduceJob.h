@@ -8,6 +8,7 @@
 #include <oscpp/Thread.h>
 #include <oscpp/Timer.h>
 #include <vector>
+
 #include "Panda.h"
 
 namespace panda
@@ -43,6 +44,7 @@ namespace panda
 	void StartPandaCPUCombineTasks();
 	void StartPandaCPUSortTasks();
 	void StartPandaCPUDumpReduceTasks();
+	void StartPandaGPUMergeReduceTasks2Pnc();
 
  	void StartPandaCopyRecvedBucketToCPU(int, int);
 	
@@ -55,6 +57,7 @@ namespace panda
 
 	bool enableGPU;
 	bool enableCPU;
+	bool enableDump;
 
       	oscpp::Thread * MessageThread;
       	cudacpp::Stream * kernelStream, * memcpyStream;
@@ -80,7 +83,7 @@ namespace panda
 	virtual void InitPandaGPUMapReduce();
 	virtual void InitPandaCPUMapReduce();
 
-	virtual void StartPandaLocalMergeGPUOutput();
+	virtual void StartPandaGPULocalMerge2Pnc();
 	virtual void StartPandaGlobalPartition();
 	virtual void StartPandaDoPartitionOnCPU();
 	virtual void StartPandaSortBucket();

@@ -6,6 +6,7 @@ namespace panda
   class Message;
   class Chunk;
   class Partitioner;
+  class Output;
   //class Sorter;
 
   class MapReduceJob
@@ -13,6 +14,7 @@ namespace panda
     protected:
       Message *messager;
       Partitioner *partition;
+      Output *output;
       //Sorter *sorter;
 
       int commRank, commSize, deviceNum;
@@ -22,17 +24,18 @@ namespace panda
       MapReduceJob(int & argc, char **&argv);
       MapReduceJob(int & argc, char **&argv, const bool bl);
       virtual ~MapReduceJob();
-      inline Message    *getMessage()        {return messager;}
-      inline int        getDeviceNumber()    {return deviceNum;}
-      inline void setMessage    (Message  *const pMessage)  {messager =	pMessage;}
-      inline void setPartition  (Partitioner *const pPartition) {partition = pPartition;}
 
+      Message    *getMessage()        {return messager;}
+      int        getDeviceNumber()    {return deviceNum;}
+      void setMessage    (Message  *const pMessage)  {messager =	pMessage;}
+      void setPartition  (Partitioner *const pPartition) {partition = pPartition;}
+      void setOutput (Output *const pOutput){output=pOutput;}
       virtual void addInput(Chunk * chunk) = 0;
-      virtual void addCPUMapTasks(Chunk *chunk) = 0;
-      virtual void addGPUMapTasks(Chunk *chunk) = 0;
+      //virtual void addCPUMapTasks(Chunk *chunk) = 0;
+      //virtual void addGPUMapTasks(Chunk *chunk) = 0;
       virtual void execute() = 0;
-      virtual void setEnableGPU(bool b) = 0;
-      virtual void setEnableCPU(bool b) = 0;
+      //virtual void setEnableGPU(bool b) = 0;
+      //virtual void setEnableCPU(bool b) = 0;
   };
 }
 

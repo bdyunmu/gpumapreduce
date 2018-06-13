@@ -29,7 +29,7 @@ int main(int argc, char ** argv)
 	   panda::ShowLog("mpirun -host node1,node2 -np 2 ./%s file:///tmp/terasort_in file:///tmp/terasort_out",argv[0]);
            exit(-1);
         }  //if
-	panda::MapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv);
+	panda::PandaMapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv);
 	int rank, size;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	MPI_Comm_size(MPI_COMM_WORLD, &size);

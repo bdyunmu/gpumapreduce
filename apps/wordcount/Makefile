@@ -27,6 +27,7 @@ CPP_FILES_2     := $(wildcard ../../src/pandajob/*.cpp)
 CPP_FILES_3	:= $(wildcard ../../src/cudacpp/*.cpp)
 CPP_FILES_4     := $(wildcard ../../src/message/*.cpp)
 CPP_FILES_5     := $(wildcard ../../src/inputformat/*.cpp)
+CPP_FILES_6     := $(wildcard ../../src/outputformat/*.cpp)
 
 CU_FILES_0 	:= $(wildcard ../../src/runtime/*.cu)
 CU_FILES_1	:= $(wildcard ./*.cu)
@@ -40,7 +41,7 @@ H_FILES_4 	:= $(wildcard ../../include/*.h)
 TARGET_H_FILES  := $(H_FILES_0) $(H_FILES_1) $(H_FILES_2) \
 			$(H_FILES_3) $(H_FILES_4)
 TARGET_CPP_FILES:= $(CPP_FILES_0) $(CPP_FILES_1) $(CPP_FILES_2) \
-		     $(CPP_FILES_3) $(CPP_FILES_4) $(CPP_FILES_5)
+		     $(CPP_FILES_3) $(CPP_FILES_4) $(CPP_FILES_5) $(CPP_FILES_6)
 TARGET_CU_FILES := $(CU_FILES_0) $(CU_FILES_1)
 CPP_OBJ_FILES   := $(addprefix ../../obj/,$(notdir $(TARGET_CPP_FILES:.cpp=.o)))
 CU_OBJ_FILES    := $(addprefix ../../cuobj/,$(notdir $(TARGET_CU_FILES:.cu=.o)))
@@ -55,6 +56,7 @@ FILES_2     	:= ../../src/pandajob/%.cpp
 FILES_3		:= ../../src/cudacpp/%.cpp
 FILES_4     	:= ../../src/message/%.cpp
 FILES_5     	:= ../../src/inputformat/%.cpp
+FILES_6		:= ../../src/outputformat/%.cpp
 
 ../../obj/%.o: $(FILES_0) $(TARGET_H_FILES) 
 	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
@@ -68,13 +70,15 @@ FILES_5     	:= ../../src/inputformat/%.cpp
 	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
 ../../obj/%.o: $(FILES_5) $(TARGET_H_FILES) 
 	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
+../../obj/%.o: $(FILES_6) $(TARGET_H_FILES) 
+	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
 
-FILES_6 	:= ../../src/runtime/%.cu
-FILES_7		:= ./%.cu
+FILES_7 	:= ../../src/runtime/%.cu
+FILES_8		:= ./%.cu
 
-../../cuobj/%.o: $(FILES_6) $(TARGET_H_FILES)
-	$(NVCC) $(NVCCFLAGS) -c -o $@ $<
 ../../cuobj/%.o: $(FILES_7) $(TARGET_H_FILES)
+	$(NVCC) $(NVCCFLAGS) -c -o $@ $<
+../../cuobj/%.o: $(FILES_8) $(TARGET_H_FILES)
 	$(NVCC) $(NVCCFLAGS) -c -o $@ $<
 
 clean:

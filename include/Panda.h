@@ -28,7 +28,7 @@ namespace panda{
 
 #define _DEBUG		0x01
 //#define _WARN		0x02
-//#define _ERROR		0x03
+#define _ERROR		0x03
 //#define _DISKLOG	0x04
 
 const int TaskLevelOne = 1;
@@ -80,7 +80,7 @@ template<typename... Args>
 #endif
 
 #ifdef _ERROR
-#define ErrorLog(...) do{printf("[%d]",gCommRank);printf("[%s]\t",__FUNCTION__);printf(__VA_ARGS__);printf("\n");fflush(stdout);}while(0)
+#define ErrorLog(...) do{printf("[%d][err]",gCommRank);printf("[%s]\t",__FUNCTION__);printf(__VA_ARGS__);printf("\n");fflush(stdout);}while(0)
 #else
 #define ErrorLog(...)
 #endif
@@ -115,7 +115,7 @@ void* RunPandaCPUMapThread(void* thread_info);
 
 void ExecutePandaGPUCombiner(panda_gpu_context *pgc);
 void ExecutePandaGPUSort(panda_gpu_context *pgc);
-void ExecutePandaGPUShuffleMerge(panda_node_context *d_g_state_1, panda_gpu_context *d_g_state_0);
+void ExecutePandaGPULocalMerge2Pnc(panda_node_context *pnc, panda_gpu_context *pgc);
 void ExecutePandaGPUReduceTasks(panda_gpu_context *pgc);
 void ExecutePandaGPUMapTasksSplit(panda_gpu_context pgc, dim3 grids, dim3 blocks);
 void ExecutePandaGPUMapTasksIterative(panda_gpu_context pgc, int curIter, int totalIter, dim3 grids, dim3 blocks);
@@ -423,6 +423,8 @@ __global__ void RunPandaGPUCombiner(panda_gpu_context pgc);
 
 void ExecutePandaMapTasksSchedule();
 void ExecutePandaTasksSched(panda_node_context *pnc, panda_gpu_context *pgc, panda_cpu_context *pcc);
+void ExecutePandaGPUMergeReduceTasks2Pnc(panda_node_context *pnc, panda_gpu_context *pgc);
+void ExecutePandaCPUMergeReduceTasks2Pnc(panda_node_context *pnc, panda_gpu_context *pcc);
 
 double getCPUGHz();
 double getCPUMemSizeGb();

@@ -21,17 +21,18 @@ INCFLAGS   += -I/usr/include/  -I/usr/local/cuda/include
 INCFLAGS   += -I../../include  -I../../include/panda
 LDFLAGS    += -L/usr/local/cuda/lib64/
 
-CPP_FILES_5	:= terasort_main.cpp Unsigned16.cpp Random16.cpp TeraSortPartitioner.cpp TeraInputFormat.cpp
 CPP_FILES_0 	:= $(wildcard ../../src/oscpp/*.cpp)
 CPP_FILES_1 	:= $(wildcard ../../src/pandajob/*.cpp)
 CPP_FILES_2	:= $(wildcard ../../src/cudacpp/*.cpp)
 CPP_FILES_3   	:= $(wildcard ../../src/message/*.cpp)
 CPP_FILES_4 	:= $(wildcard ../../src/inputformat/*.cpp)
+CPP_FILES_5     := $(wildcard ../../src/outputformat/*.cpp)
+CPP_FILES_6	:= terasort_main.cpp Unsigned16.cpp Random16.cpp TeraSortPartitioner.cpp TeraInputFormat.cpp
 
 CU_FILES_1	:= $(wildcard ../../src/runtime/*.cu)
 CU_FILES_0	:= terasort_api.cu
 
-TERASORT_CPP_FILES:= $(CPP_FILES_5) $(CPP_FILES_0) $(CPP_FILES_1) $(CPP_FILES_2) $(CPP_FILES_3) $(CPP_FILES_4)
+TERASORT_CPP_FILES:= $(CPP_FILES_5) $(CPP_FILES_0) $(CPP_FILES_1) $(CPP_FILES_2) $(CPP_FILES_3) $(CPP_FILES_4) $(CPP_FILES_6)
 TERASORT_CU_FILES:= $(CU_FILES_0) $(CU_FILES_1) 
 
 H_FILES_0	:= $(wildcard ./*.h)
@@ -47,8 +48,8 @@ TERASORT_CU_OBJ_FILES:= $(addprefix ../../cuobj/,$(notdir $(TERASORT_CU_FILES:.c
 terasort: $(TERASORT_OBJ_FILES) $(TERASORT_CU_OBJ_FILES)
 		$(NVCC) $(LIBS) $(NVCCFLAGS) $(LDFLAGS) -o ../../bin/$@ $^
 
-CPP_FILES_6	:= teragen_main.cpp TeraInputFormat.cpp Unsigned16.cpp Random16.cpp
-TERAGEN_CPP_FILES:= $(CPP_FILES_6) $(CPP_FILES_0) $(CPP_FILES_1) $(CPP_FILES_2) $(CPP_FILES_3) $(CPP_FILES_4)
+CPP_FILES_7	:= teragen_main.cpp TeraInputFormat.cpp Unsigned16.cpp Random16.cpp
+TERAGEN_CPP_FILES:= $(CPP_FILES_5) $(CPP_FILES_0) $(CPP_FILES_1) $(CPP_FILES_2) $(CPP_FILES_3) $(CPP_FILES_4) $(CPP_FILES_7)
 
 CU_FILES_2	:= teragen_api.cu
 TERAGEN_CU_FILES:= $(CU_FILES_2) $(CU_FILES_1) 
@@ -66,6 +67,9 @@ teragen: $(TERAGEN_OBJ_FILES) $(TERAGEN_CU_OBJ_FILES)
 	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
 
 ../../obj/%.o: ../../src/inputformat/%.cpp $(TARGET_H_FILES)	
+	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
+
+../../obj/%.o: ../../src/outputformat/%.cpp $(TARGET_H_FILES)
 	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
 
 ../../obj/%.o: ../../src/message/%.cpp $(TARGET_H_FILES)  

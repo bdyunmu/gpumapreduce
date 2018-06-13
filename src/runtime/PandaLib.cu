@@ -388,27 +388,25 @@ void ExecutePandaGPUCombiner(panda_gpu_context * pgc){
 
 	cudaMemset(pgc->intermediate_key_vals.d_intermediate_keyval_total_count,0,pgc->input_key_vals.num_input_record*sizeof(int));
 	ShowLog("pgc->input_key_vals.num_input_record:%d",pgc->input_key_vals.num_input_record);
-	int numGPUCores = pgc->num_gpus_cores;//getGPUCoresNum();
+	int numGPUCores = pgc->num_gpus_cores;
 	dim3 blocks(THREAD_BLOCK_SIZE, THREAD_BLOCK_SIZE);
 	int numBlocks = (numGPUCores*16+(blocks.x*blocks.y)-1)/(blocks.x*blocks.y);
     	dim3 grids(numBlocks, 1);
 
 	RunPandaGPUCombiner<<<grids,blocks>>>(*pgc);
-
+	ShowLog("Debug 1.0");
 	cudaThreadSynchronize();
 }
 
 void ExecutePandaCPUCombiner(panda_cpu_context *pcc){
-
-	if (pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p == NULL)	{ ErrorLog("intermediate_keyval_arr_arr_p == NULL"); exit(-1); }
-	if (pcc->intermediate_key_vals.intermediate_keyval_arr_arr_len <= 0)	{ ErrorLog("no any input keys"); exit(-1); }
-	if (pcc->num_cpus_cores <= 0)	{ ErrorLog("pcc->num_cpus == 0"); exit(-1); }
-
+	ShowLog("Debug 1.5");
+	if (pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p == NULL)	{ ErrorLog("intermediate_keyval_arr_arr_p == NULL"); return; }
+	if (pcc->intermediate_key_vals.intermediate_keyval_arr_arr_len <= 0)	{ ErrorLog("no any input keys"); return; }
+	if (pcc->num_cpus_cores <= 0)	{ ErrorLog("pcc->num_cpus == 0"); return; }
+	ShowLog("Debug 1.6");
 	//-------------------------------------------------------
 	//1, prepare buffer to store intermediate results
 	//-------------------------------------------------------
-
-	//keyval_arr_t *d_keyval_arr_p;
 
 	ShowLog("num_input_record:%d",pcc->input_key_vals.num_input_record);
 

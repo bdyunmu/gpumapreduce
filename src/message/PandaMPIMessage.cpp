@@ -39,7 +39,6 @@ namespace panda
 	void PandaMPIMessage::MsgInit(){
 		Message::MsgInit();
 		this->copySendData = false;
-		this->getSendData = false;
 	}//void
 
 	void PandaMPIMessage::MsgFinalize(){
@@ -134,7 +133,7 @@ namespace panda
 					counts[i*3+1],counts[i*3+2], counts[i*3+0]);
 			}
 		}
-		ShowLog("Message Looping Done (numSentBuckets:%d commSize:%d)",numSentBuckets,commSize);
+		//ShowLog("Message Looping Done (numSentBuckets:%d commSize:%d)",numSentBuckets,commSize);
 		//MPI_Waitall(commSize, zeroReqs, MPI_STATUSES_IGNORE);
 		delete [] counts;
 		for(int i = 0;i<commSize;i++){

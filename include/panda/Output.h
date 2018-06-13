@@ -5,8 +5,9 @@ namespace panda{
 
 class Output{
     public:
-	Output(){}
-	~Output(){}
+	Output();
+	~Output();
+        virtual void write(void *key, void *val);
 };
 
 }

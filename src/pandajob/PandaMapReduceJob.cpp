@@ -131,10 +131,13 @@ namespace panda
 	}//for
 	pcc->sorted_key_vals.sorted_keyvals_arr_len = end_task_id - start_task_id;
   }//void
-
-  void PandaMapReduceJob::StartPandaLocalMergeGPUOutput()
+  void PandaMapReduceJob::StartPandaGPUMergeReduceTasks2Pnc()
   {
-	ExecutePandaGPUShuffleMerge(this->pNodeContext, this->pGPUContext);
+	ExecutePandaGPUMergeReduceTasks2Pnc(this->pNodeContext, this->pGPUContext);
+  }
+  void PandaMapReduceJob::StartPandaGPULocalMerge2Pnc()
+  {
+	ExecutePandaGPULocalMerge2Pnc(this->pNodeContext, this->pGPUContext);
   }//void
 
   void PandaMapReduceJob::StartPandaGPUSortTasks()
@@ -468,8 +471,8 @@ namespace panda
 	taskLevel = TaskLevelOne;
 	enableCPU = false;
 	enableGPU = false;
+	enableDump = false;
 	MessageThread = NULL;
-		
   }
 
   PandaMapReduceJob::~PandaMapReduceJob()
@@ -532,15 +535,12 @@ namespace panda
 
   void PandaMapReduceJob::addGPUMapTasks(panda::Chunk *chunk)
   {
-
 	  void *key = chunk->getKey();
 	  void *val = chunk->getVal();
 	  int keySize = chunk->getKeySize();
 	  int valSize = chunk->getValSize();
-
 	  MapTask *pMapTask = new MapTask(keySize,key,valSize,val);
 	  gpuMapTasks.push_back(pMapTask);
-
   }//void
 
   void PandaMapReduceJob::StartPandaCPUCombineTasks()
@@ -657,7 +657,7 @@ namespace panda
   }//void
 
 
-  // send data to local bucket
+  //send data to local bucket
   void PandaMapReduceJob::StartPandaDoPartitionOnCPU(){
 
 	  //Init Buckets there are commSize buckets across cluster
@@ -904,7 +904,7 @@ namespace panda
 
 	if(this->getEnableGPU()){
 		StartPandaGPUSortTasks();		
-		StartPandaLocalMergeGPUOutput();	
+		StartPandaGPULocalMerge2Pnc();	
 	}//if
 	if(this->getEnableCPU()){
 		StartPandaCPUSortTasks();
@@ -950,6 +950,9 @@ namespace panda
 		StartPandaGPUReduceTasks();
 	if(this->getEnableCPU())
 		StartPandaCPUReduceTasks();
+
+	StartPandaGPUMergeReduceTasks2Pnc();
+
 	if(this->getEnableCPU())
 		StartPandaCPUDumpReduceTasks();
     	//MPI_Barrier(MPI_COMM_WORLD);

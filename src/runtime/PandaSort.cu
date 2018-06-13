@@ -145,6 +145,7 @@ void ExecutePandaSortBucket(panda_node_context *pnc)
 void ExecutePandaGPUSort(panda_gpu_context* pgc){
 
 	cudaThreadSynchronize();
+	ShowLog("Debug 2.0");
 
 	int *count_arr = (int *)malloc(sizeof(int) * pgc->input_key_vals.num_input_record);
 	cudaMemcpy(count_arr, pgc->intermediate_key_vals.d_intermediate_keyval_total_count, 
@@ -156,7 +157,7 @@ void ExecutePandaGPUSort(panda_gpu_context* pgc){
 	}//for
 	//free(count_arr);
 
-	ShowLog("GPU Total Count of Intermediate Records:%d num_input_record:%d",total_count,pgc->input_key_vals.num_input_record);
+	ShowLog("GPU Total Count of Intermediate Records:%d",total_count);
 	cudaMalloc((void **)&(pgc->intermediate_key_vals.d_intermediate_keyval_arr),sizeof(keyval_t)*total_count);
 
 	//int num_mappers = 1;
@@ -166,7 +167,6 @@ void ExecutePandaGPUSort(panda_gpu_context* pgc){
 	dim3 blocks(THREAD_BLOCK_SIZE, THREAD_BLOCK_SIZE);
 	int numBlocks = (numGPUCores*16+(blocks.x*blocks.y)-1)/(blocks.x*blocks.y);
 	dim3 grids(numBlocks, 1);
-
 
 	cudaThreadSynchronize();
 	//copyDataFromDevice2Host1<<<grids,blocks>>>(pgc);
@@ -179,7 +179,7 @@ void ExecutePandaGPUSort(panda_gpu_context* pgc){
 	cudaMemcpy(h_keyval_arr, pgc->intermediate_key_vals.d_intermediate_keyval_arr, 
 		sizeof(keyval_t)*total_count, cudaMemcpyDeviceToHost);
 
-pgc->intermediate_key_vals.h_intermediate_keyval_pos_arr = (keyval_pos_t *)malloc(sizeof(keyval_pos_t)*total_count);
+	pgc->intermediate_key_vals.h_intermediate_keyval_pos_arr = (keyval_pos_t *)malloc(sizeof(keyval_pos_t)*total_count);
 	keyval_pos_t *h_intermediate_keyvals_pos_arr = pgc->intermediate_key_vals.h_intermediate_keyval_pos_arr;
 
 	int totalKeySize = 0;
@@ -313,12 +313,16 @@ pgc->intermediate_key_vals.h_intermediate_keyval_pos_arr = (keyval_pos_t *)mallo
 	pgc->sorted_key_vals.d_sorted_keyvals_arr_len = sorted_key_arr_len;
 	cudaMalloc((void**)&pgc->sorted_key_vals.d_pos_arr_4_sorted_keyval_pos_arr,sizeof(int)*sorted_key_arr_len);
 	cudaMemcpy(pgc->sorted_key_vals.d_pos_arr_4_sorted_keyval_pos_arr,pos_arr_4_pos_arr,sizeof(int)*sorted_key_arr_len,cudaMemcpyHostToDevice);
-
+	ShowLog("Debug 3.0");
 }
 
 void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 
 	//keyvals_t * merged_keyvals_arr = NULL;
+	if(pcc->input_key_vals.num_input_record <=0){
+		ErrorLog("pcc->input_key_vals.num_input_record <=0");
+		return;
+	}
 	int num_threads = pcc->num_cpus_cores > pcc->input_key_vals.num_input_record ? pcc->input_key_vals.num_input_record:pcc->num_cpus_cores;
 	int num_records_per_thread = (pcc->input_key_vals.num_input_record)/(num_threads);
 
@@ -424,7 +428,15 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 
 }
 
-void ExecutePandaGPUShuffleMerge(panda_node_context *pnc, panda_gpu_context *pgc){
+
+void ExecutePandaGPUMergeReduceTasks2Pnc(panda_node_context *pnc, panda_gpu_context *pgc){
+
+
+
+}
+
+
+void ExecutePandaGPULocalMerge2Pnc(panda_node_context *pnc, panda_gpu_context *pgc){
 
 	char *sorted_keys_shared_buff_0 = (char *)pgc->sorted_key_vals.h_sorted_keys_shared_buff;
 	char *sorted_vals_shared_buff_0 = (char *)pgc->sorted_key_vals.h_sorted_vals_shared_buff;
@@ -434,9 +446,7 @@ void ExecutePandaGPUShuffleMerge(panda_node_context *pnc, panda_gpu_context *pgc
 
 	void *key_0, *key_1;
 	int keySize_0, keySize_1;
-	//bool equal;
 
-	//int new_count = 0;
 	for (int i=0;i< pgc->sorted_key_vals.d_sorted_keyvals_arr_len;i++){
 		key_0 = sorted_keys_shared_buff_0 + keyval_pos_arr_0[i].keyPos;
 		keySize_0 = keyval_pos_arr_0[i].keySize;
@@ -503,7 +513,7 @@ void ExecutePandaGPUShuffleMerge(panda_node_context *pnc, panda_gpu_context *pgc
 		}//if
 	}//if 
 	pnc->sorted_key_vals.sorted_intermediate_keyvals_arr = sorted_intermediate_keyvals_arr;
-
+	ShowLog("Debug 5.0");
 	return;
 
 }//void
