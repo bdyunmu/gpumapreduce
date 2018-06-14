@@ -425,15 +425,50 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 		pnc->sorted_key_vals.sorted_intermediate_keyvals_arr = sorted_intermediate_keyvals_arr;
 	}
 	pnc->sorted_key_vals.sorted_keyvals_arr_len = sorted_key_arr_len;
+	
+}
+	
+	
+void ExecutePandaMergeReduceTasks2Pnc(panda_node_context *pnc, panda_gpu_context *pgc, panda_cpu_context *pcc){
+
+	pnc->output_keyval_arr.output_keyval_arr_len = 0;
+	pnc->output_keyval_arr.output_keyval_arr = NULL;
+	
+	if(pgc->output_key_vals.h_reduced_keyval_arr_len <=0 && pcc->reduced_key_vals.reduced_keyval_arr_len <= 0)
+	{
+	ErrorLog("there is no output keyval");
+	return;
+	}
+	pnc->output_keyval_arr.output_keyval_arr_len  = pgc->output_key_vals.h_reduced_keyval_arr_len + pcc->reduced_key_vals.reduced_keyval_arr_len;
+	pnc->output_keyval_arr.output_keyval_arr = (keyval_t *)malloc(sizeof(keyval_t)*pnc->output_keyval_arr.output_keyval_arr_len); 
+	
+	void *val;
+	void *key;
+
+ 	for (int i=0; i<pgc->output_key_vals.h_reduced_keyval_arr_len; i++){
+           	key = pgc->output_key_vals.h_reduced_keyval_arr[i].key;
+           	val = pgc->output_key_vals.h_reduced_keyval_arr[i].val;
+      		pnc->output_keyval_arr.output_keyval_arr[i].key = key;
+		pnc->output_keyval_arr.output_keyval_arr[i].val = val;
+	}//for
+	int gpulen = pgc->output_key_vals.h_reduced_keyval_arr_len;
+	for (int i=0; i<pcc->reduced_key_vals.reduced_keyval_arr_len; i++){
+		key = pcc->reduced_key_vals.reduced_keyval_arr[i].key;
+		val = pcc->reduced_key_vals.reduced_keyval_arr[i].val;
+		pnc->output_keyval_arr.output_keyval_arr[gpulen+i].key = key;
+		pnc->output_keyval_arr.output_keyval_arr[gpulen+i].val = val;
+	}//for
+
+}	
+
+
+void ExecutePandaCPUMergeReduceTasks2Pnc(panda_node_context *pnc, panda_cpu_context *pcc){
+
 
 }
 
 
-void ExecutePandaGPUMergeReduceTasks2Pnc(panda_node_context *pnc, panda_gpu_context *pgc){
 
-
-
-}
 
 
 void ExecutePandaGPULocalMerge2Pnc(panda_node_context *pnc, panda_gpu_context *pgc){

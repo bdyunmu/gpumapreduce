@@ -23,6 +23,7 @@
 #include <stdarg.h>
 #include <pthread.h>
 #include <vector>
+#include <panda/Output.h>
 
 namespace panda{
 
@@ -124,7 +125,7 @@ void ExecutePandaSortBucket(panda_node_context *pnc);
 void ExecutePandaCPUCombiner(panda_cpu_context *pcc);
 void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc);
 void ExecutePandaCPUReduceTasks(panda_cpu_context *pcc);
-void ExecutePandaCPUDumpReduceTasks(panda_cpu_context *pcc);
+void ExecutePandaDumpReduceTasks(panda_node_context *pnc,Output *output);
 
 double PandaTimer();
 
@@ -350,7 +351,12 @@ struct panda_node_context
 {				
 	keyval_t	*input_keyval_arr;
 	keyval_arr_t	*intermediate_keyval_arr_arr_p;
-			
+	
+	struct{
+	int output_keyval_arr_len;
+	keyval_t * output_keyval_arr;	
+	} output_keyval_arr;
+	
 	struct{	
 	//data for sorted intermediate results
 	int sorted_keyvals_arr_len;
@@ -423,8 +429,8 @@ __global__ void RunPandaGPUCombiner(panda_gpu_context pgc);
 
 void ExecutePandaMapTasksSchedule();
 void ExecutePandaTasksSched(panda_node_context *pnc, panda_gpu_context *pgc, panda_cpu_context *pcc);
-void ExecutePandaGPUMergeReduceTasks2Pnc(panda_node_context *pnc, panda_gpu_context *pgc);
-void ExecutePandaCPUMergeReduceTasks2Pnc(panda_node_context *pnc, panda_gpu_context *pcc);
+void ExecutePandaMergeReduceTasks2Pnc(panda_node_context *pnc, panda_gpu_context *pgc, panda_cpu_context *pcc);
+//void ExecutePandaCPUMergeReduceTasks2Pnc(panda_node_context *pnc, panda_cpu_context *pcc);
 
 double getCPUGHz();
 double getCPUMemSizeGb();

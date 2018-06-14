@@ -1,10 +1,9 @@
 #include <mpi.h>
 
-#include <panda/Output.h>
 #include <panda/DataChunk.h>
 #include <panda/PandaMPIMessage.h>
 #include <panda/PandaMapReduceJob.h>
-
+#include "wcoutputformat.h"
 #include <vector>
 #include <cstdlib>
 #include <cstdio>
@@ -23,6 +22,7 @@ int main(int argc, char ** argv)
 	  exit(-1);
 	}
 	panda::PandaMapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv);
+	job->setOutput(new WCOutput());
 	job->setMessage(new panda::PandaMPIMessage(true));
 	job->setTaskLevel(panda::TaskLevelTwo);
 	job->setEnableCPU(true);

@@ -43,10 +43,11 @@ namespace panda
 	void StartPandaCPUReduceTasks();
 	void StartPandaCPUCombineTasks();
 	void StartPandaCPUSortTasks();
-	void StartPandaCPUDumpReduceTasks();
-	void StartPandaGPUMergeReduceTasks2Pnc();
-
- 	void StartPandaCopyRecvedBucketToCPU(int, int);
+	void StartPandaDumpReduceTasks();
+	void StartPandaMergeReduceTasks2Pnc();
+ 	//void StartPandaCPUMergeReduceTasks2Pnc();
+ 
+	void StartPandaCopyRecvedBucketToCPU(int, int);
 	
 	bool getEnableGPU() {return enableGPU;}
 	bool getEnableCPU() {return enableCPU;}

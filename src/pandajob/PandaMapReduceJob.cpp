@@ -131,9 +131,16 @@ namespace panda
 	}//for
 	pcc->sorted_key_vals.sorted_keyvals_arr_len = end_task_id - start_task_id;
   }//void
-  void PandaMapReduceJob::StartPandaGPUMergeReduceTasks2Pnc()
+#if 0
+  void PandaMapReduceJob::StartPandaCPUMergeReduceTasks2Pnc()
   {
-	ExecutePandaGPUMergeReduceTasks2Pnc(this->pNodeContext, this->pGPUContext);
+        ExecutePandaCPUMergeReduceTasks2Pnc(this->pNodeContext, this->pCPUContext);
+  }
+#endif
+
+  void PandaMapReduceJob::StartPandaMergeReduceTasks2Pnc()
+  {
+	ExecutePandaMergeReduceTasks2Pnc(this->pNodeContext, this->pGPUContext, this->pCPUContext);
   }
   void PandaMapReduceJob::StartPandaGPULocalMerge2Pnc()
   {
@@ -717,8 +724,8 @@ namespace panda
   void PandaMapReduceJob::StartPandaCPUReduceTasks(){
 	  ExecutePandaCPUReduceTasks(this->pCPUContext);
   }//void
-  void PandaMapReduceJob::StartPandaCPUDumpReduceTasks(){
-	  ExecutePandaCPUDumpReduceTasks(this->pCPUContext);
+  void PandaMapReduceJob::StartPandaDumpReduceTasks(){
+	  ExecutePandaDumpReduceTasks(this->pNodeContext,this->output);
   }//void
   void PandaMapReduceJob::StartPandaPartitionSendData()
   {
@@ -951,10 +958,9 @@ namespace panda
 	if(this->getEnableCPU())
 		StartPandaCPUReduceTasks();
 
-	StartPandaGPUMergeReduceTasks2Pnc();
+	StartPandaMergeReduceTasks2Pnc();
 
-	if(this->getEnableCPU())
-		StartPandaCPUDumpReduceTasks();
+	StartPandaDumpReduceTasks();
     	//MPI_Barrier(MPI_COMM_WORLD);
 	
   }

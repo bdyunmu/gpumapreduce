@@ -9,6 +9,7 @@ namespace panda
   Output::~Output()
   {
   }
-  void Output::write(void * key, void *val){
+  void Output::write(char *buf, void * key, void *val){
+  	printf("Output::write\n");
   }
 }

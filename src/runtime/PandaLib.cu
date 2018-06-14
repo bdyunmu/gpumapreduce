@@ -147,17 +147,16 @@ void ExecutePandaGPUReduceTasks(panda_gpu_context *pgc)
 	pgc->output_key_vals.h_reduced_keyval_arr_len = pgc->reduced_key_vals.d_reduced_keyval_arr_len;
 	pgc->output_key_vals.h_reduced_keyval_arr = (keyval_t*)(malloc(sizeof(keyval_t)*pgc->output_key_vals.h_reduced_keyval_arr_len));
 	
-	cudaThreadSynchronize(); 
-	int numGPUCores = pgc->num_gpus_cores;//getGPUCoresNum();
+	cudaThreadSynchronize();
+	int numGPUCores = pgc->num_gpus_cores;
 	dim3 blocks(THREAD_BLOCK_SIZE, THREAD_BLOCK_SIZE);
 	int numBlocks = (numGPUCores*16+(blocks.x*blocks.y)-1)/(blocks.x*blocks.y);
         dim3 grids(numBlocks, 1);
 	//int total_gpu_threads = (grids.x*grids.y*blocks.x*blocks.y);
-	pgc->intermediate_key_vals.d_intermediate_keyval_arr_arr_len = pgc->reduced_key_vals.d_reduced_keyval_arr_len;
+	//pgc->intermediate_key_vals.d_intermediate_keyval_arr_arr_len = pgc->reduced_key_vals.d_reduced_keyval_arr_len;
 	
-	ShowLog("reduce len:%d intermediate len:%d output len:%d sorted keySize%d: sorted valSize:%d",
+	ShowLog("reduced len:%d output len:%d sorted keySize%d: sorted valSize:%d",
 		pgc->reduced_key_vals.d_reduced_keyval_arr_len, 
-		pgc->intermediate_key_vals.d_intermediate_keyval_arr_arr_len,
 		pgc->output_key_vals.h_reduced_keyval_arr_len,
 		pgc->sorted_key_vals.totalKeySize, 
 		pgc->sorted_key_vals.totalValSize);
@@ -508,21 +507,24 @@ void ExecutePandaCPUReduceTasks(panda_cpu_context *pcc){
 	}//for
 		
 }//void
-
-void ExecutePandaCPUDumpReduceTasks(panda_cpu_context *pcc){
+//typedef void (*WRITE)(char *buf, void *key, void *val);
+void ExecutePandaDumpReduceTasks(panda_node_context *pnc, Output *output){
 
 	char fn[128];
 	sprintf(fn,"OUTPUT%d",gCommRank);
 	FILE *fp = fopen(fn,"wb");
 	char *buf = NULL;
-	int len = pcc->reduced_key_vals.reduced_keyval_arr_len;
+	int bs = 0;
+	keyval_t *p = NULL;
+	int len = pnc->output_keyval_arr.output_keyval_arr_len;
 	for(int reduce_idx=0;reduce_idx<len;reduce_idx++){
 
-		keyval_t *p = (keyval_t *)(&pcc->reduced_key_vals.reduced_keyval_arr[reduce_idx]);
-		int size = p->keySize + p->valSize;
-		buf = (char *)malloc(sizeof(char)*(size+2));
-		sprintf(buf,"%s %s\n",p->key,p->val);
-		fwrite(buf,sizeof(buf),1,fp);
+		p = (keyval_t *)(&pnc->output_keyval_arr.output_keyval_arr[reduce_idx]);
+		bs = p->keySize + p->valSize;
+		buf = (char *)malloc(sizeof(char)*(bs+10));
+		memset(buf,0,bs+10);
+		output->write(buf,p->key,p->val);
+		fwrite(buf,strlen(buf),1,fp);
 		free(buf);	
 
 	}//for
@@ -761,7 +763,7 @@ __device__ void PandaEmitGPUReduceOutput(
 						int		valSize,
 						panda_gpu_context *pgc){
 	//printf("[PandaGPUEmitReduceOutput] key:[%s] val:[%d] TID:%d len:%d\n",(char *)key,*(int *)val,TID,
-	//		pgc->reduced_key_vals.d_reduced_keyval_arr_len);
+	//pgc->reduced_key_vals.d_reduced_keyval_arr_len);
 			
 		        keyval_t *p = &(pgc->reduced_key_vals.d_reduced_keyval_arr[TID]);
 			p->keySize = keySize;
@@ -770,7 +772,6 @@ __device__ void PandaEmitGPUReduceOutput(
 			p->valSize = valSize;
 			p->val = malloc(valSize);
 			memcpy(p->val,val,valSize);
-	//printf("[PandaGPUEmitRedueOutput] key:[%s] val:[%d]",(char *)p->key,*(int *)p->val);
 
 }//__device__ 
 

@@ -1,12 +1,12 @@
 #ifndef __PANDA_SUPMAPREDUCEJOB_H__
 #define __PANDA_SUPMAPREDUCEJOB_H__
 
+#include <panda/Output.h>
 namespace panda
 {
   class Message;
   class Chunk;
   class Partitioner;
-  class Output;
   //class Sorter;
 
   class MapReduceJob
@@ -29,7 +29,7 @@ namespace panda
       int        getDeviceNumber()    {return deviceNum;}
       void setMessage    (Message  *const pMessage)  {messager =	pMessage;}
       void setPartition  (Partitioner *const pPartition) {partition = pPartition;}
-      void setOutput (Output *const pOutput){output=pOutput;}
+      void setOutput (Output *pOutput){output=pOutput;}
       virtual void addInput(Chunk * chunk) = 0;
       //virtual void addCPUMapTasks(Chunk *chunk) = 0;
       //virtual void addGPUMapTasks(Chunk *chunk) = 0;
