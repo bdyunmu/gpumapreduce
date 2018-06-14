@@ -16,6 +16,7 @@ steps to run word count:<br>
 	2)make wordcount<br>
 	3)cd bin<br>
 	4)mpirun -host node1,node2 -np 2 ./wordcount input.txt<br>
+	5)cat ./OUTPUT0
 <br>
 steps to run terasort:<br>
 	1)cd gpumapreduce<br>
