@@ -18,6 +18,11 @@ TERASORT_OBJ_FILES:= $(addprefix ../../obj/,$(notdir $(TERASORT_CPP_FILES:.cpp=.
 TERASORT_CU_OBJ_FILES:= $(addprefix ../../cuobj/,$(notdir $(TERASORT_CU_FILES:.cu=.o)))
 
 terasort: $(TERASORT_OBJ_FILES) $(TERASORT_CU_OBJ_FILES)
+		@echo "+--------------"
+		@echo $(TERASORT_OBJ_FILES)
+		@echo "-----"
+		@echo $(TERASORT_CPP_FILES)
+		@echo "+--------------"
 		$(NVCC) $(LIBS) $(NVCCFLAGS) $(LDFLAGS) -o ../../bin/$@ $^
 
 CPP_FILES_8	:= teragen_main.cpp TeraInputFormat.cpp Unsigned16.cpp Random16.cpp
@@ -32,6 +37,36 @@ TERAGEN_CU_OBJ_FILES:= $(addprefix ../../cuobj/,$(notdir $(TERAGEN_CU_FILES:.cu=
 
 teragen: $(TERAGEN_OBJ_FILES) $(TERAGEN_CU_OBJ_FILES)
 		$(NVCC) $(LIBS) $(NVCCFLAGS) $(LDFLAGS) -o ../../bin/$@ $^
+
+../../obj/%.o: ./%.cpp $(TARGET_H_FILES)
+	$(MPICC) $(LIBS) $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
+
+../../obj/%.o: ../../src/oscpp/%.cpp $(TARGET_H_FILES)	
+	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
+
+../../obj/%.o: ../../src/inputformat/%.cpp $(TARGET_H_FILES)	
+	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
+
+../../obj/%.o: ../../src/outputformat/%.cpp $(TARGET_H_FILES)
+	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
+
+../../obj/%.o: ../../src/message/%.cpp $(TARGET_H_FILES)  
+	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
+
+../../obj/%.o: ../../src/pandajob/%.cpp $(TARGET_H_FILES)
+	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
+
+../../obj/%.o: ../../src/cudacpp/%.cpp $(TARGET_H_FILES)
+	$(MPICC) $(LIBS)  $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
+
+../../obj/%.o: ../../%.cpp $(TARGET_H_FILES)
+	$(MPICC) $(LIBS) $(CC_FLAGS) $(INCFLAGS) -c -o $@ $<
+
+../../cuobj/%.o: ./%.cu $(TARGET_H_FILES)
+	$(NVCC) $(NVCCFLAGS) -c -o $@ $<
+
+../../cuobj/%.o: ../../src/runtime/%.cu $(TARGET_H_FILES)
+	$(NVCC) $(NVCCFLAGS) -c -o $@ $<
 
 clean:
 	rm -rf ../../obj/*.o ../../cuobj/*.o ../../bin/terasort  ../../bin/teragen

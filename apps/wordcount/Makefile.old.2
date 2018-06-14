@@ -1,0 +1,15 @@
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+#    Panda Code V0.42 						 04/29/2018 */
+#    							huili@ruijie.com.cn */
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+all: wordcount
+
+include  ../../makefile.in
+
+wordcount: $(TARGET_OBJ_FILES)
+		$(NVCC) $(LIBS) $(NVCCFLAGS) $(LDFLAGS) -o ../../bin/wordcount $^
+
+
+clean:
+	rm -rf ../../obj/*.o ../../cuobj/*.o ../../bin/wordcount ../../bin/OUTPUT*
