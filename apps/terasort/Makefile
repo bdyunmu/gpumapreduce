@@ -7,7 +7,7 @@ all: terasort teragen
 
 include ../../makefile.in
 
-CPP_FILES_7	:= terasort_main.cpp Unsigned16.cpp Random16.cpp TeraSortPartitioner.cpp TeraInputFormat.cpp
+CPP_FILES_7	:= terasort_main.cpp Unsigned16.cpp Random16.cpp TeraSortPartitioner.cpp TeraInputFormat.cpp tsoutputformat.cpp
 
 CU_FILES_2	:= terasort_api.cu
 
