@@ -840,16 +840,18 @@ namespace panda
 
         if(this->getEnableCPU()&&this->getEnableGPU()){
 		double cpu_ratio = this->pNodeContext->cpu_ratio;
-		int size = chunks.size();
-		int cpu_size = (int)(size*cpu_ratio);
-		int gpu_size = size - cpu_size;
-		ShowLog("schedule: size:%d cpu_size:%d gpu_size:%d\n",size,cpu_size,gpu_size);
+		int chunks_num = chunks.size();
 
-		for(int i = 0;i<cpu_size;i++){
+		int cpu_chunks_num = (int)(chunks_num*cpu_ratio);
+		int gpu_chunks_num = chunks_num - cpu_chunks_num;
+
+		ShowLog("task schedule policy: chunks_num:%d cpu_chunks_num:%d gpu_chunks_num:%d\n",chunks_num,cpu_chunks_num,gpu_chunks_num);
+
+		for(int i = 0;i<cpu_chunks_num;i++){
                 	addCPUMapTasks(chunks[i]);
                 	ShowLog("addCPUMapTasks");
         	}
-		for(int i = cpu_size;i<size;i++){
+		for(int i = cpu_chunks_num;i<chunks_num;i++){
                 	addGPUMapTasks(chunks[i]);
                 	ShowLog("addGPUMapTasks");
         	}//if(this->
