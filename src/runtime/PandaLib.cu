@@ -315,6 +315,7 @@ void *RunPandaCPUCombinerThread(void *ptr){
 	if (val_t_arr == NULL) ErrorLog("there is no enough memory");
 	int num_keyval_pairs_after_combiner = 0;
 	int total_intermediate_keyvalue_pairs = 0;
+	ShowLog("Thread unmerged_shared_arr_len:%d start_idx:%d",unmerged_shared_arr_len,start_idx);
 
 	for (int i = 0; i < unmerged_shared_arr_len; i++){
 
@@ -335,7 +336,11 @@ void *RunPandaCPUCombinerThread(void *ptr){
 		(val_t_arr[index]).valSize = first_kv_p->valSize;
 		(val_t_arr[index]).val = (char*)shared_buff + first_kv_p->valPos;
 
-		ShowLog("key:%s val:%d",iKey,*(int *)(val_t_arr[index]).val);
+		//ShowLog("unmerged_shared_arr_len:%d combiner key:%s val:%d",unmerged_shared_arr_len,iKey,*(int *)(val_t_arr[index]).val);
+		printf("cominber key:");
+		for(int s = 0;s<10;s++)
+			printf("%3d",(int)iKey[s]);
+		printf("\n");
 		for (int j=i+1;j<unmerged_shared_arr_len;j++){
 
 			keyval_pos_t *next_kv_p = (keyval_pos_t *)((char *)shared_buff + shared_buff_len - sizeof(keyval_pos_t)*(unmerged_shared_arr_len-j));
@@ -629,7 +634,7 @@ void PandaEmitCPUReduceOutput (	void*		key,
 			p->valSize = valSize;
 			p->val = malloc(valSize);
 			memcpy(p->val,val,valSize);
-			ShowLog("key:%s  val:%d",(char*)key,*(int *)val);
+			ShowLog("reduce output key:%s  val:%d",(char*)key,*(int *)val);
 
 }
 

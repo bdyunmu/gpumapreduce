@@ -35,6 +35,10 @@ void panda_cpu_map(void *KEY, void*VAL, int keySize, int valSize, panda_cpu_cont
 	//byte *value = new byte[TeraInputFormat::VALUE_LEN];
 	//TeraInputFormat::copyByte((byte *)VAL,key,0,TeraInputFormat::KEY_LEN);
 	//TeraInputFormat::copyByte((byte *)VAL,value,TeraInputFormat::KEY_LEN,TeraInputFormat::RECORD_LEN);
+	printf("map key:");
+	for(int s = 0; s<10; s++)
+		printf("%2d",(int)((char *)KEY)[s]);
+	printf("\n");	
 	PandaEmitCPUMapOutput(KEY,VAL,TeraInputFormat::KEY_LEN, TeraInputFormat::VALUE_LEN, pcc, map_task_idx);	
 }
 

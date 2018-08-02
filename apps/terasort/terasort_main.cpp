@@ -32,8 +32,10 @@ int main(int argc, char ** argv)
         }  //if
 	panda::PandaMapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv);
 	int rank, size;
-	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-	MPI_Comm_size(MPI_COMM_WORLD, &size);
+	rank = 0;
+	size = 1;
+	//MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	//MPI_Comm_size(MPI_COMM_WORLD, &size);
 	job->setOutput(new TSOutput());
 	job->setPartition(new TeraSortPartitioner());	
 	job->setMessage(new panda::PandaMPIMessage(true));
@@ -41,7 +43,7 @@ int main(int argc, char ** argv)
 	job->setEnableCPU(true);
 	job->setEnableGPU(false);
 
-	if (rank == 0)
+	//if (rank == 0)
 	{
 	panda::ShowLog("========================================================");
 	panda::ShowLog("========================================================");
@@ -60,16 +62,22 @@ int main(int argc, char ** argv)
 	panda::ShowLog("can not open:%s",input);
 	exit(-1);
 	}
-	char rb[100];
+	char *rb  = (char *)malloc(sizeof(char)*100);
 	int count = 0;
 	while(fread(rb,100,1,fp)!=0){
-	job->addInput(new panda::KeyValueChunk((char *)rb,TeraInputFormat::KEY_LEN,(char *)rb+10,TeraInputFormat::VALUE_LEN));
-	count++;	
+	printf("read key:");
+	for(int s = 0;s<10;s++){
+	printf("%2d",(int)rb[s]);
 	}
-	panda::ShowLog("terasort job->addInput count:[%d]",count);
+	printf("\n");
+	job->addInput(new panda::KeyValueChunk((char *)rb,TeraInputFormat::KEY_LEN,(char *)rb+10,TeraInputFormat::VALUE_LEN));
+	count++;
+	rb  = (char *)malloc(sizeof(char)*100);
+	}
+	panda::ShowLog("terasort keyvalue pairs num:%d",count);
 	fclose(fp);
 	job->execute();
 	delete job;
-	MPI_Finalize();
+	//MPI_Finalize();
 	return 0;
 }//int main

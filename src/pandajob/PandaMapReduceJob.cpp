@@ -491,41 +491,6 @@ namespace panda
   {
 	chunks.push_back(chunk);
 #if 0
-	if(!this->getEnableCPU()&&!this->getEnableGPU()){
-	ShowLog("neither GPU nor CPU are enabled");
-	return;
-	}
-	
-	if(!this->getEnableCPU()&&this->getEnableGPU()){
-	addGPUMapTasks(chunk);
-        ShowLog("addGPUMapTasks");
-	return;
-	}
-
-	if(this->getEnableCPU()&&!this->getEnableGPU()){
-	addCPUMapTasks(chunk);
-	ShowLog("addCPUMapTasks");
-	return;
-	}
-
-	if(this->getEnableCPU()&&this->getEnableGPU()){
-	static bool lastgpu = false;
-	static bool lastcpu = false;
-	if(!lastcpu){
-		addCPUMapTasks(chunk);
-		ShowLog("addCPUMapTasks");
-		lastcpu = true;
-		lastgpu = false;
-		return;
-	}
-	if(!lastgpu){
-		addGPUMapTasks(chunk);
-		ShowLog("addGPUMapTasks");
-		lastcpu = false;
-		lastgpu = true;
-		return;	
-	}
-	}//if(this->
 #endif
 
   }//void
@@ -533,6 +498,10 @@ namespace panda
   void PandaMapReduceJob::addCPUMapTasks(panda::Chunk *chunk)
   {
 	  void *key	= chunk->getKey();
+		printf("add cpu key:");
+		for(int s = 0;s<10;s++)
+		printf("%2d",(int)((char *)key)[s]);
+		printf("\n");
 	  void *val	= chunk->getVal();
 	  int keySize	= chunk->getKeySize();
 	  int valSize	= chunk->getValSize();
@@ -714,7 +683,7 @@ namespace panda
 		val_t *vals  = sorted_intermediate_keyvals_arr1[i].vals;
 		int len = sorted_intermediate_keyvals_arr1[i].val_arr_len;
 		for (int j=0;j<len;j++){
-			ShowLog("mapoutput key:%s keySize:%d val:%d dump to bucket:[%d]",key, keySize, *(int *)vals[j].val, bucketId);
+			ShowLog("dump key:%.3s keySize:%d val:%.3s dump to bucket:[%d]",key, keySize, (char *)(vals[j].val), bucketId);
 			PandaAddKeyValue2Bucket(bucketId, (char *)key, keySize,(char *)(vals[j].val),vals[j].valSize);
 		}//for
 	  }//for
@@ -796,6 +765,7 @@ namespace panda
           //sendReqs.push_back(ioReq);
           }//if
     }//for
+	ShowLog("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
   }//void
 
   void PandaMapReduceJob::StartPandaGlobalPartition()
@@ -922,7 +892,7 @@ namespace panda
 	StartPandaGlobalPartition();
 	WaitPandaMessagerExit();
 	//MPI_Barrier(MPI_COMM_WORLD);
-
+	ShowLog("llllllllllllllllllllllllllllllllllllllllllllllllll");
 	if(this->getEnableGPU()){
 		this->pGPUContext->sorted_key_vals.d_sorted_keyvals_arr_len = 0;
 	}

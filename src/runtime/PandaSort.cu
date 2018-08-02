@@ -326,16 +326,16 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 	int num_threads = pcc->num_cpus_cores > pcc->input_key_vals.num_input_record ? pcc->input_key_vals.num_input_record:pcc->num_cpus_cores;
 	int num_records_per_thread = (pcc->input_key_vals.num_input_record)/(num_threads);
 
-	ShowLog("num cores:%d num input records:%d threads:%d num_reocords_per_thread:%d",
-			pcc->num_cpus_cores, pcc->input_key_vals.num_input_record, num_threads,num_records_per_thread);
+	ShowLog("num cores:%d num input records:%d threads:%d num_reocords_per_thread:%.2f",
+			pcc->num_cpus_cores, pcc->input_key_vals.num_input_record, num_threads, (pcc->input_key_vals.num_input_record)/(float)(num_threads));
 
 	int start_idx = 0;
 	int end_idx = 0;
 	
-	int total_count = 0;
-	for (int i=0; i< pcc->input_key_vals.num_input_record; i++){
-		total_count += pcc->intermediate_key_vals.intermediate_keyval_total_count[i];
-	}//for
+	//int total_count = 0;
+	//for (int i=0; i< pcc->input_key_vals.num_input_record; i++){
+	//	total_count += pcc->intermediate_key_vals.intermediate_keyval_total_count[i];
+	//}//for
 
 	int keyvals_arr_max_len = pnc->sorted_key_vals.sorted_keyval_arr_max_len;
 	//pnc->sorted_key_vals.sorted_intermediate_keyvals_arr = (keyvals_t *)malloc(sizeof(keyvals_t)*keyvals_arr_len);
@@ -344,20 +344,20 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 	int sorted_key_arr_len = 0;
 
 	for (int tid = 0;tid<num_threads;tid++){
-	
 		end_idx = start_idx + num_records_per_thread;
 		if (tid < (pcc->input_key_vals.num_input_record % num_threads) )
 			end_idx++;
 		if (end_idx > pcc->input_key_vals.num_input_record)
 			end_idx = pcc->input_key_vals.num_input_record;
-		if (end_idx<=start_idx) continue;
+		if (end_idx<=start_idx) 
+			continue;
 		keyval_arr_t *kv_arr_p 	= (keyval_arr_t *)&(pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[start_idx]);
 		int shared_arr_len 	= *kv_arr_p->shared_arr_len;
 		char *shared_buff 	= kv_arr_p->shared_buff;
 		int shared_buff_len 	= *kv_arr_p->shared_buff_len;
 		//bool local_combiner 	= pnc->local_combiner;
 		bool local_combiner 	= false;
-
+		//ShowLog("TTTTTTTTTTTTTT:%d  shared_arr_len:%d",tid,shared_arr_len);	
 		for(int local_idx = 0; local_idx<(shared_arr_len); local_idx++){
 
 			keyval_pos_t *p2 = (keyval_pos_t *)((char *)shared_buff + shared_buff_len - sizeof(keyval_pos_t)*(shared_arr_len - local_idx ));
@@ -365,22 +365,25 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 		
 			char *key_i = shared_buff + p2->keyPos;
 			char *val_i = shared_buff + p2->valPos;
-			//ShowLog("cihui key:%s val:%d",key_i,*(int *)(val_i));
+			//ShowLog("sortkeyval key:%s val:%d",key_i,*(int *)(val_i));
 			int keySize_i = p2->keySize;
 			int valSize_i = p2->valSize;
-		
 			int k = 0;
 			for (; k<sorted_key_arr_len; k++){
 				char *key_k = (char *)(sorted_intermediate_keyvals_arr[k].key);
 				int keySize_k = sorted_intermediate_keyvals_arr[k].keySize;
 
 				if ( cpu_compare(key_i, keySize_i, key_k, keySize_k) != 0 )
-					continue;
+				{
+				ShowLog("cpu_compare !=0");		
+				continue;
+				}else
+				ShowLog("cpu_compare ==0 key_i:%.3s  key_k:%.3s keySize_i:%d keySize_k:%d",key_i,key_k,keySize_i,keySize_k);
 
 				//found the match
 				val_t *vals = sorted_intermediate_keyvals_arr[k].vals;
 				sorted_intermediate_keyvals_arr[k].val_arr_len++;
-			sorted_intermediate_keyvals_arr[k].vals = (val_t*)realloc(vals, sizeof(val_t)*(sorted_intermediate_keyvals_arr[k].val_arr_len));
+				sorted_intermediate_keyvals_arr[k].vals = (val_t*)realloc(vals, sizeof(val_t)*(sorted_intermediate_keyvals_arr[k].val_arr_len));
 
 				int index = sorted_intermediate_keyvals_arr[k].val_arr_len - 1;
 				sorted_intermediate_keyvals_arr[k].vals[index].valSize = valSize_i;
@@ -389,7 +392,7 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 				break;
 
 			}//for
-			
+			ShowLog("TTTTTTTTTTTTTT:%d  shared_arr_len:%d sorted_key_arr_len:%d k:%d",tid,shared_arr_len,sorted_key_arr_len,k);	
 			if (k == sorted_key_arr_len){
 				sorted_key_arr_len++;
 				if (sorted_key_arr_len >= keyvals_arr_max_len){
@@ -425,7 +428,7 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 		pnc->sorted_key_vals.sorted_intermediate_keyvals_arr = sorted_intermediate_keyvals_arr;
 	}
 	pnc->sorted_key_vals.sorted_keyvals_arr_len = sorted_key_arr_len;
-	
+	ShowLog("OOOOOOOOOOOOOOOOOO:%d",sorted_key_arr_len);
 }
 	
 	
