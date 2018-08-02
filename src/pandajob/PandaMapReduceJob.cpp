@@ -890,7 +890,7 @@ namespace panda
 	}//if
 
 	StartPandaGlobalPartition();
-	WaitPandaMessagerExit();
+	//WaitPandaMessagerExit();
 	//MPI_Barrier(MPI_COMM_WORLD);
 	ShowLog("llllllllllllllllllllllllllllllllllllllllllllllllll");
 	if(this->getEnableGPU()){

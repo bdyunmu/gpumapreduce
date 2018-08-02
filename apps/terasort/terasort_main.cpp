@@ -43,7 +43,7 @@ int main(int argc, char ** argv)
 	job->setEnableCPU(true);
 	job->setEnableGPU(false);
 
-	//if (rank == 0)
+	if (rank == 0)
 	{
 	panda::ShowLog("========================================================");
 	panda::ShowLog("========================================================");
@@ -54,8 +54,7 @@ int main(int argc, char ** argv)
 	panda::ShowLog("=========================================================");	
 	}
 	
-	const int NUM_ELEMENTS = 1;
-	char input[64];
+	char input[128];
 	sprintf(input,"%s/INPUT%d",argv[1],rank);
 	FILE *fp = fopen(input,"r");
 	if(fp == NULL){
@@ -65,19 +64,18 @@ int main(int argc, char ** argv)
 	char *rb  = (char *)malloc(sizeof(char)*100);
 	int count = 0;
 	while(fread(rb,100,1,fp)!=0){
-	printf("read key:");
-	for(int s = 0;s<10;s++){
-	printf("%2d",(int)rb[s]);
-	}
-	printf("\n");
-	job->addInput(new panda::KeyValueChunk((char *)rb,TeraInputFormat::KEY_LEN,(char *)rb+10,TeraInputFormat::VALUE_LEN));
-	count++;
-	rb  = (char *)malloc(sizeof(char)*100);
+		printf("read key:");
+		for(int s = 0;s<10;s++){
+		printf("%3d",(int)rb[s]);
+		}
+		printf("\n");
+		job->addInput(new panda::KeyValueChunk((char *)rb,TeraInputFormat::KEY_LEN,(char *)rb+10,TeraInputFormat::VALUE_LEN));
+		count++;
+		rb = (char *)malloc(sizeof(char)*100);
 	}
 	panda::ShowLog("terasort keyvalue pairs num:%d",count);
 	fclose(fp);
 	job->execute();
 	delete job;
-	//MPI_Finalize();
 	return 0;
 }//int main
