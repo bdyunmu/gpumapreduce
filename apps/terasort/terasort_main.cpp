@@ -29,7 +29,7 @@ int main(int argc, char ** argv)
 	   panda::ShowLog("Example:");
 	   panda::ShowLog("mpirun -host node1,node2 -np 2 ./%s file:///tmp/terasort_in file:///tmp/terasort_out",argv[0]);
            exit(-1);
-        }  //if
+        }//if
 	panda::PandaMapReduceJob  *job = new panda::PandaMapReduceJob(argc, argv);
 	int rank, size;
 	rank = 0;
@@ -58,12 +58,14 @@ int main(int argc, char ** argv)
 	sprintf(input,"%s/INPUT%d",argv[1],rank);
 	FILE *fp = fopen(input,"r");
 	if(fp == NULL){
-	panda::ShowLog("can not open:%s",input);
-	exit(-1);
+		panda::ShowLog("can not open:%s",input);
+		exit(-1);
 	}
 	char *rb  = (char *)malloc(sizeof(char)*100);
 	int count = 0;
 	while(fread(rb,100,1,fp)!=0){
+		if(count == 8)
+			break;
 		printf("read key:");
 		for(int s = 0;s<10;s++){
 		printf("%3d",(int)rb[s]);
@@ -76,6 +78,6 @@ int main(int argc, char ** argv)
 	panda::ShowLog("terasort keyvalue pairs num:%d",count);
 	fclose(fp);
 	job->execute();
-	delete job;
+	//delete job;
 	return 0;
 }//int main

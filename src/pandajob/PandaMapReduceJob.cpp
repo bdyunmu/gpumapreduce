@@ -162,7 +162,6 @@ namespace panda
 	ExecutePandaGPUReduceTasks(this->pGPUContext);
   }// int PandaMapReduceJob
 
-
   void PandaMapReduceJob::StartPandaCPUMapTasks()
   {
 	panda_cpu_context *pcc = this->pCPUContext;
@@ -201,7 +200,7 @@ namespace panda
 	pcc->intermediate_key_vals.intermediate_keyval_total_count = (int *)malloc(pcc->input_key_vals.num_input_record*sizeof(int));
 	memset(pcc->intermediate_key_vals.intermediate_keyval_total_count, 0, pcc->input_key_vals.num_input_record * sizeof(int));
 	
-	keyval_arr_t *d_keyval_arr_p;
+	//keyval_arr_t *d_keyval_arr_p;
 	int *count = NULL;
 	
 	int num_threads				= pcc->num_cpus_cores;
@@ -328,6 +327,7 @@ namespace panda
 		totalKeySize += pcc->input_key_vals.input_keyval_arr[i].keySize;
 		totalValSize += pcc->input_key_vals.input_keyval_arr[i].valSize;
 	}//for
+	ShowLog("Debug InitPandaCPUMapReduce copy totalKeySize:%d totalValSize:%d",totalKeySize,totalValSize);
 
 	void *input_vals_shared_buff = malloc(totalValSize);
 	void *input_keys_shared_buff = malloc(totalKeySize);
@@ -342,7 +342,7 @@ namespace panda
 	for(int i=0;i<pcc->input_key_vals.num_input_record;i++){
 		keySize = pcc->input_key_vals.input_keyval_arr[i].keySize;
 		valSize = pcc->input_key_vals.input_keyval_arr[i].valSize;
-		
+		ShowLog("Debug InitPandaCPUMapReduce copy keySize:%d valSize:%d",keySize,valSize);	
 		memcpy((char *)input_keys_shared_buff + keyPos,(char *)(pcc->input_key_vals.input_keyval_arr[i].key), keySize);
 		memcpy((char *)input_vals_shared_buff + valPos,(char *)(pcc->input_key_vals.input_keyval_arr[i].val), valSize);
 		
@@ -468,8 +468,10 @@ namespace panda
   {
     if (messager!=NULL) 
 	messager->MsgFinish();
-    MessageThread->join();
-    delete MessageThread;
+    if(MessageThread != NULL){  
+  	MessageThread->join();
+    }
+    //delete MessageThread;
   }//void
 
   PandaMapReduceJob::PandaMapReduceJob(int argc,char **argv)
@@ -501,12 +503,12 @@ namespace panda
 		printf("add cpu key:");
 		for(int s = 0;s<10;s++)
 		printf("%2d",(int)((char *)key)[s]);
-		printf("\n");
 	  void *val	= chunk->getVal();
 	  int keySize	= chunk->getKeySize();
 	  int valSize	= chunk->getValSize();
 	  MapTask *pMapTask = new MapTask(keySize,key,valSize,val);
 	  cpuMapTasks.push_back(pMapTask);
+		printf("keySize:%d valSize:%d\n",keySize,valSize);
   }//void
 
   void PandaMapReduceJob::addGPUMapTasks(panda::Chunk *chunk)
@@ -578,7 +580,7 @@ namespace panda
 			this->pNodeContext->buckets.savedKeysBuff[bucketId] = newKeyBuff;
 			this->pNodeContext->buckets.keyBuffSize[bucketId]   = keyBuffSize;
 			//TODO remove keyBuff in std::vector
-			delete [] keyBuff;
+			//delete [] keyBuff;
 	  }else{
 			memcpy(keyBuff + keyBufflen, key, keySize);
 			counts[2] = keyBufflen+keySize;
@@ -596,7 +598,7 @@ namespace panda
 			this->pNodeContext->buckets.savedValsBuff[bucketId] = newValBuff;
 			this->pNodeContext->buckets.valBuffSize[bucketId]   = valBuffSize;
 			//TODO remove valBuff in std::vector
-			delete [] valBuff;
+			//delete [] valBuff;
 	  }else{
 			memcpy(valBuff + valBufflen, val, valSize);	//
 			counts[3] = valBufflen+valSize;				//
@@ -625,10 +627,10 @@ namespace panda
 		 this->pNodeContext->buckets.valPos[bucketId]  = newValPosArray;
 		 this->pNodeContext->buckets.keySize[bucketId] = newKeySizeArray;
 		 this->pNodeContext->buckets.valSize[bucketId] = newValSizeArray;
-		 delete [] keyPosArray;
-		 delete [] valPosArray;
-	   	 delete [] keySizeArray;
- 		 delete [] valSizeArray;
+		 //delete [] keyPosArray;
+		 //delete [] valPosArray;
+	   	 //delete [] keySizeArray;
+ 		 //delete [] valSizeArray;
 	  }//if
   }//void
 
@@ -683,7 +685,12 @@ namespace panda
 		val_t *vals  = sorted_intermediate_keyvals_arr1[i].vals;
 		int len = sorted_intermediate_keyvals_arr1[i].val_arr_len;
 		for (int j=0;j<len;j++){
-			ShowLog("dump key:%.3s keySize:%d val:%.3s dump to bucket:[%d]",key, keySize, (char *)(vals[j].val), bucketId);
+			printf("dump key:");
+			for(int s = 0;s<keySize;s++){
+				printf("%.3d",key[s]);
+			}//for
+			printf("keySize:%d dump to bucket:%d\n",keySize,bucketId);
+			//ShowLog("dump key:%.3s keySize:%d val:%.3s dump to bucket:[%d]",key, keySize, (char *)(vals[j].val), bucketId);
 			PandaAddKeyValue2Bucket(bucketId, (char *)key, keySize,(char *)(vals[j].val),vals[j].valSize);
 		}//for
 	  }//for
@@ -890,7 +897,7 @@ namespace panda
 	}//if
 
 	StartPandaGlobalPartition();
-	//WaitPandaMessagerExit();
+	WaitPandaMessagerExit();
 	//MPI_Barrier(MPI_COMM_WORLD);
 	ShowLog("llllllllllllllllllllllllllllllllllllllllllllllllll");
 	if(this->getEnableGPU()){

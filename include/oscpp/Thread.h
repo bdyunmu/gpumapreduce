@@ -20,7 +20,7 @@ namespace oscpp
   class Thread
   {
     protected:
-      void * handle;
+      void *handle;
       volatile bool running;
       Runnable * runner;
 

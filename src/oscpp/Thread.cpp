@@ -1,12 +1,15 @@
 #include <oscpp/Thread.h>
 #include <oscpp/Runnable.h>
+#include <signal.h>
+#include <errno.h>
 
 namespace oscpp
 {
 	void * Thread::startThread(void * vself)
 	{
-		Runnable* pRun = (Runnable*)(vself);	
-		pRun->run();
+		Runnable* pRunner = (Runnable*)(vself);	
+		pRunner->run();
+		printf("lihui +++++++++++++ Big Test OKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK run is done\n");
 		return 0;
 	};
 
@@ -15,8 +18,6 @@ namespace oscpp
 		running = false;
 		handle = (pthread_t *)malloc(sizeof(pthread_t));
 		runner = pRunner;
-		
-		//runner->run = pRunner->run;
 	};
 
 	Thread::~Thread(){};
@@ -40,9 +41,24 @@ namespace oscpp
 
 	void Thread::join()
 	{
-		void *exitstat;
-		if (pthread_join(*(pthread_t*)handle,&exitstat)!=0) 
-			perror("joining failed\n");
+	#if 0
+	printf("Big Test kill __________________________________________________________\n");
+	int ret = pthread_kill(*(pthread_t*)handle,0);
+   	if(ret == ESRCH)
+        	printf("thread kill this thread does not exist or already exit.\n");
+   	else if(ret == EINVAL)
+        	printf("thread kill invoke useless msg\n");
+   	else
+        	printf("thread kill exist\n");
+	#endif	
+#if 1
+	printf("Big Test join start 	___________________________________________________________\n");
+	void *exitstat = NULL;
+	if (pthread_join(*(pthread_t*)handle,NULL)!=0){
+		printf("joining failed\n");
+	}
+	printf("Big Test join end	===========================================================\n");
+#endif
 	};
 
 	bool Thread::isRunning()

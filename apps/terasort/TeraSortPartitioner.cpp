@@ -5,16 +5,16 @@
 byte* TeraSortPartitioner::toByteArray(long value){
 	byte* result = new byte[8];
 	for(int i = 7;i>=0;i--){
-	result[i] = (byte)(value & 0xffL);
-	value >>=8;
-	}
+		result[i] = (byte)(value & 0xffL);
+		value >>=8;
+	}//for
 	return result;
 }
 
 unsigned long TeraSortPartitioner::toLong(byte * byteArray){
 	unsigned long result = (unsigned long)(byteArray[7]);
 	long power2 = 1;
-	for(int i = 6;i>=0;i--){
+	for(int i=6;i>=0;i--){
 		power2 *= 256;
 		result += (unsigned long)byteArray[i]*power2;
 	}
@@ -42,7 +42,7 @@ TeraSortPartitioner::TeraSortPartitioner(){
 	printf("long:%lu\n",result);
 	byte *minbyteArray = new byte[8]{0,0,0,0,0,0,0,0};	
 	byte *maxbyteArray = new byte[8]{0,-1,-1,-1,-1,-1,-1,-1};
-	for(int i = 0;i<8;i++)
+	for(int i=0;i<8;i++)
 		printf("%d ",(unsigned char)maxbyteArray[i]);
 	printf("\n");
 

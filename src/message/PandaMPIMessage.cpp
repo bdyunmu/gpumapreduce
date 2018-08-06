@@ -14,6 +14,8 @@ Developer: Hui Li (huili@ruijie.com.cn)
 #include <panda/PandaMPIMessage.h>
 #include <cstring>
 #include "Panda.h"
+#include <stdlib.h>
+#include <unistd.h>
 
 namespace panda
 {
@@ -52,8 +54,11 @@ namespace panda
 
 	void PandaMPIMessage::run()
 	{
-
-		ShowLog("start PandaMPIMessage thread. run() thread [%d/%d]", commRank, commSize);
+		ShowLog("Big Test PandaMPIMessage run()  sleep 10+++++++++++++++++++++++++++++");
+		sleep(1);
+		return;
+#if 0
+		ShowLog("K start PandaMPIMessage thread. run() thread [%d/%d]", commRank, commSize);
 		
 		int   * counts		= new int [commSize*3];
 		int  ** keyRecv		= new int*[commSize];
@@ -92,15 +97,20 @@ namespace panda
 		   	if (data != NULL)
 				break;
 	 	   }while(data == NULL);
+		   ShowLog("MPI_Isend to rank:%d",data->rank);
 		   MPI_Isend(data->counts,3,MPI_INT,data->rank,0,MPI_COMM_WORLD,&data->reqs[0]);
 		   pendingIO.push_back(data);	
 		}
+#endif
+#if 0
 		MPI_Barrier(MPI_COMM_WORLD);
 		for(int i = 0;i<commSize; i++)
 		{
 		MPI_Wait(&(countReqs[i]),NULL);
 		}
 		MPI_Barrier(MPI_COMM_WORLD);	
+#endif
+#if 0
 		for(int i = 0;i<commSize; i++)
 		{
 			if(counts[i*3+0]>0 && counts[i*3+1]>0 && counts[i*3+2]>0){
@@ -133,16 +143,17 @@ namespace panda
 					counts[i*3+1],counts[i*3+2], counts[i*3+0]);
 			}
 		}
-		ShowLog("Message Looping Done (commSize:%d)",commSize);
+#endif
+		ShowLog("TTTT Message Looping Done (commSize:%d)",commSize);
 		//MPI_Waitall(commSize, zeroReqs, MPI_STATUSES_IGNORE);
-		delete [] counts;
+		/*delete [] counts;
 		for(int i = 0;i<commSize;i++){
 			delete [] keyRecv[i];
 			delete [] valRecv[i];
 		}
 		delete [] dataReqs;
 		delete [] keyRecv;
-		delete [] valRecv;
+		delete [] valRecv;*/
 	}
 
 
@@ -154,7 +165,7 @@ namespace panda
 		const int valSize,
 		const int maxlen) //curlen
 	{
-		PandaMessagePackage * data  = new PandaMessagePackage;
+		PandaMessagePackage *data  = new PandaMessagePackage;
 		data->counts = new int[3];
 		data->flag	= new volatile bool;
 		data->waiting	= new volatile bool;

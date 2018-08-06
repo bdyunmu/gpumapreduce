@@ -93,7 +93,7 @@ void* RunPandaCPUMapThread(void * ptr)
 	//panda_node_context *pnc = (panda_node_context *)(panda_cpu_task_info->pnc);
 	
 	int start_task_idx	=	panda_cpu_task_info->start_task_idx;
-	int end_task_idx		=	panda_cpu_task_info->end_task_idx;
+	int end_task_idx	=	panda_cpu_task_info->end_task_idx;
 
 	if(end_task_idx<=start_task_idx) 	return NULL;
 	
@@ -788,7 +788,7 @@ void PandaEmitCPUCombinerOutput(void *key, void *val, int keySize, int valSize, 
 	int shared_buff_len		= *kv_arr_p->shared_buff_len;
 	int shared_arr_len		= *kv_arr_p->shared_arr_len;
 	int shared_buff_pos		= *kv_arr_p->shared_buff_pos;
-		
+	ShowLog("EmitCPUCombinerOutput shared_buff_len:%d shared_arr_len:%d shared_buff_pos:%d",shared_buff_len,shared_arr_len,shared_buff_pos);
 	int required_mem_len = (shared_buff_pos) + keySize + valSize + sizeof(keyval_pos_t)*(shared_arr_len+1);
 	if (required_mem_len> shared_buff_len){
 

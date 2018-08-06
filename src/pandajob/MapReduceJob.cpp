@@ -41,9 +41,10 @@ namespace panda
   MapReduceJob::~MapReduceJob()
   {
     ShowLog("destroying MapReduce job and invoke MPI_Finalize");
-    if (messager  != NULL) delete messager;
+   /* if (messager  != NULL) delete messager;
     if (partition != NULL) delete partition;
     if (output != NULL) delete output; 
+	*/
     if(MPI_COMM_WORLD!=NULL) MPI_Finalize();
   }//MapReduceJob
 }
