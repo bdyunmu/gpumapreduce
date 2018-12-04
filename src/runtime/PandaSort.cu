@@ -145,7 +145,6 @@ void ExecutePandaSortBucket(panda_node_context *pnc)
 void ExecutePandaGPUSort(panda_gpu_context* pgc){
 
 	cudaThreadSynchronize();
-	ShowLog("Debug 2.0");
 
 	int *count_arr = (int *)malloc(sizeof(int) * pgc->input_key_vals.num_input_record);
 	cudaMemcpy(count_arr, pgc->intermediate_key_vals.d_intermediate_keyval_total_count, 
@@ -313,7 +312,6 @@ void ExecutePandaGPUSort(panda_gpu_context* pgc){
 	pgc->sorted_key_vals.d_sorted_keyvals_arr_len = sorted_key_arr_len;
 	cudaMalloc((void**)&pgc->sorted_key_vals.d_pos_arr_4_sorted_keyval_pos_arr,sizeof(int)*sorted_key_arr_len);
 	cudaMemcpy(pgc->sorted_key_vals.d_pos_arr_4_sorted_keyval_pos_arr,pos_arr_4_pos_arr,sizeof(int)*sorted_key_arr_len,cudaMemcpyHostToDevice);
-	ShowLog("Debug 3.0");
 }
 
 void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
@@ -428,7 +426,6 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 		pnc->sorted_key_vals.sorted_intermediate_keyvals_arr = sorted_intermediate_keyvals_arr;
 	}
 	pnc->sorted_key_vals.sorted_keyvals_arr_len = sorted_key_arr_len;
-	ShowLog("OOOOOOOOOOOOOOOOOO:%d",sorted_key_arr_len);
 }
 	
 	
@@ -551,7 +548,6 @@ void ExecutePandaGPULocalMerge2Pnc(panda_node_context *pnc, panda_gpu_context *p
 		}//if
 	}//if 
 	pnc->sorted_key_vals.sorted_intermediate_keyvals_arr = sorted_intermediate_keyvals_arr;
-	ShowLog("Debug 5.0");
 	return;
 
 }//void
@@ -561,8 +557,8 @@ __global__ void copyDataFromDevice2Host1(panda_gpu_context pgc)
 	
 	int num_records_per_thread = (pgc.input_key_vals.num_input_record + (gridDim.x*blockDim.x*blockDim.y)-1)/(gridDim.x*blockDim.x*blockDim.y);
 
-	printf("[copyDataFromDevice2Host1]  pgc.input_key_vals.num_input_record:%d gx:%d,bx:%d,by:%d\n",
-		pgc.input_key_vals.num_input_record,gridDim.x,blockDim.x,blockDim.y);
+	//printf("[copyDataFromDevice2Host1]  pgc.input_key_vals.num_input_record:%d gx:%d,bx:%d,by:%d\n",
+	//	pgc.input_key_vals.num_input_record,gridDim.x,blockDim.x,blockDim.y);
 
 	int block_start_idx = num_records_per_thread * blockIdx.x * blockDim.x * blockDim.y;
 	int thread_start_idx = block_start_idx 

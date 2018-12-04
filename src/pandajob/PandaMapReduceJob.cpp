@@ -784,7 +784,6 @@ namespace panda
           //sendReqs.push_back(ioReq);
           }//if
     }//for
-	ShowLog("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
   }//void
 
   void PandaMapReduceJob::StartPandaGlobalPartition()
@@ -921,7 +920,6 @@ namespace panda
 	WaitPandaMessagerExit();
 
 	//MPI_Barrier(MPI_COMM_WORLD);
-	ShowLog("llllllllllllllllllllllllllllllllllllllllllllllllll ");
 
 	if(this->getEnableGPU()){
 		this->pGPUContext->sorted_key_vals.d_sorted_keyvals_arr_len = 0;

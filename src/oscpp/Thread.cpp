@@ -9,7 +9,6 @@ namespace oscpp
 	{
 		Runnable* pRunner = (Runnable*)(vself);	
 		pRunner->run();
-		printf("lihui +++++++++++++ Big Test startThread pRunner->run is done\n");
 		return 0;
 	};
 
@@ -53,12 +52,10 @@ namespace oscpp
         	printf("thread kill exist\n");
 	#endif	
 #if 1
-	printf("Big Test join start 	___________________________________________________________\n");
 	void *exitstat = NULL;
 	if (pthread_join(handle0,NULL)!=0){
 		printf("joining failed\n");
 	}
-	printf("Big Test join end	===========================================================\n");
 	running = false;
 #endif
 	};

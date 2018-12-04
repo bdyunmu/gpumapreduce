@@ -402,16 +402,13 @@ void ExecutePandaGPUCombiner(panda_gpu_context * pgc){
     	dim3 grids(numBlocks, 1);
 
 	RunPandaGPUCombiner<<<grids,blocks>>>(*pgc);
-	ShowLog("Debug 1.0");
 	cudaThreadSynchronize();
 }
 
 void ExecutePandaCPUCombiner(panda_cpu_context *pcc){
-	ShowLog("Debug 1.5");
 	if (pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p == NULL)	{ ErrorLog("intermediate_keyval_arr_arr_p == NULL"); return; }
 	if (pcc->intermediate_key_vals.intermediate_keyval_arr_arr_len <= 0)	{ ErrorLog("no any input keys"); return; }
 	if (pcc->num_cpus_cores <= 0)	{ ErrorLog("pcc->num_cpus == 0"); return; }
-	ShowLog("Debug 1.6");
 	//-------------------------------------------------------
 	//1, prepare buffer to store intermediate results
 	//-------------------------------------------------------
@@ -866,7 +863,7 @@ __global__ void RunPandaGPUCombiner(panda_gpu_context pgc)
 	if (thread_start_idx >= thread_end_idx)
 		return;
 
-	printf("lihuix [RunPandaGPUCombiner] thread_start_idx:%d thread_end_idx:%d =========",thread_start_idx, thread_end_idx);
+	//printf("lihuix [RunPandaGPUCombiner] thread_start_idx:%d thread_end_idx:%d =========",thread_start_idx, thread_end_idx);
 
 	keyval_arr_t *kv_arr_p = pgc.intermediate_key_vals.d_intermediate_keyval_arr_arr_p[thread_start_idx];
 	//int *buddy = kv_arr_p->shared_buddy;
