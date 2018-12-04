@@ -157,7 +157,7 @@ void ExecutePandaGPUSort(panda_gpu_context* pgc){
 	}//for
 	//free(count_arr);
 
-	ShowLog("GPU Total Count of Intermediate Records:%d",total_count);
+	ShowLog("GPU Total Count of Intermediate Records:%d pgc->input_key_vals.num_input_record:%d",total_count,pgc->input_key_vals.num_input_record);
 	cudaMalloc((void **)&(pgc->intermediate_key_vals.d_intermediate_keyval_arr),sizeof(keyval_t)*total_count);
 
 	//int num_mappers = 1;

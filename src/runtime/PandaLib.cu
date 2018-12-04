@@ -854,6 +854,7 @@ __global__ void RunPandaGPUCombiner(panda_gpu_context pgc)
 	//GpuErrorLog("num_records_per_thread:%d",num_records_per_thread);
 	
 	int block_start_idx = num_records_per_thread * blockIdx.x * blockDim.x * blockDim.y;
+
 	int thread_start_idx = block_start_idx 
 		+ ((threadIdx.y*blockDim.x + threadIdx.x)/STRIDE)*num_records_per_thread*STRIDE
 		+ ((threadIdx.y*blockDim.x + threadIdx.x)%STRIDE);
@@ -864,6 +865,8 @@ __global__ void RunPandaGPUCombiner(panda_gpu_context pgc)
 	
 	if (thread_start_idx >= thread_end_idx)
 		return;
+
+	printf("lihuix [RunPandaGPUCombiner] thread_start_idx:%d thread_end_idx:%d =========",thread_start_idx, thread_end_idx);
 
 	keyval_arr_t *kv_arr_p = pgc.intermediate_key_vals.d_intermediate_keyval_arr_arr_p[thread_start_idx];
 	//int *buddy = kv_arr_p->shared_buddy;

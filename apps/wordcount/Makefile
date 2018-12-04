@@ -6,8 +6,8 @@
 all: wordcount
 
 include ../../makefile.in
-CPP_FILES_7	:= wc_main.cpp  wcoutputformat.cpp
 
+CPP_FILES_7	:= wc_main.cpp  wcoutputformat.cpp
 CU_FILES_2	:= wc_api.cu
 
 WC_CPP_FILES:= $(CPP_FILES_1) $(CPP_FILES_2) $(CPP_FILES_3) $(CPP_FILES_4) $(CPP_FILES_5) $(CPP_FILES_5) $(CPP_FILES_6) $(CPP_FILES_7) 

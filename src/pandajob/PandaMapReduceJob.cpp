@@ -899,11 +899,13 @@ namespace panda
 #if 1
 	if(this->getEnableGPU())
 		StartPandaGPUMapTasks();
+
 	if(this->getEnableCPU())
 		StartPandaCPUMapTasks();
 
 	if(this->getEnableGPU())
 		StartPandaGPUCombineTasks();
+
 	if(this->getEnableCPU())
 		StartPandaCPUCombineTasks();
 
@@ -920,6 +922,7 @@ namespace panda
 
 	//MPI_Barrier(MPI_COMM_WORLD);
 	ShowLog("llllllllllllllllllllllllllllllllllllllllllllllllll ");
+
 	if(this->getEnableGPU()){
 		this->pGPUContext->sorted_key_vals.d_sorted_keyvals_arr_len = 0;
 	}
@@ -934,13 +937,13 @@ namespace panda
 	int start_task_id = 0;
 	int end_task_id = this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len;
 
-	ShowLog("lihuix start_task_id:%d end_task_id:%d",0,end_task_id);
+	ShowLog("lihuix pnc->sorted_key_Vals.sorted_keyvals_arr_len, start_task_id:%d end_task_id:%d",0,end_task_id);
 
 	if(end_task_id>0){
 
 	if(this->getEnableGPU()&&this->getEnableCPU()){
-	StartPandaCopyRecvedBucketToCPU(start_task_id, end_task_id);
-	//StartPandaCopyRecvedBucketToCPU(end_task_id/2+1, end_task_id);
+	StartPandaCopyRecvedBucketToCPU(start_task_id, end_task_id/2);
+	StartPandaCopyRecvedBucketToGPU(end_task_id/2, end_task_id);
 	}//if
 	if(this->getEnableGPU()&&(!this->getEnableCPU())){
 	StartPandaCopyRecvedBucketToGPU(start_task_id, end_task_id);
