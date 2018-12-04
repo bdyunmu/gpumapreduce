@@ -315,7 +315,8 @@ void *RunPandaCPUCombinerThread(void *ptr){
 	if (val_t_arr == NULL) ErrorLog("there is no enough memory");
 	int num_keyval_pairs_after_combiner = 0;
 	int total_intermediate_keyvalue_pairs = 0;
-	ShowLog("Thread unmerged_shared_arr_len:%d start_idx:%d",unmerged_shared_arr_len,start_idx);
+
+	//ShowLog("Thread unmerged_shared_arr_len:%d start_idx:%d",unmerged_shared_arr_len,start_idx);
 
 	for (int i = 0; i < unmerged_shared_arr_len; i++){
 
@@ -337,10 +338,10 @@ void *RunPandaCPUCombinerThread(void *ptr){
 		(val_t_arr[index]).val = (char*)shared_buff + first_kv_p->valPos;
 
 		//ShowLog("unmerged_shared_arr_len:%d combiner key:%s val:%d",unmerged_shared_arr_len,iKey,*(int *)(val_t_arr[index]).val);
-		printf("cominber key:");
-		for(int s = 0;s<10;s++)
-			printf("%3d",(int)iKey[s]);
-		printf("\n");
+		//printf("cominber key:");
+		//for(int s = 0;s<10;s++)
+	//		printf("%3d",(int)iKey[s]);
+	//	printf("\n");
 		for (int j=i+1;j<unmerged_shared_arr_len;j++){
 
 			keyval_pos_t *next_kv_p = (keyval_pos_t *)((char *)shared_buff + shared_buff_len - sizeof(keyval_pos_t)*(unmerged_shared_arr_len-j));
@@ -479,7 +480,7 @@ panda_cpu_context *CreatePandaCPUContext(){
 	pcc->input_key_vals.input_keyval_arr = NULL;
 	pcc->input_key_vals.input_keyval_pos_arr = NULL;
 	pcc->input_key_vals.input_vals_shared_buff = NULL;
-	pcc->input_key_vals.input_keyval_arr = NULL;
+	//pcc->input_key_vals.input_keyval_arr = NULL;
 	
 	pcc->intermediate_key_vals.intermediate_keys_shared_buff = NULL;
 	pcc->intermediate_key_vals.intermediate_keyval_arr = NULL;

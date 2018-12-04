@@ -45,6 +45,9 @@ namespace panda
     if (partition != NULL) delete partition;
     if (output != NULL) delete output; 
 	*/
-    if(MPI_COMM_WORLD!=NULL) MPI_Finalize();
+    if(MPI_COMM_WORLD!=NULL) {
+	MPI_Barrier(MPI_COMM_WORLD);	
+	MPI_Finalize();
+	}
   }//MapReduceJob
 }

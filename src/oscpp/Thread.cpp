@@ -9,7 +9,7 @@ namespace oscpp
 	{
 		Runnable* pRunner = (Runnable*)(vself);	
 		pRunner->run();
-		printf("lihui +++++++++++++ Big Test OKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK run is done\n");
+		printf("lihui +++++++++++++ Big Test startThread pRunner->run is done\n");
 		return 0;
 	};
 
@@ -29,15 +29,16 @@ namespace oscpp
 
 	void Thread::start()
 	{
-		if (pthread_create((pthread_t*)handle,NULL,startThread, runner)!=0)
-			perror("Thread creation failed!\n");
+	//	if (pthread_create((pthread_t*)handle,NULL,startThread, runner)!=0)
+		if(pthread_create(&handle0,NULL,startThread, runner)!=0)
+		perror("Thread creation failed!\n");
 		running = true;
 	};
 
-	void Thread::run()
+	/*void Thread::run()
 	{
 
-	};
+	};*/
 
 	void Thread::join()
 	{
@@ -54,10 +55,11 @@ namespace oscpp
 #if 1
 	printf("Big Test join start 	___________________________________________________________\n");
 	void *exitstat = NULL;
-	if (pthread_join(*(pthread_t*)handle,NULL)!=0){
+	if (pthread_join(handle0,NULL)!=0){
 		printf("joining failed\n");
 	}
 	printf("Big Test join end	===========================================================\n");
+	running = false;
 #endif
 	};
 

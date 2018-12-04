@@ -27,7 +27,7 @@ void ExecutePandaSortBucket(panda_node_context *pnc)
 {
 
 	  int numRecvedBuckets = pnc->recv_buckets.counts.size();
-	  ShowLog("numRecvedBuckets:%d",numRecvedBuckets);
+	  ShowLog("lihuix numRecvedBuckets:%d",numRecvedBuckets);
 
 	  keyvals_t *sorted_intermediate_keyvals_arr = NULL; 
           pnc->sorted_key_vals.sorted_intermediate_keyvals_arr = NULL;
@@ -357,7 +357,7 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 		int shared_buff_len 	= *kv_arr_p->shared_buff_len;
 		//bool local_combiner 	= pnc->local_combiner;
 		bool local_combiner 	= false;
-		//ShowLog("TTTTTTTTTTTTTT:%d  shared_arr_len:%d",tid,shared_arr_len);	
+		////ShowLog("TTTTTTTTTTTTTT:%d  shared_arr_len:%d",tid,shared_arr_len);	
 		for(int local_idx = 0; local_idx<(shared_arr_len); local_idx++){
 
 			keyval_pos_t *p2 = (keyval_pos_t *)((char *)shared_buff + shared_buff_len - sizeof(keyval_pos_t)*(shared_arr_len - local_idx ));
@@ -375,10 +375,10 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 
 				if ( cpu_compare(key_i, keySize_i, key_k, keySize_k) != 0 )
 				{
-				ShowLog("cpu_compare !=0");		
+				//ShowLog("cpu_compare !=0");		
 				continue;
-				}else
-				ShowLog("cpu_compare ==0 key_i:%.3s  key_k:%.3s keySize_i:%d keySize_k:%d",key_i,key_k,keySize_i,keySize_k);
+				}//else
+				//ShowLog("cpu_compare ==0 key_i:%.3s  key_k:%.3s keySize_i:%d keySize_k:%d",key_i,key_k,keySize_i,keySize_k);
 
 				//found the match
 				val_t *vals = sorted_intermediate_keyvals_arr[k].vals;
@@ -392,7 +392,7 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 				break;
 
 			}//for
-			ShowLog("TTTTTTTTTTTTTT:%d  shared_arr_len:%d sorted_key_arr_len:%d k:%d",tid,shared_arr_len,sorted_key_arr_len,k);	
+			//ShowLog("TTTTTTTTTTTTTT:%d  shared_arr_len:%d sorted_key_arr_len:%d k:%d",tid,shared_arr_len,sorted_key_arr_len,k);	
 			if (k == sorted_key_arr_len){
 				sorted_key_arr_len++;
 				if (sorted_key_arr_len >= keyvals_arr_max_len){

@@ -21,6 +21,8 @@ namespace oscpp
   {
     protected:
       void *handle;
+      pthread_t handle0;
+
       volatile bool running;
       Runnable * runner;
 

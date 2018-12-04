@@ -14,7 +14,7 @@ CC          = mpicc
 MPICC       = mpicxx -std=c++11
 NVCC        = nvcc
 
-NVCCFLAGS  = -I/opt/openmpi/include -lcudart -arch=sm_20 -I../../include --relocatable-device-code=true
+NVCCFLAGS  = -I/opt/openmpi/include -lcudart -arch=sm_30 -I../../include --relocatable-device-code=true
 INCFLAGS   += -I/usr/include/  -I/usr/local/cuda/include
 INCFLAGS   += -I../../include -I../../include/panda
 LDFLAGS    += -L/usr/local/cuda/lib64/ 

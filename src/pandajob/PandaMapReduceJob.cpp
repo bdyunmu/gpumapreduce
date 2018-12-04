@@ -308,6 +308,14 @@ namespace panda
   void PandaMapReduceJob::InitPandaCPUMapReduce()
   {
 
+
+	this->pCPUContext->input_key_vals.num_input_record      = cpuMapTasks.size();
+        ShowLog("lihuix this->pCPUContext->input_key_vals.num_input_record:%d",cpuMapTasks.size());
+        if(cpuMapTasks.size()<=0)
+                this->pCPUContext->input_key_vals.input_keyval_arr      = NULL;
+        else
+                this->pCPUContext->input_key_vals.input_keyval_arr      = (keyval_t *)malloc(cpuMapTasks.size()*sizeof(keyval_t));
+
 	for (unsigned int i= 0;i<cpuMapTasks.size();i++){
 		void *key = this->cpuMapTasks[i]->key;
 		int keySize = this->cpuMapTasks[i]->keySize;
@@ -319,6 +327,7 @@ namespace panda
 		this->pCPUContext->input_key_vals.input_keyval_arr[i].valSize = valSize;
 	}//for
 
+#if 1
 	panda_cpu_context* pcc = this->pCPUContext;
 	pcc->input_key_vals.num_input_record = cpuMapTasks.size();
 	int totalKeySize = 0;
@@ -338,7 +347,8 @@ namespace panda
 	int valPos  = 0;
 	int keySize = 0;
 	int valSize = 0;
-	
+#endif
+#if 1	
 	for(int i=0;i<pcc->input_key_vals.num_input_record;i++){
 		keySize = pcc->input_key_vals.input_keyval_arr[i].keySize;
 		valSize = pcc->input_key_vals.input_keyval_arr[i].valSize;
@@ -354,6 +364,8 @@ namespace panda
 		keyPos += keySize;	
 		valPos += valSize;
 	}//for
+#endif
+
   }//void
 
 
@@ -500,15 +512,15 @@ namespace panda
   void PandaMapReduceJob::addCPUMapTasks(panda::Chunk *chunk)
   {
 	  void *key	= chunk->getKey();
-		printf("add cpu key:");
-		for(int s = 0;s<10;s++)
-		printf("%2d",(int)((char *)key)[s]);
+		//printf("add cpu key:");
+		//for(int s = 0;s<10;s++)
+		//	printf("%3d",(int)((char *)key)[s]);
 	  void *val	= chunk->getVal();
 	  int keySize	= chunk->getKeySize();
 	  int valSize	= chunk->getValSize();
 	  MapTask *pMapTask = new MapTask(keySize,key,valSize,val);
 	  cpuMapTasks.push_back(pMapTask);
-		printf("keySize:%d valSize:%d\n",keySize,valSize);
+	  ShowLog("keySize:%d valSize:%d cpuMapTasks.size:%d\n",keySize,valSize,cpuMapTasks.size());
   }//void
 
   void PandaMapReduceJob::addGPUMapTasks(panda::Chunk *chunk)
@@ -685,11 +697,11 @@ namespace panda
 		val_t *vals  = sorted_intermediate_keyvals_arr1[i].vals;
 		int len = sorted_intermediate_keyvals_arr1[i].val_arr_len;
 		for (int j=0;j<len;j++){
-			printf("dump key:");
+			/*printf("dump key:");
 			for(int s = 0;s<keySize;s++){
 				printf("%.3d",key[s]);
-			}//for
-			printf("keySize:%d dump to bucket:%d\n",keySize,bucketId);
+			}*///for
+			//printf("keySize:%d dump to bucket:%d\n",keySize,bucketId);
 			//ShowLog("dump key:%.3s keySize:%d val:%.3s dump to bucket:[%d]",key, keySize, (char *)(vals[j].val), bucketId);
 			PandaAddKeyValue2Bucket(bucketId, (char *)key, keySize,(char *)(vals[j].val),vals[j].valSize);
 		}//for
@@ -839,7 +851,12 @@ namespace panda
   void PandaMapReduceJob::InitPandaCPUContext(){
 	this->pCPUContext					= CreatePandaCPUContext();
 	this->pCPUContext->input_key_vals.num_input_record	= cpuMapTasks.size();
-	this->pCPUContext->input_key_vals.input_keyval_arr	= (keyval_t *)malloc(cpuMapTasks.size()*sizeof(keyval_t));
+	ShowLog("lihuix this->pCPUContext->input_key_vals.num_input_record:%d",cpuMapTasks.size());
+	if(cpuMapTasks.size()<=0)
+		this->pCPUContext->input_key_vals.input_keyval_arr	= NULL;
+	else
+		this->pCPUContext->input_key_vals.input_keyval_arr	= (keyval_t *)malloc(cpuMapTasks.size()*sizeof(keyval_t));
+
 	this->pCPUContext->num_cpus_cores			= getCPUCoresNum();
 	this->pCPUContext->cpu_mem_size = getCPUMemSizeGb();
 	this->pCPUContext->cpu_mem_bandwidth = getCPUMemBandwidthGb();
@@ -862,7 +879,7 @@ namespace panda
 
   void PandaMapReduceJob::execute()
   {
-	
+	//start mpi messager thread.	
 	InitPandaNodeContextAndRuntime();
 
 	//if(this->getEnableCPU())
@@ -878,6 +895,8 @@ namespace panda
 	if(this->getEnableCPU()){
 		InitPandaCPUMapReduce();
 	}//if
+
+#if 1
 	if(this->getEnableGPU())
 		StartPandaGPUMapTasks();
 	if(this->getEnableCPU())
@@ -895,11 +914,12 @@ namespace panda
 	if(this->getEnableCPU()){
 		StartPandaCPUSortTasks();
 	}//if
-
 	StartPandaGlobalPartition();
+#endif
 	WaitPandaMessagerExit();
+	return;//lihuix
 	//MPI_Barrier(MPI_COMM_WORLD);
-	ShowLog("llllllllllllllllllllllllllllllllllllllllllllllllll");
+	ShowLog("llllllllllllllllllllllllllllllllllllllllllllllllll ");
 	if(this->getEnableGPU()){
 		this->pGPUContext->sorted_key_vals.d_sorted_keyvals_arr_len = 0;
 	}
@@ -913,6 +933,8 @@ namespace panda
 
 	int start_task_id = 0;
 	int end_task_id = this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len;
+
+	ShowLog("lihuix start_task_id:%d end_task_id:%d",0,end_task_id);
 
 	if(end_task_id>0){
 
