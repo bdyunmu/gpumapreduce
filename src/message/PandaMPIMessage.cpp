@@ -56,8 +56,7 @@ namespace panda
 	{
 		ShowLog("Big Test PandaMPIMessage run()  sleep 10+++++++++++++++++++++++++++++");
 		sleep(1);
-		return;
-#if 0
+#if 1
 		ShowLog("K start PandaMPIMessage thread. run() thread [%d/%d]", commRank, commSize);
 		
 		int   * counts		= new int [commSize*3];
@@ -102,7 +101,7 @@ namespace panda
 		   pendingIO.push_back(data);	
 		}
 #endif
-#if 0
+#if 1
 		MPI_Barrier(MPI_COMM_WORLD);
 		for(int i = 0;i<commSize; i++)
 		{
@@ -110,7 +109,7 @@ namespace panda
 		}
 		MPI_Barrier(MPI_COMM_WORLD);	
 #endif
-#if 0
+#if 1
 		for(int i = 0;i<commSize; i++)
 		{
 			if(counts[i*3+0]>0 && counts[i*3+1]>0 && counts[i*3+2]>0){

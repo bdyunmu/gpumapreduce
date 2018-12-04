@@ -850,12 +850,12 @@ namespace panda
 
   void PandaMapReduceJob::InitPandaCPUContext(){
 	this->pCPUContext					= CreatePandaCPUContext();
-	this->pCPUContext->input_key_vals.num_input_record	= cpuMapTasks.size();
-	ShowLog("lihuix this->pCPUContext->input_key_vals.num_input_record:%d",cpuMapTasks.size());
-	if(cpuMapTasks.size()<=0)
-		this->pCPUContext->input_key_vals.input_keyval_arr	= NULL;
-	else
-		this->pCPUContext->input_key_vals.input_keyval_arr	= (keyval_t *)malloc(cpuMapTasks.size()*sizeof(keyval_t));
+	//this->pCPUContext->input_key_vals.num_input_record	= cpuMapTasks.size();
+	//ShowLog("lihuix this->pCPUContext->input_key_vals.num_input_record:%d",cpuMapTasks.size());
+	//if(cpuMapTasks.size()<=0)
+	//	this->pCPUContext->input_key_vals.input_keyval_arr	= NULL;
+	//else
+	//	this->pCPUContext->input_key_vals.input_keyval_arr	= (keyval_t *)malloc(cpuMapTasks.size()*sizeof(keyval_t));
 
 	this->pCPUContext->num_cpus_cores			= getCPUCoresNum();
 	this->pCPUContext->cpu_mem_size = getCPUMemSizeGb();
@@ -917,7 +917,7 @@ namespace panda
 	StartPandaGlobalPartition();
 #endif
 	WaitPandaMessagerExit();
-	return;//lihuix
+
 	//MPI_Barrier(MPI_COMM_WORLD);
 	ShowLog("llllllllllllllllllllllllllllllllllllllllllllllllll ");
 	if(this->getEnableGPU()){

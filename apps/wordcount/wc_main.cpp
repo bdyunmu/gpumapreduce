@@ -26,7 +26,7 @@ int main(int argc, char ** argv)
 	job->setMessage(new panda::PandaMPIMessage(true));
 	job->setTaskLevel(panda::TaskLevelTwo);
 	job->setEnableCPU(true);
-	job->setEnableGPU(false);
+	job->setEnableGPU(true);
 
     	char wcfn[128];
 	char str[1024];

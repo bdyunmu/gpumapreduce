@@ -308,7 +308,10 @@ void *RunPandaCPUCombinerThread(void *ptr){
 	int start_idx = panda_cpu_task_info->start_task_idx;
 	keyval_arr_t *kv_arr_p = (keyval_arr_t *)&(pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[start_idx]);
 	int unmerged_shared_arr_len = *kv_arr_p->shared_arr_len;
-        char *shared_buff = kv_arr_p->shared_buff;
+
+	ShowLog("lihuix unmerged_shared_arr_len:%d",unmerged_shared_arr_len);
+       
+	char *shared_buff = kv_arr_p->shared_buff;
         int shared_buff_len = *kv_arr_p->shared_buff_len;
 
 	val_t *val_t_arr = (val_t *)malloc(sizeof(val_t)*unmerged_shared_arr_len);
