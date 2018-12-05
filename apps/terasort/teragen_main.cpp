@@ -120,6 +120,6 @@ int main(int argc, char ** argv)
 
 	job->execute();
 	delete job;
-	//MPI_Finalize();
+
 	return 0;
 }//int main

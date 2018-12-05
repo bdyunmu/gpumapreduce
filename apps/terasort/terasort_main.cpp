@@ -34,8 +34,8 @@ int main(int argc, char ** argv)
 	int rank, size;
 	rank = 0;
 	size = 1;
-	//MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-	//MPI_Comm_size(MPI_COMM_WORLD, &size);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	job->setOutput(new TSOutput());
 	job->setPartition(new TeraSortPartitioner());	
 	job->setMessage(new panda::PandaMPIMessage(true));
@@ -78,6 +78,6 @@ int main(int argc, char ** argv)
 	panda::ShowLog("terasort keyvalue pairs num:%d",count);
 	fclose(fp);
 	job->execute();
-	//delete job;
+	delete job;
 	return 0;
 }//int main

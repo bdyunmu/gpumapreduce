@@ -35,15 +35,18 @@ void panda_cpu_map(void *KEY, void*VAL, int keySize, int valSize, panda_cpu_cont
 	//byte *value = new byte[TeraInputFormat::VALUE_LEN];
 	//TeraInputFormat::copyByte((byte *)VAL,key,0,TeraInputFormat::KEY_LEN);
 	//TeraInputFormat::copyByte((byte *)VAL,value,TeraInputFormat::KEY_LEN,TeraInputFormat::RECORD_LEN);
-	printf("map key:");
+	/*printf("map key:");
 	for(int s = 0; s<10; s++)
 		printf("%2d",(int)((char *)KEY)[s]);
-	printf("\n");	
+	printf("\n");*/
 	PandaEmitCPUMapOutput(KEY,VAL,TeraInputFormat::KEY_LEN, TeraInputFormat::VALUE_LEN, pcc, map_task_idx);	
 }
 
 void panda_cpu_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_cpu_context* pcc, int reduce_task_idx){
-	PandaEmitCPUReduceOutput(KEY, VAL, keySize, TeraInputFormat::VALUE_LEN, pcc, reduce_task_idx);
+	char *key = new char[10];
+	char *val = new char[90];
+//	PandaEmitCPUReduceOutput(KEY, val, 10, 90, pcc, reduce_task_idx);
+	PandaEmitCPUReduceOutput(key, val, 10, 90, pcc, reduce_task_idx);
 }
 
 }

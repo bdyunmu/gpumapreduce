@@ -355,7 +355,6 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 		int shared_buff_len 	= *kv_arr_p->shared_buff_len;
 		//bool local_combiner 	= pnc->local_combiner;
 		bool local_combiner 	= false;
-		////ShowLog("TTTTTTTTTTTTTT:%d  shared_arr_len:%d",tid,shared_arr_len);	
 		for(int local_idx = 0; local_idx<(shared_arr_len); local_idx++){
 
 			keyval_pos_t *p2 = (keyval_pos_t *)((char *)shared_buff + shared_buff_len - sizeof(keyval_pos_t)*(shared_arr_len - local_idx ));
@@ -371,6 +370,8 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 				char *key_k = (char *)(sorted_intermediate_keyvals_arr[k].key);
 				int keySize_k = sorted_intermediate_keyvals_arr[k].keySize;
 
+				//2018/12/5 lihuix
+				//TODO need tell the difference between cpu_compare >0 and cpu_compare <0
 				if ( cpu_compare(key_i, keySize_i, key_k, keySize_k) != 0 )
 				{
 				//ShowLog("cpu_compare !=0");		

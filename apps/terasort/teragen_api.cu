@@ -79,16 +79,16 @@ void panda_cpu_map(void *KEY, void*VAL, int keySize, int valSize, panda_cpu_cont
         l8 = rand.getLow8();
 	//printf("next rand h8:%ld l8:%ld\n",h8,l8);
 	TeraInputFormat::generateRecord(rowBytes,rand,*recordNumber);
-	printf("key:::");
+	/*printf("key:");
 	for(int k = 0;k<10;k++){
-		//rowBytes[k]+=100;
 		printf("%3d",(unsigned char)rowBytes[k]);
 	}
-	printf(" \tid:::");
-	for(int k = 0;k<40;k++){
+	printf(" \tid:");
+	for(int k = 0;k<10;k++){
 		printf("%3d",(unsigned char)rowBytes[10+k]);
 	}
 	printf("\n");
+	*/
 	recordNumber->add(*one);
 	TeraInputFormat::copyByte(rowBytes,key,0,TeraInputFormat::KEY_LEN);
 	TeraInputFormat::copyByte(rowBytes,value,TeraInputFormat::KEY_LEN,TeraInputFormat::RECORD_LEN);
