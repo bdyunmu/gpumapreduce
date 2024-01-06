@@ -260,15 +260,15 @@ namespace panda
 		h_keyval_arr_arr[i].arr_len = 0;
 	}//for
 
-	keyval_arr_t **d_keyval_arr_arr_p;
-	cudaMalloc((void***)&(d_keyval_arr_arr_p),pgc->input_key_vals.num_input_record*sizeof(keyval_arr_t*));
-	pgc->intermediate_key_vals.d_intermediate_keyval_arr_arr_p = d_keyval_arr_arr_p;
+	//keyval_arr_t **d_keyval_arr_arr_p;
+	cudaMalloc((void***)&(pgc->intermediate_key_vals.d_intermediate_keyval_arr_arr_p), pgc->input_key_vals.num_input_record*sizeof(keyval_arr_t*));
+	//pgc->intermediate_key_vals.d_intermediate_keyval_arr_arr_p = d_keyval_arr_arr_p;
 
-	int *count = NULL;
-	cudaMalloc((void**)(&count),pgc->input_key_vals.num_input_record*sizeof(int));
-	pgc->intermediate_key_vals.d_intermediate_keyval_total_count = count;
+	//int *count = NULL;
+	cudaMalloc((void**)(&(pgc->intermediate_key_vals.d_intermediate_keyval_total_count)),pgc->input_key_vals.num_input_record*sizeof(int));
+	//pgc->intermediate_key_vals.d_intermediate_keyval_total_count = count;
 	cudaMemset(pgc->intermediate_key_vals.d_intermediate_keyval_total_count,0,
-					pgc->input_key_vals.num_input_record*sizeof(int));
+					(pgc->input_key_vals.num_input_record)*sizeof(int));
 	//----------------------------------------------
 	//3, determine the number of threads to run
 	//----------------------------------------------
@@ -282,6 +282,7 @@ namespace panda
 
 	dim3 blocks(THREAD_BLOCK_SIZE, THREAD_BLOCK_SIZE);
 	int numBlocks = (numGPUCores*16+(blocks.x*blocks.y)-1)/(blocks.x*blocks.y);
+	ShowLog("lihuix numBlocks:%d thread_block_size:%d\n",numBlocks,THREAD_BLOCK_SIZE);
     	dim3 grids(numBlocks, 1);
 	int total_gpu_threads = (grids.x*grids.y*blocks.x*blocks.y);
 	ShowLog("GridDim.X:%d GridDim.Y:%d BlockDim.X:%d BlockDim.Y:%d TotalGPUThreads:%d",grids.x,grids.y,blocks.x,blocks.y,total_gpu_threads);
@@ -291,7 +292,8 @@ namespace panda
 
 	int num_records_per_thread = (pgc->input_key_vals.num_input_record + (total_gpu_threads)-1)/(total_gpu_threads);
 	int totalIter = num_records_per_thread;
-	//ShowLog("num_records_per_thread:%d totalIter:%d",num_records_per_thread, totalIter);
+
+	ShowLog("lihuix num_records_per_thread:%d totalIter:%d",num_records_per_thread, totalIter);
 
 	for (int iter = 0; iter< totalIter; iter++){
 		ExecutePandaGPUMapTasksIterative(*pgc, totalIter-1-iter, totalIter, grids, blocks);
@@ -310,18 +312,18 @@ namespace panda
 
 
 	this->pCPUContext->input_key_vals.num_input_record      = cpuMapTasks.size();
-        ShowLog("lihuix this->pCPUContext->input_key_vals.num_input_record:%d",cpuMapTasks.size());
+        ShowLog("this->pCPUContext->input_key_vals.num_input_record:%d",cpuMapTasks.size());
         if(cpuMapTasks.size()<=0)
                 this->pCPUContext->input_key_vals.input_keyval_arr      = NULL;
         else
                 this->pCPUContext->input_key_vals.input_keyval_arr      = (keyval_t *)malloc(cpuMapTasks.size()*sizeof(keyval_t));
 
 	for (unsigned int i= 0;i<cpuMapTasks.size();i++){
-		void *key = this->cpuMapTasks[i]->key;
+		int key = this->cpuMapTasks[i]->key;
 		int keySize = this->cpuMapTasks[i]->keySize;
 		void *val = this->cpuMapTasks[i]->val;
 		int valSize = this->cpuMapTasks[i]->valSize;
-		this->pCPUContext->input_key_vals.input_keyval_arr[i].key = key;
+		this->pCPUContext->input_key_vals.input_keyval_arr[i].key = &key;
 		this->pCPUContext->input_key_vals.input_keyval_arr[i].keySize = keySize;
 		this->pCPUContext->input_key_vals.input_keyval_arr[i].val = val;
 		this->pCPUContext->input_key_vals.input_keyval_arr[i].valSize = valSize;
@@ -372,17 +374,18 @@ namespace panda
 
   void PandaMapReduceJob::InitPandaGPUMapReduce()
   {
-
+	ShowLog("gpuMapTasks.size():%d\n",gpuMapTasks.size());
 	this->pGPUContext->input_key_vals.num_input_record = gpuMapTasks.size();//Ratio
 	this->pGPUContext->input_key_vals.h_input_keyval_arr = 	(keyval_t *)malloc(gpuMapTasks.size()*sizeof(keyval_t));
 
 	//TODO for the test purpose only
 	for (unsigned int i= 0;i<gpuMapTasks.size();i++){
-		void *key = this->gpuMapTasks[i]->key;
+		int key = this->gpuMapTasks[i]->key;
 		int keySize = this->gpuMapTasks[i]->keySize;
 		void *val = this->gpuMapTasks[i]->val;
 		int valSize = this->gpuMapTasks[i]->valSize;
-		this->pGPUContext->input_key_vals.h_input_keyval_arr[i].key = key;
+		ShowLog("InitPandaGPUMapReduce() key:%d keySize:%d val:%s valSize:%d\n",key,keySize,val,valSize);
+		this->pGPUContext->input_key_vals.h_input_keyval_arr[i].key = &key;
 		this->pGPUContext->input_key_vals.h_input_keyval_arr[i].keySize = keySize;
 		this->pGPUContext->input_key_vals.h_input_keyval_arr[i].val = val;			//didn't use memory copy
 		this->pGPUContext->input_key_vals.h_input_keyval_arr[i].valSize = valSize;
@@ -498,37 +501,33 @@ namespace panda
 
   PandaMapReduceJob::~PandaMapReduceJob()
   {
+	ShowLog("~PandaMapReduceJob\n");	
   }//PandaMapReduceJob
 
   //Significant change is required in this place
   void PandaMapReduceJob::addInput(Chunk * chunk)
   {
 	chunks.push_back(chunk);
-#if 0
-#endif
-
   }//void
 
   void PandaMapReduceJob::addCPUMapTasks(panda::Chunk *chunk)
   {
-	  void *key	= chunk->getKey();
-		//printf("add cpu key:");
-		//for(int s = 0;s<10;s++)
-		//	printf("%3d",(int)((char *)key)[s]);
-	  void *val	= chunk->getVal();
+	  int key	= chunk->getKey();
+	  void *val	= chunk->getData();
 	  int keySize	= chunk->getKeySize();
-	  int valSize	= chunk->getValSize();
+	  int valSize	= chunk->getDataSize();
 	  MapTask *pMapTask = new MapTask(keySize,key,valSize,val);
 	  cpuMapTasks.push_back(pMapTask);
-	  ShowLog("keySize:%d valSize:%d cpuMapTasks.size:%d\n",keySize,valSize,cpuMapTasks.size());
+	  ShowLog("key:%d keySize:%d valSize:%d cpuMapTasks.size:%d\n", key, keySize,valSize,cpuMapTasks.size());
   }//void
 
   void PandaMapReduceJob::addGPUMapTasks(panda::Chunk *chunk)
   {
-	  void *key = chunk->getKey();
-	  void *val = chunk->getVal();
+	  int key = chunk->getKey();
+	  void *val = chunk->getData();
 	  int keySize = chunk->getKeySize();
-	  int valSize = chunk->getValSize();
+	  int valSize = chunk->getDataSize();
+	  //ShowLog("addGPUMapTasks key:%s keySize:%d val:%s valSize:%d\n",key,keySize,val,valSize);
 	  MapTask *pMapTask = new MapTask(keySize,key,valSize,val);
 	  gpuMapTasks.push_back(pMapTask);
   }//void
@@ -837,11 +836,11 @@ namespace panda
 
 		for(int i = 0;i<cpu_chunks_num;i++){
                 	addCPUMapTasks(chunks[i]);
-                	ShowLog("addCPUMapTasks");
+                	ShowLog("addCPUMapTasks %d",i);
         	}
 		for(int i = cpu_chunks_num;i<chunks_num;i++){
                 	addGPUMapTasks(chunks[i]);
-                	ShowLog("addGPUMapTasks");
+                	ShowLog("addGPUMapTasks %d",i);
         	}//if(this->
 	}//if
 
@@ -962,8 +961,10 @@ namespace panda
 
 	StartPandaMergeReduceTasks2Pnc();
 
+	ShowLog("Before StartPandaDumpReduceTasks\n");
+
 	StartPandaDumpReduceTasks();
     	//MPI_Barrier(MPI_COMM_WORLD);
-	
+
   }
 }

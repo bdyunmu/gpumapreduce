@@ -15,7 +15,7 @@
 
 #include "Panda.h"
 #include "PandaAPI.h"
-
+#include <stdio.h>
 #include <cstdio>
 #include <cstdlib>
 
@@ -266,20 +266,24 @@ __global__ void RunPandaGPUReduceTasks(panda_gpu_context pgc)
 
 __global__ void RunPandaGPUMapTasksIterative(panda_gpu_context pgc, int curIter, int totalIter)
 {
+	
+	printf("lihuix 4\n");
+	
+	printf("lihuix 5 gridDim.x:%u gridDim.y:%u gridDim.z:%u blockDim.x:%u blockDim.y:%u blockDim.z:%u blockIdx.x:%u blockIdx.y:%u blockIdx.z:%u\n",
+	  gridDim.x,gridDim.y,gridDim.z,blockDim.x,blockDim.y,blockDim.z,blockIdx.x,blockIdx.y,blockIdx.z);
 
-	//ShowLog("gridDim.x:%d gridDim.y:%d gridDim.z:%d blockDim.x:%d blockDim.y:%d blockDim.z:%d blockIdx.x:%d blockIdx.y:%d blockIdx.z:%d\n",
-	//  gridDim.x,gridDim.y,gridDim.z,blockDim.x,blockDim.y,blockDim.z,blockIdx.x,blockIdx.y,blockIdx.z);
 	int num_records_per_thread = (pgc.input_key_vals.num_input_record + (gridDim.x*blockDim.x*blockDim.y)-1)/(gridDim.x*blockDim.x*blockDim.y);
 	int block_start_idx = num_records_per_thread * blockIdx.x * blockDim.x * blockDim.y;
 	int thread_start_idx = block_start_idx 
 		+ ((threadIdx.y*blockDim.x + threadIdx.x)/STRIDE)*num_records_per_thread*STRIDE
 		+ ((threadIdx.y*blockDim.x + threadIdx.x)%STRIDE);
-	//ShowLog("num_records_per_thread:%d block_start_idx:%d gridDim.x:%d gridDim.y:%d gridDim.z:%d blockDim.x:%d blockDim.y:%d blockDim.z:%d",num_records_per_thread, block_start_idx, gridDim.x,gridDim.y,gridDim.z,blockDim.x,blockDim.y,blockDim.z);
+	printf("lihuix 6 num_records_per_thread:%d block_start_idx:%u gridDim.x:%u gridDim.y:%u gridDim.z:%u blockDim.x:%u blockDim.y:%u blockDim.z:%u",num_records_per_thread, block_start_idx, gridDim.x,gridDim.y,gridDim.z,blockDim.x,blockDim.y,blockDim.z);
 	int thread_end_idx = thread_start_idx + num_records_per_thread*STRIDE;
 	if (thread_end_idx > pgc.input_key_vals.num_input_record)
 		thread_end_idx = pgc.input_key_vals.num_input_record;
 	if (thread_start_idx + curIter*STRIDE >= thread_end_idx)
 		return;
+	printf("hello world\n");
 	for(int map_task_idx = thread_start_idx + curIter*STRIDE; map_task_idx < thread_end_idx; map_task_idx += totalIter*STRIDE){
 		char *key = (char *)(pgc.input_key_vals.d_input_keys_shared_buff) + pgc.input_key_vals.d_input_keyval_pos_arr[map_task_idx].keyPos;
 		char *val = (char *)(pgc.input_key_vals.d_input_vals_shared_buff) + pgc.input_key_vals.d_input_keyval_pos_arr[map_task_idx].valPos;
@@ -388,8 +392,9 @@ void *RunPandaCPUCombinerThread(void *ptr){
 }
 
 void ExecutePandaGPUMapTasksIterative(panda_gpu_context pgc, int curIter, int totalIter, dim3 grids, dim3 blocks){
+	ShowLog("lihuix2 curIter:%d totalIter:%d\n GPUMapTasksIterative",curIter,totalIter);
 	RunPandaGPUMapTasksIterative<<<grids,blocks>>>(pgc, totalIter -1 - curIter, totalIter);
-	cudaDeviceSynchronize();
+	ShowLog("lihuix4\n");	
 }//void
 
 void ExecutePandaGPUCombiner(panda_gpu_context * pgc){
@@ -517,16 +522,22 @@ void ExecutePandaCPUReduceTasks(panda_cpu_context *pcc){
 void ExecutePandaDumpReduceTasks(panda_node_context *pnc, Output *output){
 
 	char fn[128];
-	sprintf(fn,"OUTPUT%d",gCommRank);
+	sprintf(fn,"OUTPUT_%d",gCommRank);
 	FILE *fp = fopen(fn,"wb");
+	ShowLog("fn:%s\n",fn);
 	char *buf = NULL;
 	int bs = 0;
 	keyval_t *p = NULL;
 	int len = pnc->output_keyval_arr.output_keyval_arr_len;
+	ShowLog("len:%d\n",len);
+
 	for(int reduce_idx=0;reduce_idx<len;reduce_idx++){
 
 		p = (keyval_t *)(&pnc->output_keyval_arr.output_keyval_arr[reduce_idx]);
 		bs = p->keySize + p->valSize;
+
+		ShowLog("bs:%d keySize:%d   valSize:%d\n", bs, p->keySize, p->valSize);
+
 		buf = (char *)malloc(sizeof(char)*(bs+10));
 		memset(buf,0,bs+10);
 		output->write(buf,p->key,p->val);

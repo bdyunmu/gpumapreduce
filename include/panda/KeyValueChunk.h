@@ -31,7 +31,7 @@ namespace panda
 		virtual void finishLoading();
 		inline void     setUserData(void * const pUserData) { userData = pUserData; }
 	
-		inline void	*getKey()		{return (void *)key;}
+		inline int	getKey()		{return 0;}
 		inline int      getKeySize()	{return keySize;	}
 		inline void * getVal()	{return (void *)data;}
 		inline int getValSize()	{return dataSize;}

@@ -3,19 +3,19 @@
 #    makefile include 					huili@ruijie.com.cn */
 # * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-OPTFLAGS    = -O2
-INCFLAGS    = -I/opt/openmpi/include
+OPTFLAGS    = 
+INCFLAGS    = -I/opt/openmpi/include -I/usr/local/cuda/include
 CFLAGS      = -std=c++11 $(OPTFLAGS) $(INCFLAGS) -DBLOCK_SHARED_MEM_OPTIMIZATION=0
 NVCCFLAGS   = $(CFLAGS)
 LDFLAGS	    = -L/opt/openmpi/lib/
-LIBS        = -lmpi -lpthread
+LIBS        = -lmpi
 
-CC          = mpicc 
-MPICC       = mpicxx -std=c++11
-NVCC        = nvcc
+CC          = gcc -g
+MPICC       = mpicc -g
+NVCC        = nvcc -g -G
 
-NVCCFLAGS  = -I/opt/openmpi/include -lcudart -arch=sm_20 -I../../include --relocatable-device-code=true
-INCFLAGS   += -I/usr/include/  -I/usr/local/cuda/include
+NVCCFLAGS  += -lcudart -arch=sm_52 -I../../include --relocatable-device-code=true
+INCFLAGS   += -I/usr/include/
 INCFLAGS   += -I../../include -I../../include/panda
 LDFLAGS    += -L/usr/local/cuda/lib64/ 
 

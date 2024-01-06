@@ -14,11 +14,11 @@ namespace panda
   {
 	  keySize = 0;
 	  valSize = 0;
-	  key = NULL;
+	  key = 0;
 	  val = NULL;
   }
 
-  MapTask::MapTask(int keySize, void *key, int valSize, void *val)
+  MapTask::MapTask(int keySize, int key, int valSize, void *val)
   {
 	  this->key = key;
 	  this->keySize = keySize;

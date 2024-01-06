@@ -5,7 +5,7 @@
 
 all: panda
 
-panda: bindir objdir cuobjdir wordcount terasort
+panda: bindir objdir cuobjdir wordcount
 
 BIN_DIR:=bin
 OBJ_DIR:=obj

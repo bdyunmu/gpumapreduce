@@ -18,10 +18,10 @@ namespace panda
       virtual void finalizeAsync() = 0;
 
       //virtual void getSplit() = 0;
-      virtual void* getKey() = 0;
+      virtual int getKey() = 0;
       virtual int getKeySize() = 0;
-      virtual void* getVal() = 0;
-      virtual int getValSize() = 0;
+      virtual void* getData() = 0;
+      virtual int getDataSize() = 0;
 
   };
 
@@ -30,11 +30,11 @@ namespace panda
   public:
 	  int keySize;
 	  int valSize;
-	  void *key;
+	  int key;
 	  void *val;
 
 	  MapTask();
-	  MapTask(int,void*,int, void*);
+	  MapTask(int,int,int, void*);
 	  virtual ~MapTask();
 
   };

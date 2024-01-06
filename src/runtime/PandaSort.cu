@@ -15,6 +15,7 @@
 #include <cstring>
 #include <math.h>
 #include <cuda_runtime.h>
+#include <assert.h>
 
 #ifndef _PANDA_SORT_CU_
 #define _PANDA_SORT_CU_
@@ -145,10 +146,13 @@ void ExecutePandaSortBucket(panda_node_context *pnc)
 void ExecutePandaGPUSort(panda_gpu_context* pgc){
 
 	cudaThreadSynchronize();
+	ShowLog("pgc->input_key_vals.num_input_record:%d\n",pgc->input_key_vals.num_input_record);
 
-	int *count_arr = (int *)malloc(sizeof(int) * pgc->input_key_vals.num_input_record);
+	assert(pgc->input_key_vals.num_input_record);
+
+	int *count_arr = (int *)malloc(sizeof(int) * (pgc->input_key_vals.num_input_record));
 	cudaMemcpy(count_arr, pgc->intermediate_key_vals.d_intermediate_keyval_total_count, 
-		sizeof(int)*pgc->input_key_vals.num_input_record, cudaMemcpyDeviceToHost);
+		sizeof(int)*(pgc->input_key_vals.num_input_record), cudaMemcpyDeviceToHost);
 
 	int total_count = 0;
 	for(int i=0;i<pgc->input_key_vals.num_input_record;i++){
@@ -441,7 +445,7 @@ void ExecutePandaMergeReduceTasks2Pnc(panda_node_context *pnc, panda_gpu_context
 	return;
 	}
 	pnc->output_keyval_arr.output_keyval_arr_len  = pgc->output_key_vals.h_reduced_keyval_arr_len + pcc->reduced_key_vals.reduced_keyval_arr_len;
-	pnc->output_keyval_arr.output_keyval_arr = (keyval_t *)malloc(sizeof(keyval_t)*pnc->output_keyval_arr.output_keyval_arr_len); 
+	pnc->output_keyval_arr.output_keyval_arr = (keyval_t *)malloc(sizeof(keyval_t)*(pnc->output_keyval_arr.output_keyval_arr_len)); 
 	
 	void *val;
 	void *key;
@@ -451,15 +455,21 @@ void ExecutePandaMergeReduceTasks2Pnc(panda_node_context *pnc, panda_gpu_context
            	val = pgc->output_key_vals.h_reduced_keyval_arr[i].val;
       		pnc->output_keyval_arr.output_keyval_arr[i].key = key;
 		pnc->output_keyval_arr.output_keyval_arr[i].val = val;
+		ShowLog("gpu key:%s val:%d\n",key,val);
 	}//for
 	int gpulen = pgc->output_key_vals.h_reduced_keyval_arr_len;
 	for (int i=0; i<pcc->reduced_key_vals.reduced_keyval_arr_len; i++){
 		key = pcc->reduced_key_vals.reduced_keyval_arr[i].key;
 		val = pcc->reduced_key_vals.reduced_keyval_arr[i].val;
+		if((gpulen+i)>=pnc->output_keyval_arr.output_keyval_arr_len){
+		ErrorLog("memery access violation\n");
+		return;
+		}
 		pnc->output_keyval_arr.output_keyval_arr[gpulen+i].key = key;
 		pnc->output_keyval_arr.output_keyval_arr[gpulen+i].val = val;
+		ShowLog("cpu key:%s val:%d\n",key,val);
 	}//for
-
+	ShowLog("end of ExecutePandaMergeReduceTasks2Pnc\n");
 }	
 
 

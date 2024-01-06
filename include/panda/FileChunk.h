@@ -43,10 +43,8 @@ namespace panda
       virtual int getMemoryRequirementsOnGPU() const;
       virtual void stageAsync(void * const gpuStorage, cudacpp::Stream * const memcpyStream);
       virtual void finalizeAsync();
-      inline void * getKey(){
-		int *pInt = (int *)malloc(sizeof(int));
-		*pInt = key++;
-		return (void *)pInt;
+      inline int getKey(){
+		return 0;
 	}
       inline int getKeySize(){ return sizeof(int);}
       inline void * getVal(){ return data;}

@@ -6,15 +6,12 @@ namespace panda
 {
 
 	
-  int DataChunk::key = 0;
-
-  DataChunk::DataChunk(void * const pData,
-                        	const int pElemSize,
-                                             const int pNumElems)
+  DataChunk::DataChunk(int mykey, void * const pData,
+                        	const int pDataSize)
   {
+    key = mykey;
     data = pData;
-    elemSize = pElemSize;
-    numElems = pNumElems;
+    dataSize = pDataSize;
   }
 
   DataChunk::~DataChunk()
@@ -29,7 +26,7 @@ namespace panda
 
   int DataChunk::getMemoryRequirementsOnGPU() const
   {
-    return elemSize * numElems;
+    return 0;
   }
 
   void DataChunk::stageAsync(void * const gpuStorage, cudacpp::Stream * const memcpyStream)

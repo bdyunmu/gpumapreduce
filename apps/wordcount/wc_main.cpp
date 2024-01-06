@@ -35,23 +35,25 @@ int main(int argc, char ** argv)
 	char *chunk_data = (char *)malloc(sizeof(char)*2*(chunk_size));
 	FILE *wcfp;
 	wcfp = fopen(wcfn, "r");
-	const int NUM_ELEMENTS = 1;
 	int total_len = 0;
+	int chunk_count = 0;
 	while(fgets(str,sizeof(str),wcfp) != NULL)
 	{
-		for (int i = 0; i < strlen(str); i++)
-		str[i] = toupper(str[i]);
-		strcpy((chunk_data + total_len),str);
+		for (int i = 0; i < strlen(str); i++){
+			str[i] = toupper(str[i]);
+		}
+		strncpy((chunk_data + total_len),str,strlen(str));
 		total_len += (int)strlen(str);
 		if(total_len>=chunk_size){
 			panda::ShowLog("(wordcount job->addInput)");
-			job->addInput(new panda::DataChunk((char *)chunk_data, total_len, NUM_ELEMENTS));
+			job->addInput(new panda::DataChunk(chunk_count,(char *)chunk_data, total_len));
 			total_len=0;
+			chunk_count++;
 		}//if
 	}//while
 	if(total_len >0){
 		panda::ShowLog("(wordcount job->addInput)");
-		job->addInput(new panda::DataChunk((char *)chunk_data, total_len, NUM_ELEMENTS));
+		job->addInput(new panda::DataChunk(chunk_count,(char *)chunk_data, total_len));
 	}
 	panda::ShowLog("(wordcount job->execute)");
 	job->execute();

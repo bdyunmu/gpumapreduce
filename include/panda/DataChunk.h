@@ -10,13 +10,12 @@ namespace panda
   {
     protected:
       void * data;
-      int elemSize, numElems;
-      void * userData;
-      static int key;
+      int dataSize;
+      int key;
     public:
-      DataChunk(void * const pData,
-                              const int pElemSize,
-                              const int pNumElems);
+      DataChunk(int mykey, void * const pData,
+                              const int pDataSize);
+
       virtual ~DataChunk();
 
       virtual bool updateQueuePosition(const int newPosition);
@@ -25,20 +24,10 @@ namespace panda
       virtual void finalizeAsync();
       virtual void finishLoading();
 
-      inline void* getKey() 
-      {
-		  int *pInt = (int *)(malloc(sizeof(int))); 
-		  *pInt = key++;
-		  return pInt;
-      };
+      inline int 	getKey() 	{return key;};
       inline int	getKeySize()	{return sizeof(int);};
-      inline void*	getVal()		{return data;};
-      inline int	getValSize()	{return elemSize*numElems;};
-				   
-      inline void     setUserData(void * const pUserData) { userData = pUserData; }
-      inline int      getElementCount() { return numElems;  }
-      inline void *   getData()         { return data;      }
-      inline void *   getUserData()     { return userData;  }
+      inline void*	getData()	{return data;};
+      inline int	getDataSize()	{return dataSize;};
 
   };
 
