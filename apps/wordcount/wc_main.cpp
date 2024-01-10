@@ -14,8 +14,8 @@ int main(int argc, char ** argv)
  	if (argc != 2)
         {
 	   panda::ShowLog("mpirun -host node1,node2 -np 2 ./%s input.txt",argv[0]);
-           exit(-1);//
-        }  //if
+           exit(-1);
+        }  //
 	if(strlen(argv[1])<2)
 	{
 	  panda::ShowLog("file path too short!");
@@ -45,7 +45,7 @@ int main(int argc, char ** argv)
 		strncpy((chunk_data + total_len),str,strlen(str));
 		total_len += (int)strlen(str);
 		if(total_len>=chunk_size){
-			panda::ShowLog("(wordcount job->addInput)");
+			panda::ShowLog("(wordcount job->addInput) chunk_count:%d",chunk_count);
 			job->addInput(new panda::DataChunk(chunk_count,(char *)chunk_data, total_len));
 			total_len=0;
 			chunk_count++;

@@ -36,109 +36,109 @@ steps to run terasort:<br>
 	5)mpirun -host node1,node2 -np 2 ./terasort ./tmp/terasort_in ./tmp/terasort_out<br>
 
 ------------------------------------------------------------------
-The code structure:
+The code structure:<br>
 
-gpumapreduce/
-├── apps
-│   ├── terasort
-│   │   ├── Makefile
-│   │   ├── Makefile.old
-│   │   ├── Makefile.old.2
-│   │   ├── parameters.sh
-│   │   ├── Random16.cpp
-│   │   ├── Random16.h
-│   │   ├── Random16.java
-│   │   ├── run.sh
-│   │   ├── teragen
-│   │   ├── teragen_api.cu
-│   │   ├── teragen_main.cpp
-│   │   ├── TeraGen.scala
-│   │   ├── TeraInputFormat.cpp
-│   │   ├── TeraInputFormat.h
-│   │   ├── TeraInputFormat.scala
-│   │   ├── TeraOutputFormat.scala
-│   │   ├── terasort_api.cu
-│   │   ├── terasort.h
-│   │   ├── terasort_main.cpp
-│   │   ├── TeraSortPartitioner.cpp
-│   │   ├── TeraSortPartitioner.h
-│   │   ├── TeraSortPartitioner.scala
-│   │   ├── TeraSort.scala
-│   │   ├── teravalidate.cpp
-│   │   ├── TeraValidate.scala
-│   │   ├── tsoutputformat.cpp
-│   │   ├── tsoutputformat.h
-│   │   ├── Unsigned16.cpp
-│   │   ├── Unsigned16.h
-│   │   └── Unsigned16.java
-│   └── wordcount
-│       ├── Makefile
-│       ├── wc_api.cu
-│       ├── wc_main.cpp
-│       ├── wcoutputformat.cpp
-│       └── wcoutputformat.h
-├── bin
-│   ├── input2.txt
-│   ├── OUTPUT0
-│   ├── terasort_in
-│   │   ├── INPUT0
-│   │   └── INPUT1
-│   └── wordcount
-├── docs
-│   └── Co-processing SPMD computation on CPUs and GPUs cluster.pdf
-├── include
-│   ├── cudacpp
-│   │   ├── Event.h
-│   │   ├── myString.h
-│   │   ├── Runtime.h
-│   │   └── Stream.h
-│   ├── oscpp
-│   │   ├── AsyncFileReader.h
-│   │   ├── AsyncIORequest.h
-│   │   ├── Condition.h
-│   │   ├── GenericAsyncIORequest.h
-│   │   ├── Mutex.h
-│   │   ├── Runnable.h
-│   │   ├── Thread.h
-│   │   └── Timer.h
-│   ├── panda
-│   │   ├── Chunk.h
-│   │   ├── Combiner.h
-│   │   ├── DataChunk.h
-│   │   ├── EmitConfiguration.h
-│   │   ├── FileChunk.h
-│   │   ├── FileOutput.h
-│   │   ├── KeyValueChunk.h
-│   │   ├── Mapper.h
-│   │   ├── MapReduceJob.h
-│   │   ├── Message.h
-│   │   ├── OutputAsInput.h
-│   │   ├── Output.h
-│   │   ├── PandaCPUConfig.h
-│   │   ├── PandaGPUConfig.h
-│   │   ├── PandaMapReduceJob.h
-│   │   ├── PandaMessage.h
-│   │   ├── PandaMessageIORequest.h
-│   │   ├── PandaMessagePackage.h
-│   │   ├── PandaMPIMessage.h
-│   │   ├── Partitioner.h
-│   │   └── Reducer.h
-│   ├── PandaAPI.h
-│   └── Panda.h
-├── LICENSE
-├── Makefile
-├── makefile.in
-├── README.md
-├── splitmpisendasanotherthread
-└── src
-    ├── cudacpp
-    │   └── Stream.cpp
-    ├── inputformat
-    │   ├── Chunk.cpp
-    │   ├── DataChunk.cpp
-    │   ├── FileChunk.cpp
-    │   └── KeyValueChunk.cpp
-    ├── message
+gpumapreduce/<br>
+├── apps<br>
+│   ├── terasort<br>
+│   │   ├── Makefile<br>
+│   │   ├── Makefile.old<br>
+│   │   ├── Makefile.old.2<br>
+│   │   ├── parameters.sh<br>
+│   │   ├── Random16.cpp<br>
+│   │   ├── Random16.h<br>
+│   │   ├── Random16.java<br>
+│   │   ├── run.sh<br>
+│   │   ├── teragen<br>
+│   │   ├── teragen_api.cu<br>
+│   │   ├── teragen_main.cpp<br>
+│   │   ├── TeraGen.scala<br>
+│   │   ├── TeraInputFormat.cpp<br>
+│   │   ├── TeraInputFormat.h<br>
+│   │   ├── TeraInputFormat.scala<br>
+│   │   ├── TeraOutputFormat.scala<br>
+│   │   ├── terasort_api.cu<br>
+│   │   ├── terasort.h<br>
+│   │   ├── terasort_main.cpp<br>
+│   │   ├── TeraSortPartitioner.cpp<br>
+│   │   ├── TeraSortPartitioner.h<br>
+│   │   ├── TeraSortPartitioner.scala<br>
+│   │   ├── TeraSort.scala<br>
+│   │   ├── teravalidate.cpp<br>
+│   │   ├── TeraValidate.scala<br>
+│   │   ├── tsoutputformat.cpp<br>
+│   │   ├── tsoutputformat.h<br>
+│   │   ├── Unsigned16.cpp<br>
+│   │   ├── Unsigned16.h<br>
+│   │   └── Unsigned16.java<br>
+│   └── wordcount<br>
+│       ├── Makefile<br>
+│       ├── wc_api.cu<br>
+│       ├── wc_main.cpp<br>
+│       ├── wcoutputformat.cpp<br>
+│       └── wcoutputformat.h<br>
+├── bin<br>
+│   ├── input2.txt<br>
+│   ├── OUTPUT0<br>
+│   ├── terasort_in<br>
+│   │   ├── INPUT0<br>
+│   │   └── INPUT1<br>
+│   └── wordcount<br>
+├── docs<br>
+│   └── Co-processing SPMD computation on CPUs and GPUs cluster.pdf<br>
+├── include<br>
+│   ├── cudacpp<br>
+│   │   ├── Event.h<br>
+│   │   ├── myString.h<br>
+│   │   ├── Runtime.h<br>
+│   │   └── Stream.h<br>
+│   ├── oscpp<br>
+│   │   ├── AsyncFileReader.h<br>
+│   │   ├── AsyncIORequest.h<br>
+│   │   ├── Condition.h<br>
+│   │   ├── GenericAsyncIORequest.h<br>
+│   │   ├── Mutex.h<br>
+│   │   ├── Runnable.h<br>
+│   │   ├── Thread.h<br>
+│   │   └── Timer.h<br>
+│   ├── panda<br>
+│   │   ├── Chunk.h<br>
+│   │   ├── Combiner.h<br>
+│   │   ├── DataChunk.h<br>
+│   │   ├── EmitConfiguration.h<br>
+│   │   ├── FileChunk.h<br>
+│   │   ├── FileOutput.h<br>
+│   │   ├── KeyValueChunk.h<br>
+│   │   ├── Mapper.h<br>
+│   │   ├── MapReduceJob.h<br>
+│   │   ├── Message.h<br>
+│   │   ├── OutputAsInput.h<br>
+│   │   ├── Output.h<br>
+│   │   ├── PandaCPUConfig.h<br>
+│   │   ├── PandaGPUConfig.h<br>
+│   │   ├── PandaMapReduceJob.h<br>
+│   │   ├── PandaMessage.h<br>
+│   │   ├── PandaMessageIORequest.h<br>
+│   │   ├── PandaMessagePackage.h<br>
+│   │   ├── PandaMPIMessage.h<br>
+│   │   ├── Partitioner.h<br>
+│   │   └── Reducer.h<br>
+│   ├── PandaAPI.h<br>
+│   └── Panda.h<br>
+├── LICENSE<br>
+├── Makefile<br>
+├── makefile.in<br>
+├── README.md<br>
+├── splitmpisendasanotherthread<br>
+└── src<br>
+    ├── cudacpp<br>
+    │   └── Stream.cpp<br>
+    ├── inputformat<br>
+    │   ├── Chunk.cpp<br>
+    │   ├── DataChunk.cpp<br>
+    │   ├── FileChunk.cpp<br>
+    │   └── KeyValueChunk.cpp<br>
+    ├── message<br>
     │   ├── Messsage.cpp
     │   ├── PandaMessage.cpp
     │   ├── PandaMessageIORequest.cpp

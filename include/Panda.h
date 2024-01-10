@@ -69,9 +69,9 @@ extern int gCommRank;
 
 #ifdef _DEBUG
 template<typename... Args>
-	void ShowLog(const Args &...rest) {do{printf("[%d]",gCommRank);printf("[log]\t");printf(rest...);printf("\n");fflush(stdout);}while(0);}
+	void ShowLog(const Args &...rest) {do{printf("host[%d]",gCommRank);printf("[log] file:[%s] line:[%d]\t",__FILE__,__LINE__);printf(rest...);printf("\n");fflush(stdout);}while(0);}
 #else
-	#define ShowLog(...) //do{printf(__VA_ARGS__);printf("\n");}while(0)
+	#define ShowLog(...) //{do{printf("file:%s line:%d \t",__FILE__,__LINE__);printf(__VA_ARGS__);printf("\n");}while(0);}
 #endif
 
 #ifdef _DISKLOG

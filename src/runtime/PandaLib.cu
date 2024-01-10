@@ -25,7 +25,7 @@ extern int gCommRank;
 
 __global__ void RunPandaGPUMapTasksSplit(panda_gpu_context pgc)
 {
-	//ShowLog2("gridDim.x:%d gridDim.y:%d gridDim.z:%d blockDim.x:%d blockDim.y:%d blockDim.z:%d blockIdx.x:%d blockIdx.y:%d blockIdx.z:%d\n",
+	//ShowLog2("lihuix9 gridDim.x:%d gridDim.y:%d gridDim.z:%d blockDim.x:%d blockDim.y:%d blockDim.z:%d blockIdx.x:%d blockIdx.y:%d blockIdx.z:%d\n",
 	// 		gridDim.x,gridDim.y,gridDim.z,blockDim.x,blockDim.y,blockDim.z,blockIdx.x,blockIdx.y,blockIdx.z);
 	int num_records_per_thread = (pgc.input_key_vals.num_input_record + (gridDim.x*blockDim.x*blockDim.y)-1)/(gridDim.x*blockDim.x*blockDim.y);
 	int block_start_idx = num_records_per_thread * blockIdx.x * blockDim.x * blockDim.y;
@@ -40,8 +40,10 @@ __global__ void RunPandaGPUMapTasksSplit(panda_gpu_context pgc)
 	if (thread_start_idx >= thread_end_idx)
 		return;
 
+	printf("lihuix9 num_records_per_thread:%d\n",num_records_per_thread);
+
 	int buddy_arr_len = num_records_per_thread;
-	int * int_arr = (int*)malloc((4+buddy_arr_len)*sizeof(int));
+	int *int_arr = (int*)malloc((4+buddy_arr_len)*sizeof(int));
 	if(int_arr==NULL){ GpuErrorLog("there is not enough GPU memory\n"); return;}
 
 	int *shared_arr_len = int_arr;
@@ -267,28 +269,37 @@ __global__ void RunPandaGPUReduceTasks(panda_gpu_context pgc)
 __global__ void RunPandaGPUMapTasksIterative(panda_gpu_context pgc, int curIter, int totalIter)
 {
 	
-	printf("lihuix 4\n");
-	
-	printf("lihuix 5 gridDim.x:%u gridDim.y:%u gridDim.z:%u blockDim.x:%u blockDim.y:%u blockDim.z:%u blockIdx.x:%u blockIdx.y:%u blockIdx.z:%u\n",
-	  gridDim.x,gridDim.y,gridDim.z,blockDim.x,blockDim.y,blockDim.z,blockIdx.x,blockIdx.y,blockIdx.z);
-
+	if(blockIdx.x == 0 && threadIdx.x == 0 && threadIdx.y == 0 && threadIdx.z == 0)
+	{
+	printf("lihuix 5 gridDim.x:%u gridDim.y:%u gridDim.z:%u blockIdx.x:%u blockIdx.y:%u blockIdx.z:%u threadIdx.x:%u threadIdx.y:%u threadIdx.z:%u\n",
+	  	gridDim.x,gridDim.y,gridDim.z,blockIdx.x,blockIdx.y,blockIdx.z,threadIdx.x,threadIdx.y,threadIdx.z);
+	}
 	int num_records_per_thread = (pgc.input_key_vals.num_input_record + (gridDim.x*blockDim.x*blockDim.y)-1)/(gridDim.x*blockDim.x*blockDim.y);
 	int block_start_idx = num_records_per_thread * blockIdx.x * blockDim.x * blockDim.y;
 	int thread_start_idx = block_start_idx 
 		+ ((threadIdx.y*blockDim.x + threadIdx.x)/STRIDE)*num_records_per_thread*STRIDE
 		+ ((threadIdx.y*blockDim.x + threadIdx.x)%STRIDE);
-	printf("lihuix 6 num_records_per_thread:%d block_start_idx:%u gridDim.x:%u gridDim.y:%u gridDim.z:%u blockDim.x:%u blockDim.y:%u blockDim.z:%u",num_records_per_thread, block_start_idx, gridDim.x,gridDim.y,gridDim.z,blockDim.x,blockDim.y,blockDim.z);
 	int thread_end_idx = thread_start_idx + num_records_per_thread*STRIDE;
 	if (thread_end_idx > pgc.input_key_vals.num_input_record)
 		thread_end_idx = pgc.input_key_vals.num_input_record;
+	if(blockIdx.x == 0 && threadIdx.x == 0 && threadIdx.y == 0 && threadIdx.z == 0)
+	{
+	printf("lihuix 6 num_records_per_thread:%d block_start_idx:%u thread_start_idx:%d thread_end_idx:%d STRIDE:%d\n",num_records_per_thread, block_start_idx, thread_start_idx, thread_end_idx, STRIDE);
+	}//if
+
 	if (thread_start_idx + curIter*STRIDE >= thread_end_idx)
 		return;
-	printf("hello world\n");
+
 	for(int map_task_idx = thread_start_idx + curIter*STRIDE; map_task_idx < thread_end_idx; map_task_idx += totalIter*STRIDE){
+
 		char *key = (char *)(pgc.input_key_vals.d_input_keys_shared_buff) + pgc.input_key_vals.d_input_keyval_pos_arr[map_task_idx].keyPos;
 		char *val = (char *)(pgc.input_key_vals.d_input_vals_shared_buff) + pgc.input_key_vals.d_input_keyval_pos_arr[map_task_idx].valPos;
+		//if(blockIdx.x == 0 && threadIdx.x == 0 && threadIdx.y == 0 && threadIdx.z == 0)
+		//printf("lihuix11 map_task_idx:%d key:%d  keyPos:%d \n",map_task_idx, *((int *)key),pgc.input_key_vals.d_input_keyval_pos_arr[map_task_idx].keyPos);
 		int valSize = pgc.input_key_vals.d_input_keyval_pos_arr[map_task_idx].valSize;
 		int keySize = pgc.input_key_vals.d_input_keyval_pos_arr[map_task_idx].keySize;
+
+		printf("lihuix11 map_task_idx:%d key:%d  keyPos:%d valSize:%d\n",map_task_idx, *((int *)key),pgc.input_key_vals.d_input_keyval_pos_arr[map_task_idx].keyPos,valSize);
 		/////////////////////////////////////////////////////////////////////
 		panda_gpu_core_map(key, val, keySize, valSize, &pgc, map_task_idx);//
 		/////////////////////////////////////////////////////////////////////
@@ -299,7 +310,7 @@ __global__ void RunPandaGPUMapTasksIterative(panda_gpu_context pgc, int curIter,
 	//int shared_arr_len = *kv_arr_p->shared_arr_len;
 	//int shared_buff_len = *kv_arr_p->shared_buff_len;
 	pgc.intermediate_key_vals.d_intermediate_keyval_total_count[thread_start_idx] = *kv_arr_p->shared_arr_len;
-	//printf("CUDA Debug thread_start_idx:%d  total_count:%d\n",thread_start_idx,*kv_arr_p->shared_arr_len);
+	printf("CUDA Debug thread_start_idx:%d  total_count:%d\n",thread_start_idx,*kv_arr_p->shared_arr_len);
 	__syncthreads();
 }//GPUMapPartitioner
 
@@ -398,9 +409,10 @@ void ExecutePandaGPUMapTasksIterative(panda_gpu_context pgc, int curIter, int to
 }//void
 
 void ExecutePandaGPUCombiner(panda_gpu_context * pgc){
-
-	cudaMemset(pgc->intermediate_key_vals.d_intermediate_keyval_total_count,0,pgc->input_key_vals.num_input_record*sizeof(int));
-	ShowLog("pgc->input_key_vals.num_input_record:%d",pgc->input_key_vals.num_input_record);
+	
+	ShowLog("hello world.\n");
+	//cudaMemset(pgc->intermediate_key_vals.d_intermediate_keyval_total_count,0,pgc->input_key_vals.num_input_record*sizeof(int));
+	ShowLog("lihuix 13 pgc->input_key_vals.num_input_record:%d",pgc->input_key_vals.num_input_record);
 	int numGPUCores = pgc->num_gpus_cores;
 	dim3 blocks(THREAD_BLOCK_SIZE, THREAD_BLOCK_SIZE);
 	int numBlocks = (numGPUCores*16+(blocks.x*blocks.y)-1)/(blocks.x*blocks.y);
@@ -658,9 +670,10 @@ __device__ void PandaEmitGPUMapOutput(void *key, void *val, int keySize, int val
 	int shared_buff_len		= *kv_arr_p->shared_buff_len;
 	int shared_arr_len		= *kv_arr_p->shared_arr_len;
 	int shared_buff_pos		= *kv_arr_p->shared_buff_pos;
-
 	int required_mem_len	= (shared_buff_pos) + keySize + valSize + sizeof(keyval_pos_t)*(shared_arr_len+1);
 	//if (!((*kv_arr_p->shared_buff_pos) + keySize + valSize <    - sizeof(keyval_pos_t)*((*kv_arr_p->shared_arr_len)+1))){
+	
+	printf("emitGPUMapOUtput shared_buff_pos:%d keySize:%d valSize:%d required_mem_len:%d shared_buff_len:%d\n",shared_buff_pos,keySize,valSize,required_mem_len,shared_buff_len);
 
 	if (required_mem_len > shared_buff_len){
 
@@ -701,15 +714,18 @@ __device__ void PandaEmitGPUMapOutput(void *key, void *val, int keySize, int val
 	*kv_arr_p->shared_buff_pos += ((keySize+3)/4)*4;		//alignment 4 bytes for reading and writing
 	memcpy((char *)(buff) + kv_p->keyPos,key,keySize);
 	kv_p->keySize = keySize;
-	
+
+	//printf("emitGPUMapOutput key:%s\n",buff);
+
 	kv_p->valPos = (*kv_arr_p->shared_buff_pos);
 	*kv_arr_p->shared_buff_pos += ((valSize+3)/4)*4;
 	//char *val_p = (char *)(buff) + kv_p->valPos;
 	memcpy((char *)(buff) + kv_p->valPos, val, valSize);
 	kv_p->valSize = valSize;
 	(kv_arr_p->arr) = kv_p;
-
+	//printf("emitGPUMapOutput key:%s val:%d kv_arr_p->arr_len:%d\n",(char *)(buff+kv_p->keyPos),*((int *)(buff+kv_p->valPos)),kv_arr_p->arr_len);
 	kv_arr_p->arr_len++;
+	printf("emitGPUMapOutput key:%s val:%d kv_arr_p->arr_len:%d map_task_idx:%d\n",(char *)(buff+kv_p->keyPos),*((int *)(buff+kv_p->valPos)),kv_arr_p->arr_len,map_task_idx);
 	pgc->intermediate_key_vals.d_intermediate_keyval_total_count[map_task_idx] = kv_arr_p->arr_len;
 
 }//__device__
