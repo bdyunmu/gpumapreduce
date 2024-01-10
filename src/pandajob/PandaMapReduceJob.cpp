@@ -504,7 +504,7 @@ namespace panda
 	  void *val = chunk->getData();
 	  int keySize = chunk->getKeySize();
 	  int valSize = chunk->getDataSize();
-	  ShowLog("addGPUMapTasks key:%s keySize:%d valSize:%d\n",key,keySize,valSize);
+	  ShowLog("addGPUMapTasks key:%d keySize:%d valSize:%d\n",key,keySize,valSize);
 	  MapTask *pMapTask = new MapTask(keySize,key,valSize,val);
 	  gpuMapTasks.push_back(pMapTask);
   }//void

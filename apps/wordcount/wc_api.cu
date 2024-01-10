@@ -36,7 +36,7 @@ __device__ void panda_gpu_core_map(void *KEY, void *VAL, int keySize, int valSiz
 			//ws=(int)(p-start);
 			if (ws>6){
 				char *word = start;
-				printf("word: %s valSize:%d map_task_idx:%d ws:%d\n",word,valSize,map_task_idx,ws);
+				printf("pgc gpu_core_map word: %s valSize:%d map_task_idx:%d ws:%d\n",word,valSize,map_task_idx,ws);
 				PandaEmitGPUMapOutput(word, one, ws, sizeof(int), pgc, map_task_idx);
 			}//if
 			//valSize = valSize - ws;

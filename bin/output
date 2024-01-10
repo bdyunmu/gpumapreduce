@@ -1,0 +1,333 @@
+WCOutput
+host[0][log]	(wordcount job->addInput) chunk_count:0
+host[0][log]	(wordcount job->addInput) chunk_count:1
+host[0][log]	(wordcount job->addInput) chunk_count:2
+host[0][log]	(wordcount job->addInput) chunk_count:3
+host[0][log]	(wordcount job->addInput) chunk_count:4
+host[0][log]	(wordcount job->addInput) chunk_count:5
+host[0][log]	(wordcount job->addInput) chunk_count:6
+host[0][log]	(wordcount job->addInput) chunk_count:7
+host[0][log]	(wordcount job->addInput) chunk_count:8
+host[0][log]	(wordcount job->addInput) chunk_count:9
+host[0][log]	(wordcount job->addInput) chunk_count:10
+host[0][log]	(wordcount job->addInput) chunk_count:11
+host[0][log]	(wordcount job->addInput) chunk_count:12
+host[0][log]	(wordcount job->addInput) chunk_count:13
+host[0][log]	(wordcount job->addInput) chunk_count:14
+host[0][log]	(wordcount job->addInput) chunk_count:15
+host[0][log]	(wordcount job->addInput) chunk_count:16
+host[0][log]	(wordcount job->addInput)
+host[0][log]	(wordcount job->execute)
+host[0][log]	commRank:0, commSize:1
+host[0][log]	Big Test PandaMPIMessage run()  sleep 10+++++++++++++++++++++++++++++
+host[0][log]	CPU ncores:4 memSize:27.000 memBandwidth:0.488 GHz:3.216
+host[0][log]	pgc Configure Device ID:0: Device Name:Tesla T4 MultProcessorCount:40 sm_per_multiproc:32
+host[0][log]	GPU ncores:1280 memSize:15.575  memBandwidth:640.128 GHz:1.590
+host[0][log]	addGPUMapTasks key:0 keySize:4 valSize:1030
+
+host[0][log]	add one GPUMapTask
+host[0][log]	addGPUMapTasks key:1 keySize:4 valSize:1067
+
+host[0][log]	add one GPUMapTask
+host[0][log]	addGPUMapTasks key:2 keySize:4 valSize:1025
+
+host[0][log]	add one GPUMapTask
+host[0][log]	addGPUMapTasks key:3 keySize:4 valSize:1026
+
+host[0][log]	add one GPUMapTask
+host[0][log]	addGPUMapTasks key:4 keySize:4 valSize:1044
+
+host[0][log]	add one GPUMapTask
+host[0][log]	addGPUMapTasks key:5 keySize:4 valSize:1040
+
+host[0][log]	add one GPUMapTask
+host[0][log]	addGPUMapTasks key:6 keySize:4 valSize:1027
+
+host[0][log]	add one GPUMapTask
+host[0][log]	addGPUMapTasks key:7 keySize:4 valSize:1025
+
+host[0][log]	add one GPUMapTask
+host[0][log]	addGPUMapTasks key:8 keySize:4 valSize:1041
+
+host[0][log]	add one GPUMapTask
+host[0][log]	addGPUMapTasks key:9 keySize:4 valSize:1067
+
+host[0][log]	add one GPUMapTask
+host[0][log]	addGPUMapTasks key:10 keySize:4 valSize:1025
+
+host[0][log]	add one GPUMapTask
+host[0][log]	addGPUMapTasks key:11 keySize:4 valSize:1026
+
+host[0][log]	add one GPUMapTask
+host[0][log]	addGPUMapTasks key:12 keySize:4 valSize:1044
+
+host[0][log]	add one GPUMapTask
+host[0][log]	addGPUMapTasks key:13 keySize:4 valSize:1040
+
+host[0][log]	add one GPUMapTask
+host[0][log]	addGPUMapTasks key:14 keySize:4 valSize:1027
+
+host[0][log]	add one GPUMapTask
+host[0][log]	addGPUMapTasks key:15 keySize:4 valSize:1025
+
+host[0][log]	add one GPUMapTask
+host[0][log]	addGPUMapTasks key:16 keySize:4 valSize:1041
+
+host[0][log]	add one GPUMapTask
+host[0][log]	addGPUMapTasks key:17 keySize:4 valSize:629
+
+host[0][log]	add one GPUMapTask
+host[0][log]	gpuMapTasks.size():18
+
+host[0][log]	copy  keys[0]:0 keySize:4 totalKeySize:72 valSize:1030
+
+host[0][log]	copy  keys[1]:1 keySize:4 totalKeySize:72 valSize:1067
+
+host[0][log]	copy  keys[2]:2 keySize:4 totalKeySize:72 valSize:1025
+
+host[0][log]	copy  keys[3]:3 keySize:4 totalKeySize:72 valSize:1026
+
+host[0][log]	copy  keys[4]:4 keySize:4 totalKeySize:72 valSize:1044
+
+host[0][log]	copy  keys[5]:5 keySize:4 totalKeySize:72 valSize:1040
+
+host[0][log]	copy  keys[6]:6 keySize:4 totalKeySize:72 valSize:1027
+
+host[0][log]	copy  keys[7]:7 keySize:4 totalKeySize:72 valSize:1025
+
+host[0][log]	copy  keys[8]:8 keySize:4 totalKeySize:72 valSize:1041
+
+host[0][log]	copy  keys[9]:9 keySize:4 totalKeySize:72 valSize:1067
+
+host[0][log]	copy  keys[10]:10 keySize:4 totalKeySize:72 valSize:1025
+
+host[0][log]	copy  keys[11]:11 keySize:4 totalKeySize:72 valSize:1026
+
+host[0][log]	copy  keys[12]:12 keySize:4 totalKeySize:72 valSize:1044
+
+host[0][log]	copy  keys[13]:13 keySize:4 totalKeySize:72 valSize:1040
+
+host[0][log]	copy  keys[14]:14 keySize:4 totalKeySize:72 valSize:1027
+
+host[0][log]	copy  keys[15]:15 keySize:4 totalKeySize:72 valSize:1025
+
+host[0][log]	copy  keys[16]:16 keySize:4 totalKeySize:72 valSize:1041
+
+host[0][log]	copy  keys[17]:17 keySize:4 totalKeySize:72 valSize:629
+
+host[0][log]	PandaMapReduceJob StartPandaGPUMapTasks num_input_record:18
+
+host[0][log]	GridDim.X:80 GridDim.Y:1 BlockDim.X:16 BlockDim.Y:16 TotalGPUThreads:20480
+host[0][log]	num_records_per_thread:1 totalIteration:1
+debug gridDim.x:80 gridDim.y:1 gridDim.z:1 blockIdx.x:0 blockIdx.y:0 blockIdx.z:0 threadIdx.x:0 threadIdx.y:0 threadIdx.z:0
+debug num_records_per_thread:1 block_start_idx:0 thread_start_idx:0 thread_end_idx:18 STRIDE:32
+pgc gpu_core_map word: SPRINTF valSize:1030 map_task_idx:0 ws:7
+pgc gpu_core_map word: SPRINTF valSize:1067 map_task_idx:1 ws:7
+pgc gpu_core_map word: SPRINTF valSize:1025 map_task_idx:2 ws:7
+pgc gpu_core_map word: SPRINTF valSize:1026 map_task_idx:3 ws:7
+pgc gpu_core_map word: SPRINTF valSize:1044 map_task_idx:4 ws:7
+pgc gpu_core_map word: SPRINTF valSize:1040 map_task_idx:5 ws:7
+pgc gpu_core_map word: SPRINTF valSize:1027 map_task_idx:6 ws:7
+pgc gpu_core_map word: SPRINTF valSize:1025 map_task_idx:7 ws:7
+pgc gpu_core_map word: SPRINTF valSize:1041 map_task_idx:8 ws:7
+pgc gpu_core_map word: SPRINTF valSize:1067 map_task_idx:9 ws:7
+pgc gpu_core_map word: SPRINTF valSize:1025 map_task_idx:10 ws:7
+pgc gpu_core_map word: SPRINTF valSize:1026 map_task_idx:11 ws:7
+pgc gpu_core_map word: SPRINTF valSize:1044 map_task_idx:12 ws:7
+pgc gpu_core_map word: SPRINTF valSize:1040 map_task_idx:13 ws:7
+pgc gpu_core_map word: SPRINTF valSize:1027 map_task_idx:14 ws:7
+pgc gpu_core_map word: SPRINTF valSize:1025 map_task_idx:15 ws:7
+pgc gpu_core_map word: SPRINTF valSize:1041 map_task_idx:16 ws:7
+pgc gpu_core_map word: SPRINTF valSize:629 map_task_idx:17 ws:7
+pgc emitGPUMapOUtput shared_buff_pos:0 keySize:7 valSize:4 required_mem_len:35 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:0 keySize:7 valSize:4 required_mem_len:35 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:0 keySize:7 valSize:4 required_mem_len:35 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:0 keySize:7 valSize:4 required_mem_len:35 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:0 keySize:7 valSize:4 required_mem_len:35 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:0 keySize:7 valSize:4 required_mem_len:35 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:0 keySize:7 valSize:4 required_mem_len:35 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:0 keySize:7 valSize:4 required_mem_len:35 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:0 keySize:7 valSize:4 required_mem_len:35 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:0 keySize:7 valSize:4 required_mem_len:35 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:0 keySize:7 valSize:4 required_mem_len:35 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:0 keySize:7 valSize:4 required_mem_len:35 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:0 keySize:7 valSize:4 required_mem_len:35 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:0 keySize:7 valSize:4 required_mem_len:35 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:0 keySize:7 valSize:4 required_mem_len:35 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:0 keySize:7 valSize:4 required_mem_len:35 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:0 keySize:7 valSize:4 required_mem_len:35 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:0 keySize:7 valSize:4 required_mem_len:35 shared_buff_len:204800
+pgc gpu_core_map word: SHOWLOG valSize:1030 map_task_idx:0 ws:7
+pgc gpu_core_map word: SHOWLOG valSize:1067 map_task_idx:1 ws:7
+pgc gpu_core_map word: SHOWLOG valSize:1025 map_task_idx:2 ws:7
+pgc gpu_core_map word: SHOWLOG valSize:1026 map_task_idx:3 ws:7
+pgc gpu_core_map word: SHOWLOG valSize:1044 map_task_idx:4 ws:7
+pgc gpu_core_map word: SHOWLOG valSize:1040 map_task_idx:5 ws:7
+pgc gpu_core_map word: SHOWLOG valSize:1027 map_task_idx:6 ws:7
+pgc gpu_core_map word: SHOWLOG valSize:1025 map_task_idx:7 ws:7
+pgc gpu_core_map word: SHOWLOG valSize:1041 map_task_idx:8 ws:7
+pgc gpu_core_map word: SHOWLOG valSize:1067 map_task_idx:9 ws:7
+pgc gpu_core_map word: SHOWLOG valSize:1025 map_task_idx:10 ws:7
+pgc gpu_core_map word: SHOWLOG valSize:1026 map_task_idx:11 ws:7
+pgc gpu_core_map word: SHOWLOG valSize:1044 map_task_idx:12 ws:7
+pgc gpu_core_map word: SHOWLOG valSize:1040 map_task_idx:13 ws:7
+pgc gpu_core_map word: SHOWLOG valSize:1027 map_task_idx:14 ws:7
+pgc gpu_core_map word: SHOWLOG valSize:1025 map_task_idx:15 ws:7
+pgc gpu_core_map word: SHOWLOG valSize:1041 map_task_idx:16 ws:7
+pgc gpu_core_map word: SHOWLOG valSize:629 map_task_idx:17 ws:7
+pgc emitGPUMapOUtput shared_buff_pos:12 keySize:7 valSize:4 required_mem_len:71 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:12 keySize:7 valSize:4 required_mem_len:71 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:12 keySize:7 valSize:4 required_mem_len:71 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:12 keySize:7 valSize:4 required_mem_len:71 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:12 keySize:7 valSize:4 required_mem_len:71 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:12 keySize:7 valSize:4 required_mem_len:71 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:12 keySize:7 valSize:4 required_mem_len:71 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:12 keySize:7 valSize:4 required_mem_len:71 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:12 keySize:7 valSize:4 required_mem_len:71 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:12 keySize:7 valSize:4 required_mem_len:71 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:12 keySize:7 valSize:4 required_mem_len:71 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:12 keySize:7 valSize:4 required_mem_len:71 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:12 keySize:7 valSize:4 required_mem_len:71 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:12 keySize:7 valSize:4 required_mem_len:71 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:12 keySize:7 valSize:4 required_mem_len:71 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:12 keySize:7 valSize:4 required_mem_len:71 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:12 keySize:7 valSize:4 required_mem_len:71 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:12 keySize:7 valSize:4 required_mem_len:71 shared_buff_len:204800
+pgc gpu_core_map word: PROCESSING valSize:1030 map_task_idx:0 ws:10
+pgc gpu_core_map word: PROCESSING valSize:1067 map_task_idx:1 ws:10
+pgc gpu_core_map word: PROCESSING valSize:1025 map_task_idx:2 ws:10
+pgc gpu_core_map word: PROCESSING valSize:1026 map_task_idx:3 ws:10
+pgc gpu_core_map word: PROCESSING valSize:1044 map_task_idx:4 ws:10
+pgc gpu_core_map word: PROCESSING valSize:1040 map_task_idx:5 ws:10
+pgc gpu_core_map word: PROCESSING valSize:1027 map_task_idx:6 ws:10
+pgc gpu_core_map word: PROCESSING valSize:1025 map_task_idx:7 ws:10
+pgc gpu_core_map word: PROCESSING valSize:1041 map_task_idx:8 ws:10
+pgc gpu_core_map word: PROCESSING valSize:1067 map_task_idx:9 ws:10
+pgc gpu_core_map word: PROCESSING valSize:1025 map_task_idx:10 ws:10
+pgc gpu_core_map word: PROCESSING valSize:1026 map_task_idx:11 ws:10
+pgc gpu_core_map word: PROCESSING valSize:1044 map_task_idx:12 ws:10
+pgc gpu_core_map word: PROCESSING valSize:1040 map_task_idx:13 ws:10
+pgc gpu_core_map word: PROCESSING valSize:1027 map_task_idx:14 ws:10
+pgc gpu_core_map word: PROCESSING valSize:1025 map_task_idx:15 ws:10
+pgc gpu_core_map word: PROCESSING valSize:1041 map_task_idx:16 ws:10
+pgc gpu_core_map word: PROCESSING valSize:629 map_task_idx:17 ws:10
+pgc emitGPUMapOUtput shared_buff_pos:24 keySize:10 valSize:4 required_mem_len:110 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:24 keySize:10 valSize:4 required_mem_len:110 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:24 keySize:10 valSize:4 required_mem_len:110 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:24 keySize:10 valSize:4 required_mem_len:110 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:24 keySize:10 valSize:4 required_mem_len:110 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:24 keySize:10 valSize:4 required_mem_len:110 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:24 keySize:10 valSize:4 required_mem_len:110 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:24 keySize:10 valSize:4 required_mem_len:110 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:24 keySize:10 valSize:4 required_mem_len:110 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:24 keySize:10 valSize:4 required_mem_len:110 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:24 keySize:10 valSize:4 required_mem_len:110 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:24 keySize:10 valSize:4 required_mem_len:110 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:24 keySize:10 valSize:4 required_mem_len:110 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:24 keySize:10 valSize:4 required_mem_len:110 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:24 keySize:10 valSize:4 required_mem_len:110 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:24 keySize:10 valSize:4 required_mem_len:110 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:24 keySize:10 valSize:4 required_mem_len:110 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:24 keySize:10 valSize:4 required_mem_len:110 shared_buff_len:204800
+pgc gpu_core_map word: ELEMENTS valSize:1030 map_task_idx:0 ws:8
+pgc gpu_core_map word: ELEMENTS valSize:1067 map_task_idx:1 ws:8
+pgc gpu_core_map word: ELEMENTS valSize:1025 map_task_idx:2 ws:8
+pgc gpu_core_map word: ELEMENTS valSize:1026 map_task_idx:3 ws:8
+pgc gpu_core_map word: ELEMENTS valSize:1044 map_task_idx:4 ws:8
+pgc gpu_core_map word: ELEMENTS valSize:1040 map_task_idx:5 ws:8
+pgc gpu_core_map word: ELEMENTS valSize:1027 map_task_idx:6 ws:8
+pgc gpu_core_map word: ELEMENTS valSize:1025 map_task_idx:7 ws:8
+pgc gpu_core_map word: ELEMENTS valSize:1041 map_task_idx:8 ws:8
+pgc gpu_core_map word: ELEMENTS valSize:1067 map_task_idx:9 ws:8
+pgc gpu_core_map word: ELEMENTS valSize:1025 map_task_idx:10 ws:8
+pgc gpu_core_map word: ELEMENTS valSize:1026 map_task_idx:11 ws:8
+pgc gpu_core_map word: ELEMENTS valSize:1044 map_task_idx:12 ws:8
+pgc gpu_core_map word: ELEMENTS valSize:1040 map_task_idx:13 ws:8
+pgc gpu_core_map word: ELEMENTS valSize:1027 map_task_idx:14 ws:8
+pgc gpu_core_map word: ELEMENTS valSize:1025 map_task_idx:15 ws:8
+pgc gpu_core_map word: ELEMENTS valSize:1041 map_task_idx:16 ws:8
+pgc gpu_core_map word: ELEMENTS valSize:629 map_task_idx:17 ws:8
+pgc emitGPUMapOUtput shared_buff_pos:40 keySize:8 valSize:4 required_mem_len:148 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:40 keySize:8 valSize:4 required_mem_len:148 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:40 keySize:8 valSize:4 required_mem_len:148 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:40 keySize:8 valSize:4 required_mem_len:148 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:40 keySize:8 valSize:4 required_mem_len:148 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:40 keySize:8 valSize:4 required_mem_len:148 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:40 keySize:8 valSize:4 required_mem_len:148 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:40 keySize:8 valSize:4 required_mem_len:148 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:40 keySize:8 valSize:4 required_mem_len:148 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:40 keySize:8 valSize:4 required_mem_len:148 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:40 keySize:8 valSize:4 required_mem_len:148 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:40 keySize:8 valSize:4 required_mem_len:148 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:40 keySize:8 valSize:4 required_mem_len:148 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:40 keySize:8 valSize:4 required_mem_len:148 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:40 keySize:8 valSize:4 required_mem_len:148 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:40 keySize:8 valSize:4 required_mem_len:148 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:40 keySize:8 valSize:4 required_mem_len:148 shared_buff_len:204800
+pgc emitGPUMapOUtput shared_buff_pos:40 keySize:8 valSize:4 required_mem_len:148 shared_buff_len:204800
+host[0][log]	pgc->input_key_vals.num_input_record:18
+host[0][log]	pgc GPU Total Count of Intermediate Records:72 pgc->input_key_vals.num_input_record:18
+pgc thread_start_idx:0  thread_end_idx:2
+pgc thread_start_idx:1  thread_end_idx:3
+pgc thread_start_idx:2  thread_end_idx:4
+pgc thread_start_idx:3  thread_end_idx:5
+pgc thread_start_idx:4  thread_end_idx:6
+pgc thread_start_idx:5  thread_end_idx:7
+pgc thread_start_idx:6  thread_end_idx:8
+pgc thread_start_idx:7  thread_end_idx:9
+pgc thread_start_idx:8  thread_end_idx:10
+pgc thread_start_idx:9  thread_end_idx:11
+pgc thread_start_idx:10  thread_end_idx:12
+pgc thread_start_idx:11  thread_end_idx:13
+pgc thread_start_idx:12  thread_end_idx:14
+pgc thread_start_idx:13  thread_end_idx:15
+pgc thread_start_idx:14  thread_end_idx:16
+pgc thread_start_idx:15  thread_end_idx:17
+host[0][log]	pgc cudaMalloc totalKeySize:0.562500 KB totalValSize:0.250000 KB, number of intermediate records:72
+host[0][log]	CPU this->pNodeContext->sorted_key_vals.sorted_keyvals_arr_len:5
+host[0][log]	CPU Panda adding Key/Values to bucket is done on local host.
+host[0][log]	bucket index:0 curlen:72 maxlen:80 keySize:512 valSize:256 
+host[0][log]	K start PandaMPIMessage thread. run() thread [0/1]
+host[0][log]	MPI_Isend to rank:0
+host[0][log]	->recved countReqs from 0, maxlen:72 keysize:512 valsize:256
+host[0][log]	TTTT Message Looping Done (commSize:1)
+host[0][log]	pnc->sorted_key_Vals.sorted_keyvals_arr_len, start_task_id:0 end_task_id:5
+host[0][log]	[AddGPUReduceTask] start_task_id:0 end_task_id:5 totalKeySize:36 totalValSize:256  total_count:72
+host[0][log]	reduced len:5 output len:5 sorted keySize576: sorted valSize:256
+host[0][log]	[copyDataFromDevice2Host4Reduce] Output total keySize:0.035156 KB valSize:0.019531 KB
+
+[copyDataFromDevice2Host4Reduce] key:[ELEMENTSPROCESSING] val:[8]
+[copyDataFromDevice2Host4Reduce] key:[ELEMENTSPROCESSING] val:[12]
+[copyDataFromDevice2Host4Reduce] key:[PROCESSING] val:[16]
+[copyDataFromDevice2Host4Reduce] key:[SHOWLOG] val:[20]
+[copyDataFromDevice2Host4Reduce] key:[SPRINTF] val:[24]
+host[0][log]	key:ELEMENTSPROCESSING val:8
+host[0][log]	key:ELEMENTSPROCESSING val:16
+host[0][log]	key:PROCESSING val:16
+host[0][log]	key:SHOWLOG val:16
+host[0][log]	key:SPRINTF val:16
+host[0][log]	pnc gpu key:ELEMENTSPROCESSING val:1854199520
+
+host[0][log]	pnc gpu key:ELEMENTSPROCESSING val:1854199524
+
+host[0][log]	pnc gpu key:PROCESSING val:1854199528
+
+host[0][log]	pnc gpu key:SHOWLOG val:1854199532
+
+host[0][log]	pnc gpu key:SPRINTF val:1854199536
+
+host[0][log]	fn:OUTPUT_0
+
+host[0][log]	dump reduce task bs:0 keySize:0   valSize:0
+
+host[0][log]	dump reduce task bs:0 keySize:0   valSize:0
+
+host[0][log]	dump reduce task bs:0 keySize:0   valSize:0
+
+host[0][log]	dump reduce task bs:0 keySize:0   valSize:0
+
+host[0][log]	dump reduce task bs:0 keySize:0   valSize:0
+
+host[0][log]	~PandaMapReduceJob
+
+host[0][log]	destroying MapReduce job and invoke MPI_Finalize

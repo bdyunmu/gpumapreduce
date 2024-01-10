@@ -4,8 +4,8 @@
         Panda: co-processing SPMD computations on GPUs and CPUs.
 
         File: PandaSort.cu
-        First Version:          2012-07-01 V0.1
-        Last UPdates:           2018-04-28 v0.41
+        First Version:          2012-07-01 V0.1.0
+        Last UPdates:           2024-01-10 v0.6.2
         Developer: Hui Li (huili@ruijie.com.cn)
 
 */
@@ -28,7 +28,7 @@ void ExecutePandaSortBucket(panda_node_context *pnc)
 {
 
 	  int numRecvedBuckets = pnc->recv_buckets.counts.size();
-	  ShowLog("lihuix numRecvedBuckets:%d",numRecvedBuckets);
+	  //ShowLog("lihuix numRecvedBuckets:%d",numRecvedBuckets);
 
 	  keyvals_t *sorted_intermediate_keyvals_arr = NULL; 
           pnc->sorted_key_vals.sorted_intermediate_keyvals_arr = NULL;
@@ -57,7 +57,7 @@ void ExecutePandaSortBucket(panda_node_context *pnc)
 		for (int j=0; j<maxlen; j++){
 			
 			if( keyPosArray[j] + keySizeArray[j] > keyBuffSize ) 
-				ErrorLog("(keyPosArray[j]:%d + keySizeArray[j]:%d > keyBuffSize:%d)", keyPosArray[j], keySizeArray[j] , keyBuffSize);
+				ErrorLog("pnc error (keyPosArray[j]:%d + keySizeArray[j]:%d > keyBuffSize:%d)", keyPosArray[j], keySizeArray[j] , keyBuffSize);
 
 			key_0		= keyBuff + keyPosArray[j];
 			keySize_0	= keySizeArray[j];
@@ -128,7 +128,7 @@ void ExecutePandaSortBucket(panda_node_context *pnc)
 			kvalsp->val_arr_len = 1;
 
 			if (valPosArray[j] + valSizeArray[j] > valBuffSize)
-				ErrorLog("(valPosArray[j] + valSizeArray[j] > valBuffSize)");
+				ErrorLog("pnc error (valPosArray[j] + valSizeArray[j] > valBuffSize)");
 
 			val_0   = valBuff + valPosArray[j];
 			valSize_0 = valSizeArray[j];
@@ -146,7 +146,7 @@ void ExecutePandaSortBucket(panda_node_context *pnc)
 void ExecutePandaGPUSort(panda_gpu_context* pgc){
 
 	cudaThreadSynchronize();
-	ShowLog("pgc->input_key_vals.num_input_record:%d\n",pgc->input_key_vals.num_input_record);
+	//ShowLog("pgc pgc->input_key_vals.num_input_record:%d\n",pgc->input_key_vals.num_input_record);
 
 	assert(pgc->input_key_vals.num_input_record);
 
@@ -160,7 +160,7 @@ void ExecutePandaGPUSort(panda_gpu_context* pgc){
 	}//for
 	//free(count_arr);
 
-	ShowLog("GPU Total Count of Intermediate Records:%d pgc->input_key_vals.num_input_record:%d",total_count,pgc->input_key_vals.num_input_record);
+	ShowLog("pgc GPU Total Count of Intermediate Records:%d pgc->input_key_vals.num_input_record:%d",total_count,pgc->input_key_vals.num_input_record);
 	cudaMalloc((void **)&(pgc->intermediate_key_vals.d_intermediate_keyval_arr),sizeof(keyval_t)*total_count);
 
 	//int num_mappers = 1;
@@ -177,7 +177,7 @@ void ExecutePandaGPUSort(panda_gpu_context* pgc){
 	copyDataFromDevice2Host1<<<1,16>>>(*pgc);
 	cudaThreadSynchronize();
 
-	//TODO intermediate keyval_arr use pos_arr
+	//intermediate keyval_arr use pos_arr
 	keyval_t * h_keyval_arr = (keyval_t *)malloc(sizeof(keyval_t)*total_count);
 	cudaMemcpy(h_keyval_arr, pgc->intermediate_key_vals.d_intermediate_keyval_arr, 
 		sizeof(keyval_t)*total_count, cudaMemcpyDeviceToHost);
@@ -202,7 +202,7 @@ void ExecutePandaGPUSort(panda_gpu_context* pgc){
 	}//for
 
 	if ((totalValSize<=0)||(totalKeySize<=0)){
-		ErrorLog("(totalValSize==0)||(totalKeySize==0) Warning!");
+		ErrorLog("pgc error (totalValSize<=0)||(totalKeySize<=0)!");
 		pgc->sorted_key_vals.totalValSize = totalValSize;
 		pgc->sorted_key_vals.totalKeySize = totalKeySize;
 		pgc->sorted_key_vals.d_sorted_keyvals_arr_len = 0;
@@ -213,7 +213,7 @@ void ExecutePandaGPUSort(panda_gpu_context* pgc){
 	pgc->sorted_key_vals.totalValSize = totalValSize;
 	pgc->sorted_key_vals.totalKeySize = totalKeySize;
 
-	ShowLog("cudaMalloc totalKeySize:%lf KB totalValSize:%lf KB, number of intermediate records:%d", 
+	ShowLog("pgc cudaMalloc totalKeySize:%lf KB totalValSize:%lf KB, number of intermediate records:%d", 
 				(double)(totalKeySize)/1024.0, (double)totalValSize/1024.0, total_count);
 	cudaMalloc((void **)&pgc->intermediate_key_vals.d_intermediate_keys_shared_buff,totalKeySize);
 	cudaMalloc((void **)&pgc->intermediate_key_vals.d_intermediate_vals_shared_buff,totalValSize);
@@ -298,7 +298,7 @@ void ExecutePandaGPUSort(panda_gpu_context* pgc){
 	int *pos_arr_4_pos_arr = (int*)malloc(sizeof(int)*sorted_key_arr_len);
 	memset(pos_arr_4_pos_arr,0,sizeof(int)*sorted_key_arr_len);
 
-	int	index = 0;
+	int index = 0;
 	for (int i=0;i<sorted_key_arr_len;i++){
 		sorted_keyval_pos_t *p = (sorted_keyval_pos_t *)&(h_sorted_keyval_pos_arr[i]);
 
@@ -322,13 +322,13 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 
 	//keyvals_t * merged_keyvals_arr = NULL;
 	if(pcc->input_key_vals.num_input_record <=0){
-		ErrorLog("pcc->input_key_vals.num_input_record <=0");
+		ErrorLog("pcc error! pcc->input_key_vals.num_input_record <=0");
 		return;
 	}
 	int num_threads = pcc->num_cpus_cores > pcc->input_key_vals.num_input_record ? pcc->input_key_vals.num_input_record:pcc->num_cpus_cores;
 	int num_records_per_thread = (pcc->input_key_vals.num_input_record)/(num_threads);
 
-	ShowLog("num cores:%d num input records:%d threads:%d num_reocords_per_thread:%.2f",
+	ShowLog("pcc num cores:%d num input records:%d threads:%d num_reocords_per_thread:%.2f",
 			pcc->num_cpus_cores, pcc->input_key_vals.num_input_record, num_threads, (pcc->input_key_vals.num_input_record)/(float)(num_threads));
 
 	int start_idx = 0;
@@ -342,7 +342,6 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 	int keyvals_arr_max_len = pnc->sorted_key_vals.sorted_keyval_arr_max_len;
 	//pnc->sorted_key_vals.sorted_intermediate_keyvals_arr = (keyvals_t *)malloc(sizeof(keyvals_t)*keyvals_arr_len);
 	keyvals_t * sorted_intermediate_keyvals_arr = pnc->sorted_key_vals.sorted_intermediate_keyvals_arr;
-			
 	int sorted_key_arr_len = 0;
 
 	for (int tid = 0;tid<num_threads;tid++){
@@ -374,15 +373,14 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 				char *key_k = (char *)(sorted_intermediate_keyvals_arr[k].key);
 				int keySize_k = sorted_intermediate_keyvals_arr[k].keySize;
 
-				//2018/12/5 lihuix
-				//TODO need tell the difference between cpu_compare >0 and cpu_compare <0
+				//2018/12/5 lihui
+				//need tell the difference between cpu_compare >0 and cpu_compare <0
 				if ( cpu_compare(key_i, keySize_i, key_k, keySize_k) != 0 )
 				{
 				//ShowLog("cpu_compare !=0");		
 				continue;
 				}//else
 				//ShowLog("cpu_compare ==0 key_i:%.3s  key_k:%.3s keySize_i:%d keySize_k:%d",key_i,key_k,keySize_i,keySize_k);
-
 				//found the match
 				val_t *vals = sorted_intermediate_keyvals_arr[k].vals;
 				sorted_intermediate_keyvals_arr[k].val_arr_len++;
@@ -393,9 +391,9 @@ void ExecutePandaCPUSort(panda_cpu_context *pcc, panda_node_context *pnc){
 				sorted_intermediate_keyvals_arr[k].vals[index].val = (char *)malloc(sizeof(char)*valSize_i);
 				memcpy(sorted_intermediate_keyvals_arr[k].vals[index].val,val_i,valSize_i);
 				break;
-
 			}//for
-			//ShowLog("TTTTTTTTTTTTTT:%d  shared_arr_len:%d sorted_key_arr_len:%d k:%d",tid,shared_arr_len,sorted_key_arr_len,k);	
+
+			//ShowLog("TID:%d  shared_arr_len:%d sorted_key_arr_len:%d k:%d",tid,shared_arr_len,sorted_key_arr_len,k);	
 			if (k == sorted_key_arr_len){
 				sorted_key_arr_len++;
 				if (sorted_key_arr_len >= keyvals_arr_max_len){
@@ -441,7 +439,7 @@ void ExecutePandaMergeReduceTasks2Pnc(panda_node_context *pnc, panda_gpu_context
 	
 	if(pgc->output_key_vals.h_reduced_keyval_arr_len <=0 && pcc->reduced_key_vals.reduced_keyval_arr_len <= 0)
 	{
-	ErrorLog("there is no output keyval");
+	ErrorLog("pnc error! there is no output keyval");
 	return;
 	}
 	pnc->output_keyval_arr.output_keyval_arr_len  = pgc->output_key_vals.h_reduced_keyval_arr_len + pcc->reduced_key_vals.reduced_keyval_arr_len;
@@ -455,32 +453,27 @@ void ExecutePandaMergeReduceTasks2Pnc(panda_node_context *pnc, panda_gpu_context
            	val = pgc->output_key_vals.h_reduced_keyval_arr[i].val;
       		pnc->output_keyval_arr.output_keyval_arr[i].key = key;
 		pnc->output_keyval_arr.output_keyval_arr[i].val = val;
-		ShowLog("gpu key:%s val:%d\n",key,val);
+		ShowLog("pnc gpu key:%s val:%d\n",key,val);
 	}//for
 	int gpulen = pgc->output_key_vals.h_reduced_keyval_arr_len;
 	for (int i=0; i<pcc->reduced_key_vals.reduced_keyval_arr_len; i++){
 		key = pcc->reduced_key_vals.reduced_keyval_arr[i].key;
 		val = pcc->reduced_key_vals.reduced_keyval_arr[i].val;
 		if((gpulen+i)>=pnc->output_keyval_arr.output_keyval_arr_len){
-		ErrorLog("memery access violation\n");
-		return;
-		}
+			ErrorLog("pnc error! memery access violation\n");
+			return;
+		}//if
 		pnc->output_keyval_arr.output_keyval_arr[gpulen+i].key = key;
 		pnc->output_keyval_arr.output_keyval_arr[gpulen+i].val = val;
-		ShowLog("cpu key:%s val:%d\n",key,val);
+		ShowLog("pnc cpu key:%s val:%d\n",key,val);
 	}//for
-	ShowLog("end of ExecutePandaMergeReduceTasks2Pnc\n");
+	//ShowLog("end of ExecutePandaMergeReduceTasks2Pnc\n");
 }	
 
 
 void ExecutePandaCPUMergeReduceTasks2Pnc(panda_node_context *pnc, panda_cpu_context *pcc){
 
-
 }
-
-
-
-
 
 void ExecutePandaGPULocalMerge2Pnc(panda_node_context *pnc, panda_gpu_context *pgc){
 
@@ -586,7 +579,7 @@ __global__ void copyDataFromDevice2Host1(panda_gpu_context pgc)
 	if (thread_start_idx >= thread_end_idx)
 		return;
 
-	printf("thread_start_idx:%d  thread_end_idx:%d\n",thread_start_idx,thread_end_idx);
+	printf("pgc thread_start_idx:%d  thread_end_idx:%d\n",thread_start_idx,thread_end_idx);
 
 	int begin=0;
 	int end=0;
@@ -595,8 +588,7 @@ __global__ void copyDataFromDevice2Host1(panda_gpu_context pgc)
 	}//for
 	end = begin + pgc.intermediate_key_vals.d_intermediate_keyval_total_count[thread_start_idx];
 
-	printf("begin:%d end:%d\n",begin,end);
-	
+	//printf("begin:%d end:%d\n",begin,end);
 	int start_idx = 0;
 	//bool local_combiner = d_g_state.local_combiner;
 	bool local_combiner = false;
@@ -611,7 +603,7 @@ __global__ void copyDataFromDevice2Host1(panda_gpu_context pgc)
 		int shared_buff_len = *kv_arr_p->shared_buff_len;
 
 		for (int idx = start_idx; idx<(shared_arr_len); idx++){
-	p2 = (keyval_pos_t *)((char *)shared_buff + shared_buff_len - sizeof(keyval_pos_t)*(shared_arr_len - idx ));
+			p2 = (keyval_pos_t *)((char *)shared_buff + shared_buff_len - sizeof(keyval_pos_t)*(shared_arr_len - idx ));
 			if ( local_combiner && p2->next_idx != _COMBINE ){
 				continue;
 			}//if
