@@ -72,7 +72,7 @@ int getGPUCoresNum() {
 			sm_per_multiproc = arch_cores_sm[gpu_dev.major];
 	else
 			sm_per_multiproc = arch_cores_sm[2];
-	ShowLog("pgc Configure Device ID:%d: Device Name:%s MultProcessorCount:%d sm_per_multiproc:%d", 0, gpu_dev.name,gpu_dev.multiProcessorCount,sm_per_multiproc);
+	//ShowLog("pgc Configure Device ID:%d: Device Name:%s MultProcessorCount:%d sm_per_multiproc:%d", 0, gpu_dev.name,gpu_dev.multiProcessorCount,sm_per_multiproc);
 	return ((gpu_dev.multiProcessorCount)*(sm_per_multiproc));
 }
 

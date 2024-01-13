@@ -25,7 +25,7 @@ int main(int argc, char ** argv)
 	job->setOutput(new WCOutput());
 	job->setMessage(new panda::PandaMPIMessage(true));
 	job->setTaskLevel(panda::TaskLevelTwo);
-	job->setEnableCPU(false);
+	job->setEnableCPU(true);
 	job->setEnableGPU(true);
 
     	char wcfn[128];
@@ -52,7 +52,7 @@ int main(int argc, char ** argv)
 		}//if
 	}//while
 	if(total_len >0){
-		panda::ShowLog("(wordcount job->addInput)");
+		panda::ShowLog("(wordcount job->addInput) chunk_count:%d",chunk_count);
 		job->addInput(new panda::DataChunk(chunk_count,(char *)chunk_data, total_len));
 	}
 	panda::ShowLog("(wordcount job->execute)");

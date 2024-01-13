@@ -7,10 +7,10 @@
 class WCOutput: public panda::Output{
 	public:
 		WCOutput(){
-		printf("WCOutput\n");
+			printf("WCOutput()\n");
 		}
 		~WCOutput(){
-		printf("~WCOutput\n");
+			printf("~WCOutput()\n");
 		}
 		void write(char *,void *,void *);
 };

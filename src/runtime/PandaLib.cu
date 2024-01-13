@@ -4,8 +4,8 @@
 	Panda: co-processing SPMD computations on GPUs and CPUs.
 	
 	File: PandaLib.cu
-	First Version:		2012-07-01 V0.1
-	Last UPdates: 		2024-01-10 v0.62
+	First Version:		2012-07-01 V0.10
+	Last UPdates: 		2024-01-10 V0.62
 	Developer: Hui Li (huili@ruijie.com.cn)
 
 */
@@ -149,11 +149,11 @@ void ExecutePandaGPUReduceTasks(panda_gpu_context *pgc)
 	//int total_gpu_threads = (grids.x*grids.y*blocks.x*blocks.y);
 	//pgc->intermediate_key_vals.d_intermediate_keyval_arr_arr_len = pgc->reduced_key_vals.d_reduced_keyval_arr_len;
 	
-	ShowLog("reduced len:%d output len:%d sorted keySize%d: sorted valSize:%d",
+	/*ShowLog("pgc reduced len:%d output len:%d sorted keySize%d: sorted valSize:%d",
 		pgc->reduced_key_vals.d_reduced_keyval_arr_len, 
 		pgc->output_key_vals.h_reduced_keyval_arr_len,
 		pgc->sorted_key_vals.totalKeySize, 
-		pgc->sorted_key_vals.totalValSize);
+		pgc->sorted_key_vals.totalValSize);*/
 
 	RunPandaGPUReduceTasks<<<grids,blocks>>>(*pgc);
 
@@ -175,7 +175,7 @@ void ExecutePandaGPUReduceTasks(panda_gpu_context *pgc)
 	cudaMalloc(&(pgc->output_key_vals.d_KeyBuff), sizeof(char)*pgc->output_key_vals.totalKeySize );
 	cudaMalloc(&(pgc->output_key_vals.d_ValBuff), sizeof(char)*pgc->output_key_vals.totalValSize );
 
-	ShowLog("[copyDataFromDevice2Host4Reduce] Output total keySize:%f KB valSize:%f KB\n",(float)(pgc->output_key_vals.totalKeySize)/1024.0,(float)(pgc->output_key_vals.totalValSize)/1024.0);
+	//ShowLog("pgc [copyDataFromDevice2Host4Reduce] Output total keySize:%f KB valSize:%f KB",(float)(pgc->output_key_vals.totalKeySize)/1024.0,(float)(pgc->output_key_vals.totalValSize)/1024.0);
 
 	copyDataFromDevice2Host4Reduce<<<grids,blocks>>>(*pgc);
 
@@ -201,7 +201,7 @@ void ExecutePandaGPUReduceTasks(panda_gpu_context *pgc)
 		key = (char *)pgc->output_key_vals.h_KeyBuff + key_pos;
 		pgc->output_key_vals.h_reduced_keyval_arr[i].key = key;
 		pgc->output_key_vals.h_reduced_keyval_arr[i].val = val;
-		ShowLog("key:%s val:%d",(char *)key,*(int*)val);
+		//ShowLog("key:%s val:%d",(char *)key,*(int*)val);
 
 		val_pos += (pgc->output_key_vals.h_reduced_keyval_arr[i].valSize+3)/4*4;
 		key_pos += (pgc->output_key_vals.h_reduced_keyval_arr[i].keySize+3)/4*4;
@@ -272,11 +272,11 @@ __global__ void RunPandaGPUMapTasksIterative(panda_gpu_context pgc, int curIter,
 	int thread_end_idx = thread_start_idx + num_records_per_thread*STRIDE;
 	if (thread_end_idx > pgc.input_key_vals.num_input_record)
 		thread_end_idx = pgc.input_key_vals.num_input_record;
-	if(blockIdx.x == 0 && threadIdx.x == 0 && threadIdx.y == 0 && threadIdx.z == 0)
+	/*if(blockIdx.x == 0 && threadIdx.x == 0 && threadIdx.y == 0 && threadIdx.z == 0)
 	{
-	printf("debug num_records_per_thread:%d block_start_idx:%u thread_start_idx:%d thread_end_idx:%d STRIDE:%d\n",
+	printf("pgc debug num_records_per_thread:%d block_start_idx:%u thread_start_idx:%d thread_end_idx:%d STRIDE:%d\n",
 			num_records_per_thread, block_start_idx, thread_start_idx, thread_end_idx, STRIDE);
-	}//if
+	}*///if
 
 	if (thread_start_idx + curIter*STRIDE >= thread_end_idx)
 		return;
@@ -315,7 +315,7 @@ void *RunPandaCPUCombinerThread(void *ptr){
 	keyval_arr_t *kv_arr_p = (keyval_arr_t *)&(pcc->intermediate_key_vals.intermediate_keyval_arr_arr_p[start_idx]);
 	int unmerged_shared_arr_len = *kv_arr_p->shared_arr_len;
 
-	ShowLog("cpu combinerthread unmerged_shared_arr_len:%d",unmerged_shared_arr_len);
+	ShowLog("pcc cpu combinerthread unmerged_shared_arr_len:%d",unmerged_shared_arr_len);
        
 	char *shared_buff = kv_arr_p->shared_buff;
         int shared_buff_len = *kv_arr_p->shared_buff_len;
@@ -400,7 +400,7 @@ void ExecutePandaGPUMapTasksIterative(panda_gpu_context pgc, int curIter, int to
 void ExecutePandaGPUCombiner(panda_gpu_context * pgc){
 	
 	//cudaMemset(pgc->intermediate_key_vals.d_intermediate_keyval_total_count,0,pgc->input_key_vals.num_input_record*sizeof(int));
-	ShowLog("pgc->input_key_vals.num_input_record:%d",pgc->input_key_vals.num_input_record);
+	//ShowLog("pgc->input_key_vals.num_input_record:%d",pgc->input_key_vals.num_input_record);
 	int numGPUCores = pgc->num_gpus_cores;
 	dim3 blocks(THREAD_BLOCK_SIZE, THREAD_BLOCK_SIZE);
 	int numBlocks = (numGPUCores*16+(blocks.x*blocks.y)-1)/(blocks.x*blocks.y);
@@ -524,7 +524,7 @@ void ExecutePandaDumpReduceTasks(panda_node_context *pnc, Output *output){
 	char fn[128];
 	sprintf(fn,"OUTPUT_%d",gCommRank);
 	FILE *fp = fopen(fn,"wb");
-	ShowLog("fn:%s\n",fn);
+	ShowLog("pnc dump file, fn:%s",fn);
 	char *buf = NULL;
 	int bs = 0;
 	keyval_t *p = NULL;
@@ -535,7 +535,7 @@ void ExecutePandaDumpReduceTasks(panda_node_context *pnc, Output *output){
 		p = (keyval_t *)(&pnc->output_keyval_arr.output_keyval_arr[reduce_idx]);
 		bs = p->keySize + p->valSize;
 
-		ShowLog("dump reduce task bs:%d keySize:%d   valSize:%d\n", bs, p->keySize, p->valSize);
+		ShowLog("pnc dump reduce task bs:%d keySize:%d   valSize:%d", bs, p->keySize, p->valSize);
 
 		buf = (char *)malloc(sizeof(char)*(bs+10));
 		memset(buf,0,bs+10);
@@ -574,8 +574,8 @@ __global__ void copyDataFromDevice2Host4Reduce(panda_gpu_context pgc)
                 //key_pos += pgc.reduced_key_vals.d_reduced_keyval_arr[i].keySize;
                 memcpy( (char *)(pgc.output_key_vals.d_ValBuff) + val_pos,
                         (char *)(pgc.reduced_key_vals.d_reduced_keyval_arr[i].val), pgc.reduced_key_vals.d_reduced_keyval_arr[i].valSize);
-       		printf("[copyDataFromDevice2Host4Reduce] key:[%s] val:[%d]\n",(char *)pgc.output_key_vals.d_KeyBuff+key_pos,
-					*(int *)pgc.output_key_vals.d_ValBuff+val_pos);
+       		//printf("pgc [copyDataFromDevice2Host4Reduce] key:[%s] val:[%d]\n",(char *)pgc.output_key_vals.d_KeyBuff+key_pos,
+		//			*(int *)pgc.output_key_vals.d_ValBuff+val_pos);
         
 		key_pos += pgc.reduced_key_vals.d_reduced_keyval_arr[i].keySize;
 		val_pos += pgc.reduced_key_vals.d_reduced_keyval_arr[i].valSize;
@@ -666,7 +666,7 @@ __device__ void PandaEmitGPUMapOutput(void *key, void *val, int keySize, int val
 	int required_mem_len	= (shared_buff_pos) + keySize + valSize + sizeof(keyval_pos_t)*(shared_arr_len+1);
 	//if (!((*kv_arr_p->shared_buff_pos) + keySize + valSize <    - sizeof(keyval_pos_t)*((*kv_arr_p->shared_arr_len)+1))){
 	
-	printf("pgc emitGPUMapOUtput shared_buff_pos:%d keySize:%d valSize:%d required_mem_len:%d shared_buff_len:%d\n",shared_buff_pos,keySize,valSize,required_mem_len,shared_buff_len);
+	//printf("pgc emitGPUMapOUtput shared_buff_pos:%d keySize:%d valSize:%d required_mem_len:%d shared_buff_len:%d\n",shared_buff_pos,keySize,valSize,required_mem_len,shared_buff_len);
 
 	if (required_mem_len > shared_buff_len){
 
