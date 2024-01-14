@@ -482,7 +482,7 @@ namespace panda
 
   PandaMapReduceJob::~PandaMapReduceJob()
   {
-	ShowLog("~PandaMapReduceJob()\n");	
+	ShowLog("~PandaMapReduceJob()");	
   }//PandaMapReduceJob
 
   //Significant change is required in this place

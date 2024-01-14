@@ -453,7 +453,7 @@ void ExecutePandaMergeReduceTasks2Pnc(panda_node_context *pnc, panda_gpu_context
            	val = pgc->output_key_vals.h_reduced_keyval_arr[i].val;
       		pnc->output_keyval_arr.output_keyval_arr[i].key = key;
 		pnc->output_keyval_arr.output_keyval_arr[i].val = val;
-		ShowLog("pnc gpu key:%s val:%d\n",key,val);
+		ShowLog("pnc gpu key:%s val:%d",key,val);
 	}//for
 	int gpulen = pgc->output_key_vals.h_reduced_keyval_arr_len;
 	for (int i=0; i<pcc->reduced_key_vals.reduced_keyval_arr_len; i++){
