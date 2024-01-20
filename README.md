@@ -3,9 +3,6 @@ Panda, a heterogeneous MapReduce framework on GPUs and CPUs cluster
 		huili@ruijie.com.cn
 		Ruijie network co.ltd
 		2017.11.09
-		lihui@zhongjuai.com
-		Zhongjuai co.ltd
-		2023.10.29
 
 Paper: docs/Co-processing SPMD computation on CPUs and GPUs cluster.pdf
 
