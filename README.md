@@ -3,6 +3,10 @@ Panda, a heterogeneous MapReduce framework on GPUs and CPUs cluster
 		huili@ruijie.com.cn
 		Ruijie network co.ltd
 		2017.11.09
+  		li7hui@gmail.com
+    		First Prize in MCM 2002
+      		WuShi Prize in PKU 2008
+		IEEE Cluster Paper in 2013 in Indianapolis
 
 Paper: docs/Co-processing SPMD computation on CPUs and GPUs cluster.pdf
 
