@@ -1,3 +1,4 @@
 num_of_cpu
 num_of_gpu
-delta
+delta_value
+machine_type
