@@ -2,3 +2,4 @@ job_command
 job_submit_time
 job_duration
 job_priority
+job_description
