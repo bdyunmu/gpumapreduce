@@ -1,4 +1,4 @@
 job_command
-job_time
+job_submit_time
 job_duration
 job_priority
