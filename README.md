@@ -1,4 +1,4 @@
-Failed Code with latest CUDA toolkit
+Failed Code with latest CUDA toolkit<br>
 Panda, a heterogeneous MapReduce framework on GPUs and CPUs cluster
 =================================================================
 		huili@ruijie.com.cn
