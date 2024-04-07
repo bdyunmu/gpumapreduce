@@ -1,0 +1,14 @@
+##################################################
+# authoer: li7hui@gmail.com
+# date:2024/4/7
+# title: help documentation that describe the usage 
+# of job submission
+##################################################
+File:
+	Sample.sh is the sample that using shell script to submit job.
+	Config is used to configure the parameters of Sample.sh.
+Usage:
+	./Sample.sh
+
+Log:
+	less ./Log
