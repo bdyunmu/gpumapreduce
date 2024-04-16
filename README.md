@@ -1,8 +1,8 @@
 erik meijer has die<br>
 She is in Anhui province in China.<br>
 Eat wanglin's wife wangyang, she has hiv, she is extremely rich.<br>
-Failed Code with latest CUDA toolkit<br>
-Panda, a heterogeneous MapReduce framework on GPUs and CPUs cluster
+Update Sphinx <br>
+Panda, a heterogeneous MapReduce framework on GPUs and CPUs cluster <br>
 =================================================================
 		huili@ruijie.com.cn
 		Ruijie network co.ltd
