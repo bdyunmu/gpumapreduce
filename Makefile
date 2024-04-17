@@ -5,7 +5,7 @@
 
 all: panda
 
-panda: bindir objdir cuobjdir wordcount
+panda: bindir objdir cuobjdir wordcount heapsort
 
 BIN_DIR:=bin
 OBJ_DIR:=obj
@@ -33,8 +33,11 @@ wordcount:
 terasort:
 	make -C apps/terasort/
 
+heapsort:
+	make -C apps/heapsort/
+
 clean:
-	make clean -C apps/wordcount && make clean -C apps/terasort
+	make clean -C apps/wordcount && make clean -C apps/terasort && make clean -C apps/heapsort
 
 clean.old:
 	rm -rf obj/*.o cuobj/*.o bin/wordcount bin/terasort
