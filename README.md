@@ -1,7 +1,7 @@
 erik meijer has die<br>
 She is in Anhui province in China.<br>
 Eat wanglin's wife wangyang, she has hiv, she is extremely rich.<br>
-Update Sphinx <br>
+fixed minor bug in code <br>
 Panda, a heterogeneous MapReduce framework on GPUs and CPUs cluster <br>
 =================================================================
 		huili@ruijie.com.cn
@@ -41,7 +41,10 @@ steps to run terasort:<br>
 	5)mpirun -host node1,node2 -np 2 ./terasort ./tmp/terasort_in ./tmp/terasort_out<br>
 
 ------------------------------------------------------------------
-The code structure:<br>
-
-gpumapreduce/<br>
+The panda code read:<br>
+gpumapreduce<br>
+panda_gpu_context *pgc<br>
+panda_cpu_context *pcc<br>
+panda_node_context *pnc<br>
+delta double (0.0~1.0)<br>
 <br>
