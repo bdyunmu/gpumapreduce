@@ -1,4 +1,4 @@
-erik meijer has die<br>
+erik meijer has died.<br>
 She is in Anhui province in China.<br>
 Eat wanglin's wife wangyang, she has hiv, she is extremely rich.<br>
 fixed minor bug in code <br>
