@@ -18,7 +18,26 @@
 
 namespace panda{
 
+void heapify(std::vector<int>&arr,int i,int n){
+	int largest = i;
+	int left = 2*i+1;
+	int right = 2*i+2;
+	if(left<n && arr[left] > arr[largest]){
+		largest = left;
+	}
+	if(right<n && arr[right]>arr[largest]){
+		largest = right;
+	}
+	if(largest!=i){
+		std::swap(arr[i],arr[largest]);
+		heapify(arr,largest,n);
+	}
+}
+//建最大堆
 void buildMaxHeap(std::vector<int>&arr, int n){
+	for (int i=n/2-1;i>=0;i--){
+	heapify(arr,i,n);	
+	}
 }
 
 
@@ -27,22 +46,8 @@ __device__ void panda_gpu_core_combiner(void *KEY, val_t* VAL, int keySize, int 
 }//void
 
 __device__ void panda_gpu_core_map(void *KEY, void *VAL, int keySize, int valSize, panda_gpu_context *pgc, int map_task_idx){
-
-		int ws=0; //word size
-		char *p = (char *)VAL;
-		int *one = (int *)malloc(sizeof(int));
-		*one = 1;
-		char delimiters[] = " \n\t\"/,.;:?!-_()[]{}+=*&<>#@%0123456789";
-		char *word;// = my_strtok(p,delimiters);
-		while(word!=NULL){
-			ws = 10;//my_strlen(word);
-			printf("pgc word:%s len:%d\n",word,ws);
-			PandaEmitGPUMapOutput(word, one, ws, sizeof(int), pgc, map_task_idx);
-			word = NULL;//my_strtok(NULL,delimiters);
-		}
-		
+		//PandaEmitGPUMapOutput(word, one, ws, sizeof(int), pgc, map_task_idx);
 		__syncthreads();
-		
 }
 
 __device__ void panda_gpu_core_reduce(void *KEY, val_t* VAL, int keySize, int valCount, panda_gpu_context pgc){
