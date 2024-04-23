@@ -1,2 +1,10 @@
-num_of_cpus
-num_of_gpus
+python version<br>
+gcc version<br>
+nvcc version<br>
+mpicc version<br>
+scala version<br>
+java version<br>
+linux release<br>
+pthread version<br>
+sm_arch number<br>
+openmpi version<br>
