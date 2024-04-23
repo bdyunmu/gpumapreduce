@@ -1,10 +1,10 @@
-python version<br>
-gcc version<br>
-nvcc version<br>
+python version 3.11.5<br>
+gcc version 10.5.0<br>
+nvcc version 11.4.0<br>
 mpicc version<br>
 scala version<br>
-java version<br>
-linux release<br>
+java version 11.0.22<br>
+linux release ubuntu 22.04<br>
 pthread version<br>
-sm_arch number<br>
-openmpi version<br>
+sm_arch number sm_52<br>
+openmpi version 5.0.0<br>
