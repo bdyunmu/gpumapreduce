@@ -1,0 +1,4 @@
+max_heap_mem_size_per_gpu_map_task
+max_heap_mem_size_per_gpu_reduce_task
+max_num_of_gpu_map_tasks
+max_num_of_gpu_reduce_tasks

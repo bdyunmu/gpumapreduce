@@ -1,12 +1,15 @@
-##################################################
-# authoer: li7hui@gmail.com
-# date:2024/4/7
-# title: help documentation that describe the usage 
-# of job submission
-##################################################
+#####################################################################
+# Title: help documentation that describe the usage of job submission
+# Author: li7hui@gmail.com
+# Date:2024/4/7
+#####################################################################
+
 File:
-	Sample.sh is the sample that using shell script to submit job.
-	Config is used to configure the parameters of Sample.sh.
+	1.Sample.sh is the sample that using shell script to submit job.
+	2.Config is used to configure the parameters of Sample.sh.
+	3.Limits is used to illustrate the limits of runtime system. Especially the limits in GPU heap memory.
+	4.Log is used to store the running information of runtime, device, user, and app.
+
 Usage:
 	./Sample.sh
 
